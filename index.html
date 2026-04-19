@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TB Screening Dashboard — HEED Bangladesh</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+<style>
+:root {
+  --green:       #1A6B3C;
+  --green-mid:   #2E8B57;
+  --green-light: #4CAF7D;
+  --green-pale:  #E8F5EE;
+  --red:         #C0392B;
+  --red-light:   #E74C3C;
+  --red-pale:    #FDECEA;
+  --amber:       #D4860B;
+  --amber-pale:  #FEF3CD;
+  --blue:        #1A5C8F;
+  --blue-pale:   #E3EEF7;
+  --slate:       #1E2D3D;
+  --slate2:      #2C3E50;
+  --slate3:      #34495E;
+  --bg:          #F4F6F8;
+  --surface:     #FFFFFF;
+  --surface2:    #F0F2F4;
+  --border:      #DDE1E7;
+  --border2:     #C8CDD6;
+  --text1:       #111827;
+  --text2:       #4B5563;
+  --text3:       #9CA3AF;
+  --sidebar-w:   256px;
+  --header-h:    72px;
+  --r:           8px;
+  --r-lg:        12px;
+  --shadow-sm:   0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
+  --shadow:      0 4px 12px rgba(0,0,0,.08), 0 1px 3px rgba(0,0,0,.05);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 14px; }
+body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text1); min-height: 100vh; line-height: 1.5; }
+
+/* ── APP SHELL ─────────────────────────────────────────── */
+.app { display: flex; min-height: 100vh; }
+
+/* ── SIDEBAR ────────────────────────────────────────────── */
+.sidebar {
+  width: var(--sidebar-w); background: var(--slate);
+  position: fixed; top: 0; left: 0; bottom: 0;
+  display: flex; flex-direction: column;
+  z-index: 200; overflow-y: auto;
+  transition: transform .25s ease;
+  box-shadow: 2px 0 16px rgba(0,0,0,.18);
+}
+.sidebar-logo {
+  padding: 22px 20px 18px;
+  background: linear-gradient(135deg, var(--green) 0%, var(--green-mid) 60%, #3D6B5A 100%);
+  border-bottom: 1px solid rgba(255,255,255,.1);
+}
+.logo-eyebrow {
+  font-size: 9.5px; font-weight: 600; letter-spacing: .14em;
+  color: rgba(255,255,255,.6); text-transform: uppercase; margin-bottom: 5px;
+}
+.logo-name { font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 2px; line-height: 1.25; }
+.logo-project { font-size: 11px; color: rgba(255,255,255,.55); line-height: 1.4; }
+.logo-divider { height: 1px; background: rgba(255,255,255,.15); margin: 12px 0 0; }
+
+.nav-section { padding: 14px 10px 6px; }
+.nav-section-label {
+  font-size: 9.5px; font-weight: 700; letter-spacing: .1em;
+  color: rgba(255,255,255,.28); text-transform: uppercase;
+  padding: 0 10px; margin-bottom: 4px;
+}
+.nav-btn {
+  display: flex; align-items: center; gap: 9px;
+  width: 100%; padding: 9px 10px; border-radius: var(--r);
+  border: none; background: none; cursor: pointer;
+  font-size: 13px; font-weight: 500; color: rgba(255,255,255,.55);
+  transition: all .15s; text-align: left;
+}
+.nav-btn:hover { background: rgba(255,255,255,.07); color: rgba(255,255,255,.9); }
+.nav-btn.active { background: rgba(255,255,255,.12); color: #fff; }
+.nav-btn .ico { font-size: 14px; width: 20px; flex-shrink: 0; text-align: center; }
+.nav-btn .nbadge {
+  margin-left: auto; font-size: 10px; font-weight: 700;
+  padding: 1px 7px; border-radius: 999px;
+  background: rgba(192,57,43,.35); color: #FF9B9B;
+}
+.nav-btn.active .nbadge { background: rgba(255,255,255,.15); color: rgba(255,255,255,.9); }
+
+.sidebar-bottom { margin-top: auto; padding: 14px 10px 10px; border-top: 1px solid rgba(255,255,255,.08); }
+.filter-head {
+  font-size: 9.5px; font-weight: 700; letter-spacing: .1em;
+  color: rgba(255,255,255,.28); text-transform: uppercase;
+  padding: 0 6px; margin-bottom: 10px;
+}
+.fgroup { margin-bottom: 9px; }
+.fgroup label { font-size: 11px; color: rgba(255,255,255,.4); display: block; margin-bottom: 3px; padding-left: 2px; }
+.fgroup input[type=date], .fgroup select {
+  width: 100%; padding: 7px 9px; border-radius: 6px;
+  border: 1px solid rgba(255,255,255,.1);
+  background: rgba(255,255,255,.07); color: rgba(255,255,255,.85);
+  font-size: 12px; font-family: 'DM Sans', sans-serif; outline: none;
+  transition: border-color .15s;
+}
+.fgroup input:focus, .fgroup select:focus { border-color: var(--green-light); }
+.fgroup select option { background: var(--slate2); }
+.filter-actions { display: flex; gap: 7px; margin-top: 12px; }
+.btn-apply {
+  flex: 1; padding: 8px 0; border-radius: 6px; border: none;
+  background: var(--green-mid); color: #fff;
+  font-size: 12px; font-weight: 600; cursor: pointer; transition: background .15s;
+  font-family: 'DM Sans', sans-serif;
+}
+.btn-apply:hover { background: var(--green); }
+.btn-reset {
+  padding: 8px 12px; border-radius: 6px;
+  border: 1px solid rgba(255,255,255,.15);
+  background: transparent; color: rgba(255,255,255,.5);
+  font-size: 12px; cursor: pointer; transition: all .15s;
+  font-family: 'DM Sans', sans-serif;
+}
+.btn-reset:hover { background: rgba(255,255,255,.06); color: rgba(255,255,255,.8); }
+.rec-count {
+  text-align: center; font-size: 11px; color: rgba(255,255,255,.3);
+  margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,.07);
+}
+.rec-count strong { color: var(--green-light); font-weight: 600; }
+
+/* ── MAIN ───────────────────────────────────────────────── */
+.main { margin-left: var(--sidebar-w); flex: 1; min-width: 0; display: flex; flex-direction: column; }
+
+/* ── TOP HEADER BANNER ──────────────────────────────────── */
+.top-banner {
+  background: linear-gradient(135deg, #1A6B3C 0%, #2E6B45 30%, #6B2E2E 70%, #C0392B 100%);
+  padding: 0 28px;
+  height: var(--header-h);
+  display: flex; align-items: center; justify-content: space-between;
+  position: sticky; top: 0; z-index: 100;
+  box-shadow: 0 2px 12px rgba(0,0,0,.2);
+}
+.banner-left { display: flex; align-items: center; gap: 14px; }
+.menu-toggle { display: none; background: none; border: none; color: rgba(255,255,255,.8); font-size: 20px; cursor: pointer; padding: 4px; }
+.banner-title-group {}
+.banner-title { font-size: 17px; font-weight: 700; color: #fff; letter-spacing: -.01em; }
+.banner-sub { font-size: 11px; color: rgba(255,255,255,.55); margin-top: 1px; }
+.banner-right { display: flex; align-items: center; gap: 12px; }
+.file-chip {
+  display: flex; align-items: center; gap: 7px;
+  background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.2);
+  border-radius: 999px; padding: 5px 13px;
+  font-size: 12px; font-weight: 500; color: rgba(255,255,255,.85);
+}
+.file-chip .dot { width: 7px; height: 7px; border-radius: 50%; background: #4CAF7D; animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+.upload-cta {
+  display: flex; align-items: center; gap: 7px;
+  padding: 8px 18px; border-radius: 999px;
+  background: rgba(255,255,255,.95); color: var(--green);
+  font-size: 13px; font-weight: 700; cursor: pointer;
+  border: none; transition: all .15s; font-family: 'DM Sans', sans-serif;
+  box-shadow: 0 2px 8px rgba(0,0,0,.15);
+}
+.upload-cta:hover { background: #fff; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,.2); }
+input[type=file] { display: none; }
+
+/* ── CONTENT ──────────────────────────────────────────────── */
+.content { flex: 1; padding: 24px 28px; }
+.pane { display: none; animation: fadeIn .2s ease; }
+.pane.active { display: block; }
+@keyframes fadeIn { from{opacity:0;transform:translateY(4px)} to{opacity:1;transform:none} }
+
+/* ── UPLOAD SCREEN ──────────────────────────────────────── */
+.upload-screen {
+  min-height: calc(100vh - var(--header-h));
+  display: flex; align-items: center; justify-content: center; padding: 40px;
+}
+.upload-card {
+  background: var(--surface); border-radius: var(--r-lg);
+  box-shadow: var(--shadow); max-width: 480px; width: 100%;
+  overflow: hidden;
+}
+.upload-card-header {
+  background: linear-gradient(135deg, #1A6B3C 0%, #2E6B45 40%, #6B2E2E 75%, #C0392B 100%);
+  padding: 28px 32px 24px; text-align: center;
+}
+.upload-card-header .big-icon { font-size: 40px; margin-bottom: 10px; display: block; }
+.upload-card-header h2 { font-size: 20px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+.upload-card-header p { font-size: 12.5px; color: rgba(255,255,255,.6); }
+.upload-card-body { padding: 28px 32px; }
+.drop-zone {
+  border: 2px dashed var(--border2); border-radius: var(--r);
+  padding: 28px 20px; text-align: center; cursor: pointer;
+  transition: all .2s; margin-bottom: 16px;
+}
+.drop-zone:hover, .drop-zone.drag { border-color: var(--green-mid); background: var(--green-pale); }
+.drop-zone p { font-size: 13px; color: var(--text2); margin-bottom: 14px; }
+.drop-zone .choose-btn {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 9px 22px; border-radius: 999px;
+  background: var(--green-mid); color: #fff;
+  font-size: 13px; font-weight: 600; cursor: pointer;
+  border: none; font-family: 'DM Sans', sans-serif;
+}
+.drop-zone .choose-btn:hover { background: var(--green); }
+.drop-hint { font-size: 11px; color: var(--text3); text-align: center; }
+
+/* ── SECTION HEADER ──────────────────────────────────────── */
+.sec-head { margin-bottom: 18px; }
+.sec-eyebrow { font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--text3); margin-bottom: 3px; }
+.sec-title { font-size: 20px; font-weight: 700; color: var(--text1); }
+
+/* ── KPI GRID ─────────────────────────────────────────────── */
+.kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(148px, 1fr)); gap: 12px; margin-bottom: 20px; }
+.kpi {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--r-lg); padding: 16px 18px;
+  box-shadow: var(--shadow-sm); position: relative; overflow: hidden;
+}
+.kpi-stripe {
+  position: absolute; top: 0; left: 0; right: 0; height: 3px;
+}
+.kpi-ico { font-size: 18px; margin-bottom: 10px; display: block; }
+.kpi-val {
+  font-size: 30px; font-weight: 700; line-height: 1;
+  font-family: 'DM Mono', monospace; letter-spacing: -.02em;
+  margin-bottom: 3px;
+}
+.kpi-lbl { font-size: 12px; font-weight: 500; color: var(--text2); }
+.kpi-sub { font-size: 11px; color: var(--text3); margin-top: 2px; }
+.kpi.green .kpi-val { color: var(--green); }
+.kpi.red .kpi-val { color: var(--red); }
+.kpi.amber .kpi-val { color: var(--amber); }
+.kpi.blue .kpi-val { color: var(--blue); }
+.kpi.slate .kpi-val { color: var(--slate2); }
+
+/* ── CARD ─────────────────────────────────────────────────── */
+.card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--r-lg); box-shadow: var(--shadow-sm); overflow: hidden;
+  margin-bottom: 16px;
+}
+.card-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 13px 18px; border-bottom: 1px solid var(--border);
+  background: var(--surface);
+}
+.card-title { font-size: 13px; font-weight: 700; color: var(--text1); }
+.card-sub { font-size: 11px; color: var(--text3); }
+.card-body { padding: 18px; }
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 16px; }
+
+/* ── TABLE ─────────────────────────────────────────────────── */
+.tbl-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+thead th {
+  padding: 9px 13px; text-align: left;
+  background: var(--surface2); border-bottom: 1px solid var(--border);
+  font-size: 10.5px; font-weight: 700; color: var(--text3);
+  text-transform: uppercase; letter-spacing: .06em;
+  white-space: nowrap; cursor: pointer; user-select: none;
+  position: sticky; top: 0;
+}
+thead th:hover { color: var(--text1); background: #E8EAEC; }
+thead th.asc::after { content: ' ↑'; color: var(--green-mid); }
+thead th.desc::after { content: ' ↓'; color: var(--red); }
+tbody td { padding: 9px 13px; border-bottom: 1px solid var(--border); color: var(--text1); white-space: nowrap; }
+tbody tr:last-child td { border-bottom: none; }
+tbody tr:hover td { background: #F7F9FA; }
+.mono { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--text2); }
+
+/* ── BADGES ──────────────────────────────────────────────── */
+.badge { display: inline-flex; align-items: center; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 999px; }
+.bg  { background: var(--green-pale);  color: var(--green); }
+.br  { background: var(--red-pale);    color: var(--red); }
+.ba  { background: var(--amber-pale);  color: var(--amber); }
+.bb  { background: var(--blue-pale);   color: var(--blue); }
+.bsl { background: var(--surface2);    color: var(--text2); }
+.err-chip { display: inline-block; font-size: 10px; font-weight: 600; padding: 1px 6px; border-radius: 4px; background: var(--red-pale); color: var(--red); margin: 1px 2px; }
+
+/* ── PROGRESS ─────────────────────────────────────────────── */
+.prog { background: var(--surface2); border-radius: 999px; height: 5px; overflow: hidden; }
+.prog-fill { height: 100%; border-radius: 999px; }
+
+/* ── CASCADE ──────────────────────────────────────────────── */
+.cascade-row {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 18px; border-bottom: 1px solid var(--border);
+}
+.cascade-row:last-child { border-bottom: none; }
+.casc-ico { font-size: 16px; width: 22px; flex-shrink: 0; }
+.casc-lbl { font-size: 12.5px; font-weight: 500; color: var(--text2); min-width: 150px; }
+.casc-val { font-family: 'DM Mono', monospace; font-size: 20px; font-weight: 700; color: var(--text1); min-width: 80px; }
+.casc-pct { font-size: 11px; color: var(--text3); min-width: 52px; }
+.casc-bar { flex: 1; }
+
+/* ── TOOLBAR ─────────────────────────────────────────────── */
+.toolbar { display: flex; gap: 9px; padding: 12px 16px; flex-wrap: wrap; align-items: center; border-bottom: 1px solid var(--border); background: var(--surface2); }
+.srch {
+  flex: 1; min-width: 160px; padding: 7px 11px;
+  border-radius: 6px; border: 1px solid var(--border2);
+  background: var(--surface); font-size: 12.5px; color: var(--text1);
+  outline: none; font-family: 'DM Sans', sans-serif;
+  transition: border-color .15s;
+}
+.srch:focus { border-color: var(--green-mid); }
+.sel {
+  padding: 7px 11px; border-radius: 6px; border: 1px solid var(--border2);
+  background: var(--surface); font-size: 12.5px; color: var(--text2);
+  outline: none; cursor: pointer; min-width: 140px;
+  font-family: 'DM Sans', sans-serif;
+}
+.sel:focus { border-color: var(--green-mid); }
+
+/* ── CF DAILY SELECT ─────────────────────────────────────── */
+.daily-sel { width: 100%; max-width: 340px; padding: 9px 13px; border-radius: 8px; border: 1px solid var(--border2); background: var(--surface); font-size: 13px; outline: none; cursor: pointer; font-family: 'DM Sans', sans-serif; margin-bottom: 14px; }
+.daily-sel:focus { border-color: var(--green-mid); }
+
+/* ── FIELD BARS ──────────────────────────────────────────── */
+.fbar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 9px; }
+.fbar-lbl { font-size: 12px; color: var(--text2); min-width: 120px; }
+.fbar-prog { flex: 1; }
+.fbar-n { font-size: 12px; font-weight: 700; color: var(--text1); min-width: 38px; text-align: right; font-family: 'DM Mono', monospace; }
+.fbar-p { font-size: 11px; color: var(--text3); min-width: 44px; text-align: right; }
+
+/* ── RULE BOX ─────────────────────────────────────────────── */
+.rule-box { background: var(--surface2); border: 1px solid var(--border); border-left: 3px solid var(--green-mid); border-radius: 0 var(--r) var(--r) 0; padding: 13px 15px; font-size: 12px; color: var(--text2); line-height: 1.9; }
+.rule-box strong { color: var(--text1); font-weight: 600; }
+
+/* ── GENDER SPLIT ─────────────────────────────────────────── */
+.gender-row { margin-bottom: 14px; }
+.gender-label-row { display: flex; justify-content: space-between; margin-bottom: 5px; }
+.gender-label-row span { font-size: 13px; font-weight: 600; color: var(--text1); }
+.gender-label-row small { font-size: 12px; color: var(--text3); font-family: 'DM Mono', monospace; }
+
+/* ── OVERLAY ─────────────────────────────────────────────── */
+.overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.4); z-index: 150; }
+.overlay.open { display: block; }
+
+/* ── RESPONSIVE ──────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .sidebar { transform: translateX(-100%); }
+  .sidebar.open { transform: translateX(0); }
+  .main { margin-left: 0; }
+  .menu-toggle { display: block; }
+  .content { padding: 16px; }
+  .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+  .kpi-val { font-size: 22px; }
+  .two-col { grid-template-columns: 1fr; }
+  .top-banner { padding: 0 16px; }
+  .banner-title { font-size: 14px; }
+}
+</style>
+</head>
+<body>
+
+<div class="overlay" id="overlay" onclick="closeSidebar()"></div>
+
+<div class="app">
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-eyebrow">FC-SDS Project</div>
+    <div class="logo-name">HEED Bangladesh</div>
+    <div class="logo-project">TB Control Programme<br>Life Saving Facility &amp; CBSD Support</div>
+    <div class="logo-divider"></div>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-section-label">Reports</div>
+    <button class="nav-btn active" onclick="showTab('overview',this)"><span class="ico">📊</span> Overview</button>
+    <button class="nav-btn" onclick="showTab('datewise',this)"><span class="ico">📅</span> Date-wise Log</button>
+    <button class="nav-btn" onclick="showTab('cf',this)"><span class="ico">👤</span> Community Facilitators</button>
+    <button class="nav-btn" onclick="showTab('district',this)"><span class="ico">🗺️</span> District</button>
+    <button class="nav-btn" onclick="showTab('garden',this)"><span class="ico">🌿</span> Tea Gardens</button>
+    <button class="nav-btn" onclick="showTab('validation',this)">
+      <span class="ico">⚠️</span> Validation
+      <span class="nbadge" id="err-badge">0</span>
+    </button>
+  </div>
+
+  <div class="sidebar-bottom">
+    <div class="filter-head">Filters</div>
+    <div class="fgroup"><label>From date</label><input type="date" id="d1"></div>
+    <div class="fgroup"><label>To date</label><input type="date" id="d2"></div>
+    <div class="fgroup"><label>District</label><select id="fDist"><option value="">All districts</option></select></div>
+    <div class="fgroup"><label>Community Facilitator</label><select id="fCF"><option value="">All CFs</option></select></div>
+    <div class="filter-actions">
+      <button class="btn-apply" onclick="applyFilters()">Apply</button>
+      <button class="btn-reset" onclick="resetFilters()">Reset</button>
+    </div>
+    <div class="rec-count" id="recCount">No data loaded</div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <!-- HEADER BANNER -->
+  <header class="top-banner">
+    <div class="banner-left">
+      <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
+      <div class="banner-title-group">
+        <div class="banner-title" id="bannerTitle">TB Screening Dashboard</div>
+        <div class="banner-sub" id="bannerSub">Upload a CSV file to begin</div>
+      </div>
+    </div>
+    <div class="banner-right">
+      <div class="file-chip" id="fileChip" style="display:none">
+        <div class="dot"></div>
+        <span id="fileName">—</span>
+      </div>
+      <label class="upload-cta" for="csvIn">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
+        Upload CSV
+      </label>
+      <input type="file" id="csvIn" accept=".csv">
+    </div>
+  </header>
+
+  <div class="content">
+
+    <!-- UPLOAD SCREEN -->
+    <div id="upload-screen">
+      <div class="upload-screen">
+        <div class="upload-card">
+          <div class="upload-card-header">
+            <span class="big-icon">🏥</span>
+            <h2>TB Screening Dashboard</h2>
+            <p>HEED Bangladesh · FC-SDS Project · 112 Tea Gardens</p>
+          </div>
+          <div class="upload-card-body">
+            <div class="drop-zone" id="dropZone" onclick="document.getElementById('csvIn').click()">
+              <p>Download your latest data from the donor portal,<br>then upload it here to generate the full report.</p>
+              <label class="choose-btn" for="csvIn">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
+                Choose CSV file
+              </label>
+            </div>
+            <div class="drop-hint">or drag and drop anywhere on this card</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- OVERVIEW -->
+    <div class="pane" id="pane-overview">
+      <div class="sec-head">
+        <div class="sec-eyebrow">Programme Summary</div>
+        <div class="sec-title">Overview</div>
+      </div>
+      <div class="kpi-grid" id="kpi-grid"></div>
+      <div class="two-col">
+        <div class="card"><div class="card-head"><span class="card-title">Screening Cascade</span></div><div id="cascade-body"></div></div>
+        <div class="card"><div class="card-head"><span class="card-title">Gender Distribution</span></div><div class="card-body" id="gender-body"></div></div>
+      </div>
+    </div>
+
+    <!-- DATE-WISE -->
+    <div class="pane" id="pane-datewise">
+      <div class="sec-head"><div class="sec-eyebrow">Daily Records</div><div class="sec-title">Date-wise Screening Log</div></div>
+      <div class="card">
+        <div class="tbl-wrap"><table id="dateTable">
+          <thead><tr>
+            <th onclick="srt('dateTable',0,false)">Date</th>
+            <th onclick="srt('dateTable',1,true)">Screened</th>
+            <th onclick="srt('dateTable',2,true)">Presumptive</th>
+            <th onclick="srt('dateTable',3,true)">Yield %</th>
+            <th onclick="srt('dateTable',4,true)">CAD X-ray</th>
+            <th onclick="srt('dateTable',5,true)">X-ray</th>
+            <th onclick="srt('dateTable',6,true)">GXP</th>
+            <th onclick="srt('dateTable',7,true)">Diagnosed</th>
+            <th onclick="srt('dateTable',8,true)">Treated</th>
+            <th onclick="srt('dateTable',9,true)">Active CFs</th>
+            <th onclick="srt('dateTable',10,true)">Gardens</th>
+            <th onclick="srt('dateTable',11,true)">Errors</th>
+          </tr></thead>
+          <tbody id="dateBody"></tbody>
+        </table></div>
+      </div>
+    </div>
+
+    <!-- CF -->
+    <div class="pane" id="pane-cf">
+      <div class="sec-head"><div class="sec-eyebrow">Field Staff</div><div class="sec-title">Community Facilitators</div></div>
+      <div class="card">
+        <div class="card-head"><span class="card-title">CF Performance</span><span class="card-sub">Click any column header to sort</span></div>
+        <div class="toolbar"><input class="srch" id="cfSearch" placeholder="Search by name…" oninput="filterCF()"></div>
+        <div class="tbl-wrap"><table id="cfTable">
+          <thead><tr>
+            <th onclick="srt('cfTable',0,false)">CF Name</th>
+            <th onclick="srt('cfTable',1,false)">District</th>
+            <th onclick="srt('cfTable',2,true)">Days</th>
+            <th onclick="srt('cfTable',3,true)">Screened</th>
+            <th onclick="srt('cfTable',4,true)">Avg/day</th>
+            <th onclick="srt('cfTable',5,true)">Presumptive</th>
+            <th onclick="srt('cfTable',6,true)">CAD</th>
+            <th onclick="srt('cfTable',7,true)">X-ray</th>
+            <th onclick="srt('cfTable',8,true)">GXP</th>
+            <th onclick="srt('cfTable',9,true)">Diagnosed</th>
+            <th onclick="srt('cfTable',10,false)">Avg Start</th>
+            <th onclick="srt('cfTable',11,false)">Avg End</th>
+            <th onclick="srt('cfTable',12,false)">Avg Session</th>
+            <th onclick="srt('cfTable',13,true)">Errors</th>
+            <th onclick="srt('cfTable',14,true)">Error %</th>
+          </tr></thead>
+          <tbody id="cfBody"></tbody>
+        </table></div>
+      </div>
+      <div class="card">
+        <div class="card-head"><span class="card-title">Daily Activity Log</span><span class="card-sub">Select a CF to view day-by-day detail</span></div>
+        <div class="card-body">
+          <select class="daily-sel" id="cfDailySel" onchange="buildCFDaily()">
+            <option value="">— Select a Community Facilitator —</option>
+          </select>
+          <div id="cfDailyLog"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DISTRICT -->
+    <div class="pane" id="pane-district">
+      <div class="sec-head"><div class="sec-eyebrow">Geographic</div><div class="sec-title">District Summary</div></div>
+      <div class="card">
+        <div class="tbl-wrap"><table id="districtTable">
+          <thead><tr>
+            <th onclick="srt('districtTable',0,false)">District</th>
+            <th onclick="srt('districtTable',1,true)">CFs</th>
+            <th onclick="srt('districtTable',2,true)">Gardens</th>
+            <th onclick="srt('districtTable',3,true)">Screened</th>
+            <th onclick="srt('districtTable',4,true)">Presumptive</th>
+            <th onclick="srt('districtTable',5,true)">Yield %</th>
+            <th onclick="srt('districtTable',6,true)">CAD X-ray</th>
+            <th onclick="srt('districtTable',7,true)">X-ray</th>
+            <th onclick="srt('districtTable',8,true)">GXP</th>
+            <th onclick="srt('districtTable',9,true)">Diagnosed</th>
+            <th onclick="srt('districtTable',10,true)">Treated</th>
+            <th onclick="srt('districtTable',11,true)">Errors</th>
+          </tr></thead>
+          <tbody id="districtBody"></tbody>
+        </table></div>
+      </div>
+    </div>
+
+    <!-- GARDEN -->
+    <div class="pane" id="pane-garden">
+      <div class="sec-head"><div class="sec-eyebrow">Facilities</div><div class="sec-title">Tea Gardens</div></div>
+      <div class="card">
+        <div class="card-head"><span class="card-title">Garden Performance</span><span class="card-sub" id="garCount"></span></div>
+        <div class="toolbar">
+          <input class="srch" id="garSearch" placeholder="Search garden name…" oninput="filterGarden()">
+          <select class="sel" id="garDist" onchange="filterGarden()"><option value="">All districts</option></select>
+        </div>
+        <div class="tbl-wrap"><table id="gardenTable">
+          <thead><tr>
+            <th onclick="srt('gardenTable',0,false)">Tea Garden</th>
+            <th onclick="srt('gardenTable',1,false)">District</th>
+            <th onclick="srt('gardenTable',2,true)">CFs</th>
+            <th onclick="srt('gardenTable',3,true)">Screened</th>
+            <th onclick="srt('gardenTable',4,true)">Presumptive</th>
+            <th onclick="srt('gardenTable',5,true)">Yield %</th>
+            <th onclick="srt('gardenTable',6,true)">CAD X-ray</th>
+            <th onclick="srt('gardenTable',7,true)">X-ray</th>
+            <th onclick="srt('gardenTable',8,true)">GXP</th>
+            <th onclick="srt('gardenTable',9,true)">Diagnosed</th>
+            <th onclick="srt('gardenTable',10,true)">Treated</th>
+            <th onclick="srt('gardenTable',11,true)">Errors</th>
+          </tr></thead>
+          <tbody id="gardenBody"></tbody>
+        </table></div>
+      </div>
+    </div>
+
+    <!-- VALIDATION -->
+    <div class="pane" id="pane-validation">
+      <div class="sec-head"><div class="sec-eyebrow">Data Quality</div><div class="sec-title">Validation Report</div></div>
+      <div class="kpi-grid" id="val-kpi" style="grid-template-columns:repeat(auto-fit,minmax(160px,1fr))"></div>
+      <div class="two-col">
+        <div class="card">
+          <div class="card-head"><span class="card-title">Error Frequency by Field</span></div>
+          <div class="card-body" id="val-bars"></div>
+        </div>
+        <div class="card">
+          <div class="card-head"><span class="card-title">Validation Rules</span></div>
+          <div class="card-body">
+            <div class="rule-box">
+              <strong>Gender</strong> — Male or Female only. Any other value = error.<br>
+              <strong>Diabetes</strong> — Cannot be blank.<br>
+              <strong>Cough</strong> — Cannot be blank.<br>
+              <strong>Cough Duration</strong> — Required if Cough = Yes. Max 180 days.<br>
+              <strong>Fever</strong> — Cannot be blank.<br>
+              <strong>Fever Duration</strong> — Required if Fever = Yes. Max 180 days.<br>
+              <strong>Weight Loss</strong> — Cannot be blank.<br>
+              <strong>Night Sweats</strong> — Yes/No for age ≥ 15. Must be blank for age &lt; 15.<br>
+              <strong>Playfulness</strong> — "Yes" only valid for age &lt; 15. Error if Yes and age ≥ 15.<br>
+              <strong>Swelling / Gland</strong> — Cannot be blank.
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card" style="margin-bottom:16px">
+        <div class="card-head"><span class="card-title">Errors by Community Facilitator</span></div>
+        <div class="tbl-wrap"><table id="cfErrTable">
+          <thead><tr>
+            <th onclick="srt('cfErrTable',0,false)">CF Name</th>
+            <th onclick="srt('cfErrTable',1,false)">District</th>
+            <th onclick="srt('cfErrTable',2,true)">Records</th>
+            <th onclick="srt('cfErrTable',3,true)">With Errors</th>
+            <th onclick="srt('cfErrTable',4,true)">Error %</th>
+            <th>Top Error Fields</th>
+          </tr></thead>
+          <tbody id="cfErrBody"></tbody>
+        </table></div>
+      </div>
+      <div class="card">
+        <div class="card-head"><span class="card-title">Flagged Records</span><span class="card-sub">Up to 300 shown · use filters to narrow</span></div>
+        <div class="toolbar">
+          <input class="srch" id="valSearch" placeholder="Search PID, patient, CF…" oninput="filterVal()">
+          <select class="sel" id="valField" onchange="filterVal()">
+            <option value="">All error types</option>
+            <option>Gender</option><option>Diabetes</option><option>Cough</option>
+            <option>Cough Duration</option><option>Fever</option><option>Fever Duration</option>
+            <option>Weight Loss</option><option>Night Sweats</option>
+            <option>Playfulness</option><option>Swelling</option>
+          </select>
+          <select class="sel" id="valDist" onchange="filterVal()"><option value="">All districts</option></select>
+        </div>
+        <div class="tbl-wrap"><table id="valTable">
+          <thead><tr>
+            <th>Date</th><th>PID</th><th>Patient</th><th>Age</th><th>Gender</th>
+            <th>CF</th><th>District</th><th>Tea Garden</th>
+            <th>Cough</th><th>Cough Dur</th><th>Fever</th><th>Fever Dur</th>
+            <th>Errors</th>
+          </tr></thead>
+          <tbody id="valBody"></tbody>
+        </table></div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+</div><!-- /app -->
+
+<script>
+let ALL=[], FILTERED=[], CFD={};
+const TABS=['overview','datewise','cf','district','garden','validation'];
+const TITLES={overview:'Overview',datewise:'Date-wise Log',cf:'Community Facilitators',district:'District',garden:'Tea Gardens',validation:'Validation Report'};
+const sortSt={};
+
+// ── SIDEBAR ──────────────────────────────────────────────────
+function toggleSidebar(){ document.getElementById('sidebar').classList.toggle('open'); document.getElementById('overlay').classList.toggle('open'); }
+function closeSidebar(){ document.getElementById('sidebar').classList.remove('open'); document.getElementById('overlay').classList.remove('open'); }
+
+// ── FILE ────────────────────────────────────────────────────
+document.getElementById('csvIn').addEventListener('change', e=>{ if(e.target.files[0]) loadFile(e.target.files[0]); });
+const dz=document.getElementById('dropZone');
+if(dz){ dz.addEventListener('dragover',e=>{e.preventDefault();dz.classList.add('drag');}); dz.addEventListener('dragleave',()=>dz.classList.remove('drag')); dz.addEventListener('drop',e=>{e.preventDefault();dz.classList.remove('drag');if(e.dataTransfer.files[0])loadFile(e.dataTransfer.files[0]);}); }
+
+function loadFile(file){
+  Papa.parse(file,{header:false,skipEmptyLines:true,complete:r=>{
+    const raw=r.data[0]; const rows=r.data.slice(1);
+    const hIdx={};
+    raw.forEach((h,i)=>{const k=h.trim();if(hIdx[k]===undefined)hIdx[k]=i;else if(hIdx[k+'_2']===undefined)hIdx[k+'_2']=i;});
+    const CD=hIdx['Duration'], FD=hIdx['Duration_2'];
+    const objs=rows.map(row=>{
+      const o={};
+      raw.forEach((h,i)=>{if(o[h.trim()]===undefined)o[h.trim()]=row[i]||'';});
+      o._cd=row[CD]||''; o._fd=row[FD]||'';
+      return o;
+    });
+    init(objs,file.name);
+  }});
+}
+
+function tv(r,c){return(r[c]||'').toString().trim();}
+function tn(s){const x=parseFloat(s);return isNaN(x)?null:x;}
+function pct(n,d){return d>0?((n/d)*100).toFixed(1)+'%':'0%';}
+function cnt(arr,c,v){return arr.filter(r=>tv(r,c)===v).length;}
+function fmtT(dt){return dt?dt.toTimeString().slice(0,5):'—';}
+function fmtD(m){if(!m||m<0)return'—';const h=Math.floor(m/60),mn=Math.round(m%60);return h>0?`${h}h ${mn}m`:`${mn}m`;}
+
+function validate(r){
+  const age=tn(tv(r,'Age-Year')); const errs=[];
+  const g=tv(r,'Gender'); if(g!=='Male'&&g!=='Female') errs.push('Gender');
+  if(tv(r,'Diabetes History')==='') errs.push('Diabetes');
+  const cough=tv(r,'Cough'); if(cough==='') errs.push('Cough');
+  const cd=tn(r._cd); if(cough==='Yes'&&(cd===null||cd>180)) errs.push('Cough Duration');
+  const fever=tv(r,'Fever'); if(fever==='') errs.push('Fever');
+  const fd=tn(r._fd); if(fever==='Yes'&&(fd===null||fd>180)) errs.push('Fever Duration');
+  if(tv(r,'Weight Loss')==='') errs.push('Weight Loss');
+  const ns=tv(r,'Night Sweats');
+  if(age!==null){if(age>=15&&ns!=='Yes'&&ns!=='No')errs.push('Night Sweats');if(age<15&&ns!=='')errs.push('Night Sweats');}
+  if(age!==null&&age>=15&&tv(r,'Reduced Playfulness')==='Yes') errs.push('Playfulness');
+  if(tv(r,'Swelling or Gland')==='') errs.push('Swelling');
+  return errs;
+}
+
+function init(rows,fname){
+  rows.forEach(r=>{
+    const raw=tv(r,'Screening Date & Time'); r._dt=null; r._ds='';
+    if(raw){const d=new Date(raw);if(!isNaN(d)){r._dt=d;r._ds=d.toISOString().slice(0,10);}}
+    r._errs=validate(r);
+  });
+  ALL=rows; FILTERED=rows;
+  const dists=[...new Set(rows.map(r=>tv(r,'District')).filter(Boolean))].sort();
+  const cfs=[...new Set(rows.map(r=>tv(r,'Name of FA')).filter(Boolean))].sort();
+  ['fDist','garDist','valDist'].forEach(id=>{ const el=document.getElementById(id); if(el){el.innerHTML='<option value="">All districts</option>'; dists.forEach(d=>el.innerHTML+=`<option>${d}</option>`);} });
+  ['fCF'].forEach(id=>{ const el=document.getElementById(id); if(el){el.innerHTML='<option value="">All CFs</option>'; cfs.forEach(c=>el.innerHTML+=`<option>${c}</option>`);} });
+  const cfSel=document.getElementById('cfDailySel'); if(cfSel){cfSel.innerHTML='<option value="">— Select a CF —</option>'; cfs.forEach(c=>cfSel.innerHTML+=`<option>${c}</option>`);}
+  const dates=rows.filter(r=>r._dt).map(r=>r._dt).sort((a,b)=>a-b);
+  if(dates.length){document.getElementById('d1').value=dates[0].toISOString().slice(0,10);document.getElementById('d2').value=dates[dates.length-1].toISOString().slice(0,10);}
+  document.getElementById('upload-screen').style.display='none';
+  document.getElementById('fileChip').style.display='flex';
+  document.getElementById('fileName').textContent=fname.replace('.csv','');
+  document.getElementById('bannerSub').textContent=rows.length.toLocaleString()+' records loaded';
+  applyFilters();
+}
+
+function applyFilters(){
+  const d1=document.getElementById('d1').value,d2=document.getElementById('d2').value;
+  const dist=document.getElementById('fDist').value,cf=document.getElementById('fCF').value;
+  FILTERED=ALL.filter(r=>{
+    if(d1&&r._ds&&r._ds<d1)return false;
+    if(d2&&r._ds&&r._ds>d2)return false;
+    if(dist&&tv(r,'District')!==dist)return false;
+    if(cf&&tv(r,'Name of FA')!==cf)return false;
+    return true;
+  });
+  const ec=FILTERED.filter(r=>r._errs.length>0).length;
+  document.getElementById('recCount').innerHTML=`<strong>${FILTERED.length.toLocaleString()}</strong> records in view`;
+  document.getElementById('err-badge').textContent=ec;
+  renderAll();
+}
+function resetFilters(){
+  const dates=ALL.filter(r=>r._dt).map(r=>r._dt).sort((a,b)=>a-b);
+  if(dates.length){document.getElementById('d1').value=dates[0].toISOString().slice(0,10);document.getElementById('d2').value=dates[dates.length-1].toISOString().slice(0,10);}
+  document.getElementById('fDist').value='';document.getElementById('fCF').value='';
+  applyFilters();
+}
+function renderAll(){buildOverview();buildDatewise();buildCF();buildDistrict();buildGarden();buildValidation();}
+
+// ── TABS ──────────────────────────────────────────────────────
+function showTab(id,el){
+  TABS.forEach(t=>{document.getElementById('pane-'+t)?.classList.remove('active');});
+  document.getElementById('pane-'+id)?.classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(n=>n.classList.remove('active'));
+  if(el)el.classList.add('active');
+  document.getElementById('bannerTitle').textContent=TITLES[id]||id;
+  closeSidebar();
+}
+
+// ── SORT ──────────────────────────────────────────────────────
+function srt(tid,col,num){
+  const tbody=document.querySelector(`#${tid} tbody`);if(!tbody)return;
+  const k=tid+col; sortSt[k]=sortSt[k]==='asc'?'desc':'asc'; const asc=sortSt[k]==='asc';
+  document.querySelectorAll(`#${tid} thead th`).forEach((th,i)=>{th.classList.remove('asc','desc');if(i===col)th.classList.add(asc?'asc':'desc');});
+  [...tbody.rows].sort((a,b)=>{
+    const av=(a.cells[col]?.textContent||'').replace(/[^0-9.\-]/g,'');
+    const bv=(b.cells[col]?.textContent||'').replace(/[^0-9.\-]/g,'');
+    if(num){const diff=(parseFloat(av)||0)-(parseFloat(bv)||0);return asc?diff:-diff;}
+    return asc?av.localeCompare(bv):bv.localeCompare(av);
+  }).forEach(r=>tbody.appendChild(r));
+}
+
+// ── HELPERS ───────────────────────────────────────────────────
+function b(n,cls){return n>0?`<span class="badge ${cls}">${n}</span>`:`<span style="color:var(--text3)">0</span>`;}
+function chk(){return`<span style="color:var(--green);font-weight:700">✓</span>`;}
+function kpi(ico,val,lbl,sub,cls=''){return`<div class="kpi ${cls}"><div class="kpi-stripe" style="background:var(--kc,var(--border))"></div><span class="kpi-ico">${ico}</span><div class="kpi-val">${val}</div><div class="kpi-lbl">${lbl}</div><div class="kpi-sub">${sub}</div></div>`;}
+
+function uniqueDays(rows){return new Set(rows.filter(r=>r._ds).map(r=>r._ds)).size;}
+
+// ── OVERVIEW ──────────────────────────────────────────────────
+function buildOverview(){
+  const rows=FILTERED,total=rows.length;
+  const pres=cnt(rows,'Presumptive','Yes'),diag=cnt(rows,'TB Diagnosed','Yes'),tx=cnt(rows,'TB Treatment Started','Yes');
+  const cad=cnt(rows,'CAD X-Ray Done','Yes'),xray=cnt(rows,'X-Ray Done','Yes'),gxp=cnt(rows,'GXP Sputum Done','Yes');
+  const mtb=rows.filter(r=>(tv(r,'Result.4')||'').toLowerCase().includes('mtb detected,')).length;
+  const male=cnt(rows,'Gender','Male'),female=cnt(rows,'Gender','Female');
+  const errs=rows.filter(r=>r._errs.length>0).length;
+  const days=Math.max(uniqueDays(rows),1);
+  document.getElementById('kpi-grid').innerHTML=`
+    <div class="kpi"><div class="kpi-stripe" style="background:var(--green-mid)"></div><span class="kpi-ico">📋</span><div class="kpi-val" style="color:var(--green)">${total.toLocaleString()}</div><div class="kpi-lbl">Total Screened</div><div class="kpi-sub">${(total/days).toFixed(1)} per active day</div></div>
+    <div class="kpi"><div class="kpi-stripe" style="background:var(--amber)"></div><span class="kpi-ico">🔍</span><div class="kpi-val" style="color:var(--amber)">${pres.toLocaleString()}</div><div class="kpi-lbl">Presumptive TB</div><div class="kpi-sub">${pct(pres,total)} yield rate</div></div>
+    <div class="kpi"><div class="kpi-stripe" style="background:#0891B2)"></div><span class="kpi-ico">🩻</span><div class="kpi-val" style="color:var(--blue)">${cad}</div><div class="kpi-lbl">CAD X-ray Done</div><div class="kpi-sub">${pct(cad,pres)} of presumptive</div></div>
+    <div class="kpi"><div class="kpi-stripe" style="background:var(--blue)"></div><span class="kpi-ico">🩻</span><div class="kpi-val" style="color:var(--blue)">${xray}</div><div class="kpi-lbl">X-ray Done</div><div class="kpi-sub">${pct(xray,pres)} of presumptive</div></div>
+    <div class="kpi"><div class="kpi-stripe" style="background:var(--green-light)"></div><span class="kpi-ico">🧬</span><div class="kpi-val" style="color:var(--green)">${gxp}</div><div class="kpi-lbl">GXP Tests Done</div><div class="kpi-sub">${mtb} MTB positive</div></div>
+    <div class="kpi"><div class="kpi-stripe" style="background:var(--red)"></div><span class="kpi-ico">🏥</span><div class="kpi-val" style="color:var(--red)">${diag}</div><div class="kpi-lbl">TB Diagnosed</div><div class="kpi-sub">${pct(diag,pres)} of presumptive</div></div>
+    <div class="kpi"><div class="kpi-stripe" style="background:var(--green)"></div><span class="kpi-ico">💊</span><div class="kpi-val" style="color:var(--green)">${tx}</div><div class="kpi-lbl">On Treatment</div><div class="kpi-sub">${pct(tx,diag)} of diagnosed</div></div>
+    <div class="kpi"><div class="kpi-stripe" style="background:var(--red-light)"></div><span class="kpi-ico">⚠️</span><div class="kpi-val" style="color:${errs>0?'var(--red)':'var(--green)'}">${errs}</div><div class="kpi-lbl">Validation Errors</div><div class="kpi-sub">${pct(errs,total)} of records</div></div>
+  `;
+  document.getElementById('cascade-body').innerHTML=[
+    ['📋','Screened',total,total,'var(--green-mid)'],
+    ['🔍','Presumptive',pres,total,'var(--amber)'],
+    ['🩻','CAD X-ray Done',cad,pres,'var(--blue)'],
+    ['🩻','X-ray Done',xray,pres,'#0891B2'],
+    ['🧬','GXP Done',gxp,pres,'var(--green-light)'],
+    ['🏥','TB Diagnosed',diag,pres,'var(--red)'],
+    ['💊','On Treatment',tx,diag,'var(--green)']
+  ].map(([ico,lbl,n,d,col])=>{
+    const w=d>0?Math.round(n/d*100):0;
+    return`<div class="cascade-row"><span class="casc-ico">${ico}</span><span class="casc-lbl">${lbl}</span><span class="casc-val">${n.toLocaleString()}</span><span class="casc-pct">${pct(n,d)}</span><div class="casc-bar"><div class="prog"><div class="prog-fill" style="width:${w}%;background:${col}"></div></div></div></div>`;
+  }).join('');
+  const mW=Math.max(male,female,1);
+  document.getElementById('gender-body').innerHTML=`
+    <div class="gender-row"><div class="gender-label-row"><span>Male</span><small>${male.toLocaleString()} &nbsp; ${pct(male,total)}</small></div><div class="prog"><div class="prog-fill" style="width:${Math.round(male/mW*100)}%;background:var(--blue)"></div></div></div>
+    <div class="gender-row"><div class="gender-label-row"><span>Female</span><small>${female.toLocaleString()} &nbsp; ${pct(female,total)}</small></div><div class="prog"><div class="prog-fill" style="width:${Math.round(female/mW*100)}%;background:var(--green-mid)"></div></div></div>
+  `;
+}
+
+// ── DATE-WISE ─────────────────────────────────────────────────
+function buildDatewise(){
+  const rows=FILTERED,bd={};
+  rows.forEach(r=>{
+    const dk=r._ds||'Unknown';
+    if(!bd[dk])bd[dk]={n:0,pres:0,cad:0,xray:0,gxp:0,diag:0,tx:0,errs:0,cfs:new Set(),gardens:new Set()};
+    const d=bd[dk];d.n++;
+    if(tv(r,'Presumptive')==='Yes')d.pres++;if(tv(r,'CAD X-Ray Done')==='Yes')d.cad++;if(tv(r,'X-Ray Done')==='Yes')d.xray++;if(tv(r,'GXP Sputum Done')==='Yes')d.gxp++;if(tv(r,'TB Diagnosed')==='Yes')d.diag++;if(tv(r,'TB Treatment Started')==='Yes')d.tx++;if(r._errs.length>0)d.errs++;
+    d.cfs.add(tv(r,'Name of FA'));d.gardens.add(tv(r,'Facility'));
+  });
+  document.getElementById('dateBody').innerHTML=Object.keys(bd).filter(k=>k!=='Unknown').sort().map(dk=>{
+    const d=bd[dk];
+    return`<tr><td><strong>${dk}</strong></td><td><strong>${d.n}</strong></td><td>${b(d.pres,'ba')}</td><td style="color:var(--amber);font-weight:600">${pct(d.pres,d.n)}</td><td>${d.cad>0?b(d.cad,'bsl'):'—'}</td><td>${d.xray>0?b(d.xray,'bsl'):'—'}</td><td>${d.gxp>0?b(d.gxp,'bg'):'—'}</td><td>${b(d.diag,'bb')}</td><td>${b(d.tx,'bg')}</td><td>${d.cfs.size}</td><td>${d.gardens.size}</td><td>${d.errs>0?b(d.errs,'br'):chk()}</td></tr>`;
+  }).join('');
+}
+
+// ── CF ────────────────────────────────────────────────────────
+function buildCF(){
+  const rows=FILTERED; CFD={};
+  rows.forEach(r=>{
+    const cf=tv(r,'Name of FA')||'Unknown';
+    if(!CFD[cf])CFD[cf]={name:cf,rows:[],days:{},district:tv(r,'District')};
+    CFD[cf].rows.push(r);
+    if(r._dt){const dk=r._ds;if(!CFD[cf].days[dk])CFD[cf].days[dk]={min:r._dt,max:r._dt,count:0,gardens:new Set()};const dy=CFD[cf].days[dk];dy.count++;if(r._dt<dy.min)dy.min=r._dt;if(r._dt>dy.max)dy.max=r._dt;dy.gardens.add(tv(r,'Facility'));}
+  });
+  const cfArr=Object.values(CFD).sort((a,b)=>b.rows.length-a.rows.length);
+  document.getElementById('cfBody').innerHTML=cfArr.map(cf=>{
+    const r=cf.rows,total=r.length,pres=cnt(r,'Presumptive','Yes'),diag=cnt(r,'TB Diagnosed','Yes');
+    const cad=cnt(r,'CAD X-Ray Done','Yes'),xray=cnt(r,'X-Ray Done','Yes'),gxp=cnt(r,'GXP Sputum Done','Yes');
+    const errs=r.filter(x=>x._errs.length>0).length;
+    const dA=Object.values(cf.days),nd=dA.length;
+    const aS=nd?Math.round(dA.reduce((s,d)=>s+d.min.getHours()*60+d.min.getMinutes(),0)/nd):0;
+    const aE=nd?Math.round(dA.reduce((s,d)=>s+d.max.getHours()*60+d.max.getMinutes(),0)/nd):0;
+    const aDur=nd?dA.reduce((s,d)=>s+(d.max-d.min)/60000,0)/nd:0;
+    const sh=Math.floor(aS/60),sm=aS%60,eh=Math.floor(aE/60),em=aE%60;
+    return`<tr data-name="${cf.name.toLowerCase()}"><td><strong>${cf.name}</strong></td><td style="color:var(--text2)">${cf.district}</td><td>${nd}</td><td><strong>${total.toLocaleString()}</strong></td><td class="mono">${nd>0?(total/nd).toFixed(1):'-'}</td><td>${b(pres,'ba')}</td><td>${cad>0?b(cad,'bsl'):'—'}</td><td>${xray>0?b(xray,'bsl'):'—'}</td><td>${gxp>0?b(gxp,'bg'):'—'}</td><td>${b(diag,'bg')}</td><td class="mono">${String(sh).padStart(2,'0')}:${String(sm).padStart(2,'0')}</td><td class="mono">${String(eh).padStart(2,'0')}:${String(em).padStart(2,'0')}</td><td>${fmtD(aDur)}</td><td>${errs>0?b(errs,'br'):chk()}</td><td style="color:${errs>0?'var(--red)':'var(--green)'};font-weight:600">${pct(errs,total)}</td></tr>`;
+  }).join('');
+}
+window.filterCF=function(){const q=(document.getElementById('cfSearch').value||'').toLowerCase();document.querySelectorAll('#cfBody tr').forEach(tr=>{tr.style.display=tr.dataset.name?.includes(q)?'':'none';});};
+window.buildCFDaily=function(){
+  const sel=document.getElementById('cfDailySel').value,log=document.getElementById('cfDailyLog');
+  if(!sel){log.innerHTML='';return;}
+  const cf=CFD[sel];if(!cf){log.innerHTML='';return;}
+  const days=Object.entries(cf.days).sort((a,b)=>a[0].localeCompare(b[0]));
+  log.innerHTML=`<div class="tbl-wrap"><table><thead><tr><th>Date</th><th>Start</th><th>End</th><th>Session Duration</th><th>Records</th><th>Tea Garden(s)</th></tr></thead><tbody>${days.map(([dk,d])=>`<tr><td><strong>${dk}</strong></td><td class="mono">${fmtT(d.min)}</td><td class="mono">${fmtT(d.max)}</td><td>${fmtD((d.max-d.min)/60000)}</td><td>${d.count}</td><td style="color:var(--text2);max-width:220px;overflow:hidden;text-overflow:ellipsis" title="${[...d.gardens].join(', ')}">${[...d.gardens].join(', ')}</td></tr>`).join('')}</tbody></table></div>`;
+};
+
+// ── DISTRICT ──────────────────────────────────────────────────
+function buildDistrict(){
+  const rows=FILTERED,ds={};
+  rows.forEach(r=>{
+    const d=tv(r,'District')||'Unknown';
+    if(!ds[d])ds[d]={n:0,pres:0,cad:0,xray:0,gxp:0,diag:0,tx:0,errs:0,cfs:new Set(),gar:new Set()};
+    const di=ds[d];di.n++;
+    if(tv(r,'Presumptive')==='Yes')di.pres++;if(tv(r,'CAD X-Ray Done')==='Yes')di.cad++;if(tv(r,'X-Ray Done')==='Yes')di.xray++;if(tv(r,'GXP Sputum Done')==='Yes')di.gxp++;if(tv(r,'TB Diagnosed')==='Yes')di.diag++;if(tv(r,'TB Treatment Started')==='Yes')di.tx++;if(r._errs.length>0)di.errs++;
+    di.cfs.add(tv(r,'Name of FA'));di.gar.add(tv(r,'Facility'));
+  });
+  document.getElementById('districtBody').innerHTML=Object.entries(ds).sort((a,b)=>b[1].n-a[1].n).map(([nm,d])=>`<tr><td><strong>${nm}</strong></td><td>${d.cfs.size}</td><td>${d.gar.size}</td><td><strong>${d.n.toLocaleString()}</strong></td><td>${b(d.pres,'ba')}</td><td style="color:var(--amber);font-weight:600">${pct(d.pres,d.n)}</td><td>${d.cad>0?b(d.cad,'bsl'):'—'}</td><td>${d.xray>0?b(d.xray,'bsl'):'—'}</td><td>${d.gxp>0?b(d.gxp,'bg'):'—'}</td><td>${b(d.diag,'bb')}</td><td>${b(d.tx,'bg')}</td><td>${d.errs>0?b(d.errs,'br'):chk()}</td></tr>`).join('');
+}
+
+// ── GARDEN ────────────────────────────────────────────────────
+function buildGarden(){
+  const rows=FILTERED,gar={};
+  rows.forEach(r=>{
+    const g=tv(r,'Facility')||'Unknown';
+    if(!gar[g])gar[g]={n:0,pres:0,cad:0,xray:0,gxp:0,diag:0,tx:0,errs:0,district:tv(r,'District'),cfs:new Set()};
+    const gi=gar[g];gi.n++;
+    if(tv(r,'Presumptive')==='Yes')gi.pres++;if(tv(r,'CAD X-Ray Done')==='Yes')gi.cad++;if(tv(r,'X-Ray Done')==='Yes')gi.xray++;if(tv(r,'GXP Sputum Done')==='Yes')gi.gxp++;if(tv(r,'TB Diagnosed')==='Yes')gi.diag++;if(tv(r,'TB Treatment Started')==='Yes')gi.tx++;if(r._errs.length>0)gi.errs++;
+    gi.cfs.add(tv(r,'Name of FA'));
+  });
+  const arr=Object.entries(gar).sort((a,b)=>b[1].n-a[1].n);
+  document.getElementById('garCount').textContent=arr.length+' gardens';
+  document.getElementById('gardenBody').innerHTML=arr.map(([g,d])=>`<tr data-name="${g.toLowerCase()}" data-dist="${d.district.toLowerCase()}"><td><strong>${g}</strong></td><td style="color:var(--text2)">${d.district}</td><td>${d.cfs.size}</td><td><strong>${d.n}</strong></td><td>${b(d.pres,'ba')}</td><td style="color:var(--amber);font-weight:600">${pct(d.pres,d.n)}</td><td>${d.cad>0?b(d.cad,'bsl'):'—'}</td><td>${d.xray>0?b(d.xray,'bsl'):'—'}</td><td>${d.gxp>0?b(d.gxp,'bg'):'—'}</td><td>${b(d.diag,'bb')}</td><td>${b(d.tx,'bg')}</td><td>${d.errs>0?b(d.errs,'br'):chk()}</td></tr>`).join('');
+}
+window.filterGarden=function(){const q=(document.getElementById('garSearch').value||'').toLowerCase(),dist=(document.getElementById('garDist').value||'').toLowerCase();document.querySelectorAll('#gardenBody tr').forEach(tr=>{tr.style.display=(tr.dataset.name?.includes(q)&&(!dist||tr.dataset.dist===dist))?'':'none';});};
+
+// ── VALIDATION ────────────────────────────────────────────────
+function buildValidation(){
+  const rows=FILTERED,errRows=rows.filter(r=>r._errs.length>0),total=rows.length;
+  const flds={Gender:0,Diabetes:0,Cough:0,'Cough Duration':0,Fever:0,'Fever Duration':0,'Weight Loss':0,'Night Sweats':0,Playfulness:0,Swelling:0};
+  errRows.forEach(r=>r._errs.forEach(e=>{if(e in flds)flds[e]++;}));
+  const maxF=Math.max(...Object.values(flds),1);
+  document.getElementById('val-kpi').innerHTML=`
+    <div class="kpi"><div class="kpi-stripe" style="background:var(--slate2)"></div><span class="kpi-ico">📋</span><div class="kpi-val">${total.toLocaleString()}</div><div class="kpi-lbl">Total Records</div><div class="kpi-sub">&nbsp;</div></div>
+    <div class="kpi"><div class="kpi-stripe" style="background:var(--red)"></div><span class="kpi-ico">⚠️</span><div class="kpi-val" style="color:${errRows.length>0?'var(--red)':'var(--green)'}">${errRows.length.toLocaleString()}</div><div class="kpi-lbl">With Errors</div><div class="kpi-sub">${pct(errRows.length,total)} error rate</div></div>
+    <div class="kpi"><div class="kpi-stripe" style="background:var(--green)"></div><span class="kpi-ico">✅</span><div class="kpi-val" style="color:var(--green)">${(total-errRows.length).toLocaleString()}</div><div class="kpi-lbl">Clean Records</div><div class="kpi-sub">${pct(total-errRows.length,total)} clean</div></div>
+  `;
+  document.getElementById('val-bars').innerHTML=Object.entries(flds).sort((a,b)=>b[1]-a[1]).map(([k,n])=>`<div class="fbar-row"><div class="fbar-lbl">${k}</div><div class="fbar-prog"><div class="prog"><div class="prog-fill" style="width:${n>0?Math.round(n/maxF*100):0}%;background:${n>0?'var(--red)':'var(--green)'}"></div></div></div><div class="fbar-n">${n}</div><div class="fbar-p">${pct(n,total)}</div></div>`).join('');
+  const cfE={};
+  rows.forEach(r=>{const cf=tv(r,'Name of FA')||'?',dist=tv(r,'District');if(!cfE[cf])cfE[cf]={n:0,e:0,flds:{},dist};cfE[cf].n++;if(r._errs.length>0){cfE[cf].e++;r._errs.forEach(f=>{cfE[cf].flds[f]=(cfE[cf].flds[f]||0)+1;});}});
+  document.getElementById('cfErrBody').innerHTML=Object.entries(cfE).sort((a,b)=>b[1].e-a[1].e).map(([name,d])=>{
+    const topF=Object.entries(d.flds).sort((a,b)=>b[1]-a[1]).slice(0,4).map(([f,n])=>`<span class="err-chip">${f} (${n})</span>`).join('');
+    return`<tr><td><strong>${name}</strong></td><td style="color:var(--text2)">${d.dist}</td><td>${d.n}</td><td>${d.e>0?b(d.e,'br'):chk()}</td><td style="color:${d.e>0?'var(--red)':'var(--green)'};font-weight:600">${pct(d.e,d.n)}</td><td>${topF||'—'}</td></tr>`;
+  }).join('');
+  document.getElementById('valBody').innerHTML=errRows.slice(0,300).map(r=>`<tr data-q="${(tv(r,'PID')+tv(r,'Patient')+tv(r,'Name of FA')).toLowerCase()}" data-errs="${r._errs.join(',').toLowerCase()}" data-dist="${tv(r,'District').toLowerCase()}"><td>${r._ds||'—'}</td><td class="mono" style="color:var(--text3)">${tv(r,'PID')}</td><td>${tv(r,'Patient')}</td><td>${tv(r,'Age-Year')}</td><td>${tv(r,'Gender')||'<span style="color:var(--red)">blank</span>'}</td><td>${tv(r,'Name of FA')}</td><td>${tv(r,'District')}</td><td>${tv(r,'Facility')}</td><td>${tv(r,'Cough')||'—'}</td><td class="mono">${r._cd||'—'}</td><td>${tv(r,'Fever')||'—'}</td><td class="mono">${r._fd||'—'}</td><td>${r._errs.map(e=>`<span class="err-chip">${e}</span>`).join('')}</td></tr>`).join('');
+}
+window.filterVal=function(){
+  const q=(document.getElementById('valSearch').value||'').toLowerCase();
+  const field=(document.getElementById('valField').value||'').toLowerCase();
+  const dist=(document.getElementById('valDist').value||'').toLowerCase();
+  document.querySelectorAll('#valBody tr').forEach(tr=>{tr.style.display=((!q||tr.dataset.q?.includes(q))&&(!field||tr.dataset.errs?.includes(field))&&(!dist||tr.dataset.dist===dist))?'':'none';});
+};
+
+// Init
+showTab('overview', document.querySelector('.nav-btn'));
+</script>
+</body>
+</html>

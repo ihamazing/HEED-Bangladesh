@@ -7,368 +7,171 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
-:root {
-  --green:       #1A6B3C;
-  --green-mid:   #2E8B57;
-  --green-light: #4CAF7D;
-  --green-pale:  #E8F5EE;
-  --red:         #C0392B;
-  --red-light:   #E74C3C;
-  --red-pale:    #FDECEA;
-  --amber:       #D4860B;
-  --amber-pale:  #FEF3CD;
-  --blue:        #1A5C8F;
-  --blue-pale:   #E3EEF7;
-  --slate:       #1E2D3D;
-  --slate2:      #2C3E50;
-  --slate3:      #34495E;
-  --bg:          #F4F6F8;
-  --surface:     #FFFFFF;
-  --surface2:    #F0F2F4;
-  --border:      #DDE1E7;
-  --border2:     #C8CDD6;
-  --text1:       #111827;
-  --text2:       #4B5563;
-  --text3:       #9CA3AF;
-  --sidebar-w:   256px;
-  --header-h:    72px;
-  --r:           8px;
-  --r-lg:        12px;
-  --shadow-sm:   0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
-  --shadow:      0 4px 12px rgba(0,0,0,.08), 0 1px 3px rgba(0,0,0,.05);
-}
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { font-size: 14px; }
-body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text1); min-height: 100vh; line-height: 1.5; }
-
-/* ── APP SHELL ─────────────────────────────────────────── */
-.app { display: flex; min-height: 100vh; }
-
-/* ── SIDEBAR ────────────────────────────────────────────── */
-.sidebar {
-  width: var(--sidebar-w); background: var(--slate);
-  position: fixed; top: 0; left: 0; bottom: 0;
-  display: flex; flex-direction: column;
-  z-index: 200; overflow-y: auto;
-  transition: transform .25s ease;
-  box-shadow: 2px 0 16px rgba(0,0,0,.18);
-}
-.sidebar-logo {
-  padding: 22px 20px 18px;
-  background: linear-gradient(135deg, var(--green) 0%, var(--green-mid) 60%, #3D6B5A 100%);
-  border-bottom: 1px solid rgba(255,255,255,.1);
-}
-.logo-eyebrow {
-  font-size: 9.5px; font-weight: 600; letter-spacing: .14em;
-  color: rgba(255,255,255,.6); text-transform: uppercase; margin-bottom: 5px;
-}
-.logo-name { font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 2px; line-height: 1.25; }
-.logo-project { font-size: 11px; color: rgba(255,255,255,.55); line-height: 1.4; }
-.logo-divider { height: 1px; background: rgba(255,255,255,.15); margin: 12px 0 0; }
-
-.nav-section { padding: 14px 10px 6px; }
-.nav-section-label {
-  font-size: 9.5px; font-weight: 700; letter-spacing: .1em;
-  color: rgba(255,255,255,.28); text-transform: uppercase;
-  padding: 0 10px; margin-bottom: 4px;
-}
-.nav-btn {
-  display: flex; align-items: center; gap: 9px;
-  width: 100%; padding: 9px 10px; border-radius: var(--r);
-  border: none; background: none; cursor: pointer;
-  font-size: 13px; font-weight: 500; color: rgba(255,255,255,.55);
-  transition: all .15s; text-align: left;
-}
-.nav-btn:hover { background: rgba(255,255,255,.07); color: rgba(255,255,255,.9); }
-.nav-btn.active { background: rgba(255,255,255,.12); color: #fff; }
-.nav-btn .ico { font-size: 14px; width: 20px; flex-shrink: 0; text-align: center; }
-.nav-btn .nbadge {
-  margin-left: auto; font-size: 10px; font-weight: 700;
-  padding: 1px 7px; border-radius: 999px;
-  background: rgba(192,57,43,.35); color: #FF9B9B;
-}
-.nav-btn.active .nbadge { background: rgba(255,255,255,.15); color: rgba(255,255,255,.9); }
-
-.sidebar-bottom { margin-top: auto; padding: 14px 10px 10px; border-top: 1px solid rgba(255,255,255,.08); }
-.filter-head {
-  font-size: 9.5px; font-weight: 700; letter-spacing: .1em;
-  color: rgba(255,255,255,.28); text-transform: uppercase;
-  padding: 0 6px; margin-bottom: 10px;
-}
-.fgroup { margin-bottom: 9px; }
-.fgroup label { font-size: 11px; color: rgba(255,255,255,.4); display: block; margin-bottom: 3px; padding-left: 2px; }
-.fgroup input[type=date], .fgroup select {
-  width: 100%; padding: 7px 9px; border-radius: 6px;
-  border: 1px solid rgba(255,255,255,.1);
-  background: rgba(255,255,255,.07); color: rgba(255,255,255,.85);
-  font-size: 12px; font-family: 'DM Sans', sans-serif; outline: none;
-  transition: border-color .15s;
-}
-.fgroup input:focus, .fgroup select:focus { border-color: var(--green-light); }
-.fgroup select option { background: var(--slate2); }
-.filter-actions { display: flex; gap: 7px; margin-top: 12px; }
-.btn-apply {
-  flex: 1; padding: 8px 0; border-radius: 6px; border: none;
-  background: var(--green-mid); color: #fff;
-  font-size: 12px; font-weight: 600; cursor: pointer; transition: background .15s;
-  font-family: 'DM Sans', sans-serif;
-}
-.btn-apply:hover { background: var(--green); }
-.btn-reset {
-  padding: 8px 12px; border-radius: 6px;
-  border: 1px solid rgba(255,255,255,.15);
-  background: transparent; color: rgba(255,255,255,.5);
-  font-size: 12px; cursor: pointer; transition: all .15s;
-  font-family: 'DM Sans', sans-serif;
-}
-.btn-reset:hover { background: rgba(255,255,255,.06); color: rgba(255,255,255,.8); }
-.rec-count {
-  text-align: center; font-size: 11px; color: rgba(255,255,255,.3);
-  margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,.07);
-}
-.rec-count strong { color: var(--green-light); font-weight: 600; }
-
-/* ── MAIN ───────────────────────────────────────────────── */
-.main { margin-left: var(--sidebar-w); flex: 1; min-width: 0; display: flex; flex-direction: column; }
-
-/* ── TOP HEADER BANNER ──────────────────────────────────── */
-.top-banner {
-  background: linear-gradient(135deg, #1A6B3C 0%, #2E6B45 30%, #6B2E2E 70%, #C0392B 100%);
-  padding: 0 28px;
-  height: var(--header-h);
-  display: flex; align-items: center; justify-content: space-between;
-  position: sticky; top: 0; z-index: 100;
-  box-shadow: 0 2px 12px rgba(0,0,0,.2);
-}
-.banner-left { display: flex; align-items: center; gap: 14px; }
-.menu-toggle { display: none; background: none; border: none; color: rgba(255,255,255,.8); font-size: 20px; cursor: pointer; padding: 4px; }
-.banner-title-group {}
-.banner-title { font-size: 17px; font-weight: 700; color: #fff; letter-spacing: -.01em; }
-.banner-sub { font-size: 11px; color: rgba(255,255,255,.55); margin-top: 1px; }
-.banner-right { display: flex; align-items: center; gap: 12px; }
-.file-chip {
-  display: flex; align-items: center; gap: 7px;
-  background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.2);
-  border-radius: 999px; padding: 5px 13px;
-  font-size: 12px; font-weight: 500; color: rgba(255,255,255,.85);
-}
-.file-chip .dot { width: 7px; height: 7px; border-radius: 50%; background: #4CAF7D; animation: pulse 2s infinite; }
-@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
-.upload-cta {
-  display: flex; align-items: center; gap: 7px;
-  padding: 8px 18px; border-radius: 999px;
-  background: rgba(255,255,255,.95); color: var(--green);
-  font-size: 13px; font-weight: 700; cursor: pointer;
-  border: none; transition: all .15s; font-family: 'DM Sans', sans-serif;
-  box-shadow: 0 2px 8px rgba(0,0,0,.15);
-}
-.upload-cta:hover { background: #fff; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,.2); }
-input[type=file] { display: none; }
-
-/* ── CONTENT ──────────────────────────────────────────────── */
-.content { flex: 1; padding: 24px 28px; }
-.pane { display: none; animation: fadeIn .2s ease; }
-.pane.active { display: block; }
-@keyframes fadeIn { from{opacity:0;transform:translateY(4px)} to{opacity:1;transform:none} }
-
-/* ── UPLOAD SCREEN ──────────────────────────────────────── */
-.upload-screen {
-  min-height: calc(100vh - var(--header-h));
-  display: flex; align-items: center; justify-content: center; padding: 40px;
-}
-.upload-card {
-  background: var(--surface); border-radius: var(--r-lg);
-  box-shadow: var(--shadow); max-width: 480px; width: 100%;
-  overflow: hidden;
-}
-.upload-card-header {
-  background: linear-gradient(135deg, #1A6B3C 0%, #2E6B45 40%, #6B2E2E 75%, #C0392B 100%);
-  padding: 28px 32px 24px; text-align: center;
-}
-.upload-card-header .big-icon { font-size: 40px; margin-bottom: 10px; display: block; }
-.upload-card-header h2 { font-size: 20px; font-weight: 700; color: #fff; margin-bottom: 4px; }
-.upload-card-header p { font-size: 12.5px; color: rgba(255,255,255,.6); }
-.upload-card-body { padding: 28px 32px; }
-.drop-zone {
-  border: 2px dashed var(--border2); border-radius: var(--r);
-  padding: 28px 20px; text-align: center; cursor: pointer;
-  transition: all .2s; margin-bottom: 16px;
-}
-.drop-zone:hover, .drop-zone.drag { border-color: var(--green-mid); background: var(--green-pale); }
-.drop-zone p { font-size: 13px; color: var(--text2); margin-bottom: 14px; }
-.drop-zone .choose-btn {
-  display: inline-flex; align-items: center; gap: 7px;
-  padding: 9px 22px; border-radius: 999px;
-  background: var(--green-mid); color: #fff;
-  font-size: 13px; font-weight: 600; cursor: pointer;
-  border: none; font-family: 'DM Sans', sans-serif;
-}
-.drop-zone .choose-btn:hover { background: var(--green); }
-.drop-hint { font-size: 11px; color: var(--text3); text-align: center; }
-
-/* ── SECTION HEADER ──────────────────────────────────────── */
-.sec-head { margin-bottom: 18px; }
-.sec-eyebrow { font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--text3); margin-bottom: 3px; }
-.sec-title { font-size: 20px; font-weight: 700; color: var(--text1); }
-
-/* ── KPI GRID ─────────────────────────────────────────────── */
-.kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(148px, 1fr)); gap: 12px; margin-bottom: 20px; }
-.kpi {
-  background: var(--surface); border: 1px solid var(--border);
-  border-radius: var(--r-lg); padding: 16px 18px;
-  box-shadow: var(--shadow-sm); position: relative; overflow: hidden;
-}
-.kpi-stripe {
-  position: absolute; top: 0; left: 0; right: 0; height: 3px;
-}
-.kpi-ico { font-size: 18px; margin-bottom: 10px; display: block; }
-.kpi-val {
-  font-size: 30px; font-weight: 700; line-height: 1;
-  font-family: 'DM Mono', monospace; letter-spacing: -.02em;
-  margin-bottom: 3px;
-}
-.kpi-lbl { font-size: 12px; font-weight: 500; color: var(--text2); }
-.kpi-sub { font-size: 11px; color: var(--text3); margin-top: 2px; }
-.kpi.green .kpi-val { color: var(--green); }
-.kpi.red .kpi-val { color: var(--red); }
-.kpi.amber .kpi-val { color: var(--amber); }
-.kpi.blue .kpi-val { color: var(--blue); }
-.kpi.slate .kpi-val { color: var(--slate2); }
-
-/* ── CARD ─────────────────────────────────────────────────── */
-.card {
-  background: var(--surface); border: 1px solid var(--border);
-  border-radius: var(--r-lg); box-shadow: var(--shadow-sm); overflow: hidden;
-  margin-bottom: 16px;
-}
-.card-head {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 13px 18px; border-bottom: 1px solid var(--border);
-  background: var(--surface);
-}
-.card-title { font-size: 13px; font-weight: 700; color: var(--text1); }
-.card-sub { font-size: 11px; color: var(--text3); }
-.card-body { padding: 18px; }
-.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 16px; }
-
-/* ── TABLE ─────────────────────────────────────────────────── */
-.tbl-wrap { overflow-x: auto; }
-table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
-thead th {
-  padding: 9px 13px; text-align: left;
-  background: var(--surface2); border-bottom: 1px solid var(--border);
-  font-size: 10.5px; font-weight: 700; color: var(--text3);
-  text-transform: uppercase; letter-spacing: .06em;
-  white-space: nowrap; cursor: pointer; user-select: none;
-  position: sticky; top: 0;
-}
-thead th:hover { color: var(--text1); background: #E8EAEC; }
-thead th.asc::after { content: ' ↑'; color: var(--green-mid); }
-thead th.desc::after { content: ' ↓'; color: var(--red); }
-tbody td { padding: 9px 13px; border-bottom: 1px solid var(--border); color: var(--text1); white-space: nowrap; }
-tbody tr:last-child td { border-bottom: none; }
-tbody tr:hover td { background: #F7F9FA; }
-.mono { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--text2); }
-
-/* ── BADGES ──────────────────────────────────────────────── */
-.badge { display: inline-flex; align-items: center; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 999px; }
-.bg  { background: var(--green-pale);  color: var(--green); }
-.br  { background: var(--red-pale);    color: var(--red); }
-.ba  { background: var(--amber-pale);  color: var(--amber); }
-.bb  { background: var(--blue-pale);   color: var(--blue); }
-.bsl { background: var(--surface2);    color: var(--text2); }
-.err-chip { display: inline-block; font-size: 10px; font-weight: 600; padding: 1px 6px; border-radius: 4px; background: var(--red-pale); color: var(--red); margin: 1px 2px; }
-
-/* ── PROGRESS ─────────────────────────────────────────────── */
-.prog { background: var(--surface2); border-radius: 999px; height: 5px; overflow: hidden; }
-.prog-fill { height: 100%; border-radius: 999px; }
-
-/* ── CASCADE ──────────────────────────────────────────────── */
-.cascade-row {
-  display: flex; align-items: center; gap: 12px;
-  padding: 12px 18px; border-bottom: 1px solid var(--border);
-}
-.cascade-row:last-child { border-bottom: none; }
-.casc-ico { font-size: 16px; width: 22px; flex-shrink: 0; }
-.casc-lbl { font-size: 12.5px; font-weight: 500; color: var(--text2); min-width: 150px; }
-.casc-val { font-family: 'DM Mono', monospace; font-size: 20px; font-weight: 700; color: var(--text1); min-width: 80px; }
-.casc-pct { font-size: 11px; color: var(--text3); min-width: 52px; }
-.casc-bar { flex: 1; }
-
-/* ── TOOLBAR ─────────────────────────────────────────────── */
-.toolbar { display: flex; gap: 9px; padding: 12px 16px; flex-wrap: wrap; align-items: center; border-bottom: 1px solid var(--border); background: var(--surface2); }
-.srch {
-  flex: 1; min-width: 160px; padding: 7px 11px;
-  border-radius: 6px; border: 1px solid var(--border2);
-  background: var(--surface); font-size: 12.5px; color: var(--text1);
-  outline: none; font-family: 'DM Sans', sans-serif;
-  transition: border-color .15s;
-}
-.srch:focus { border-color: var(--green-mid); }
-.sel {
-  padding: 7px 11px; border-radius: 6px; border: 1px solid var(--border2);
-  background: var(--surface); font-size: 12.5px; color: var(--text2);
-  outline: none; cursor: pointer; min-width: 140px;
-  font-family: 'DM Sans', sans-serif;
-}
-.sel:focus { border-color: var(--green-mid); }
-
-/* ── CF DAILY SELECT ─────────────────────────────────────── */
-.daily-sel { width: 100%; max-width: 340px; padding: 9px 13px; border-radius: 8px; border: 1px solid var(--border2); background: var(--surface); font-size: 13px; outline: none; cursor: pointer; font-family: 'DM Sans', sans-serif; margin-bottom: 14px; }
-.daily-sel:focus { border-color: var(--green-mid); }
-
-/* ── FIELD BARS ──────────────────────────────────────────── */
-.fbar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 9px; }
-.fbar-lbl { font-size: 12px; color: var(--text2); min-width: 120px; }
-.fbar-prog { flex: 1; }
-.fbar-n { font-size: 12px; font-weight: 700; color: var(--text1); min-width: 38px; text-align: right; font-family: 'DM Mono', monospace; }
-.fbar-p { font-size: 11px; color: var(--text3); min-width: 44px; text-align: right; }
-
-/* ── RULE BOX ─────────────────────────────────────────────── */
-.rule-box { background: var(--surface2); border: 1px solid var(--border); border-left: 3px solid var(--green-mid); border-radius: 0 var(--r) var(--r) 0; padding: 13px 15px; font-size: 12px; color: var(--text2); line-height: 1.9; }
-.rule-box strong { color: var(--text1); font-weight: 600; }
-
-/* ── GENDER SPLIT ─────────────────────────────────────────── */
-.gender-row { margin-bottom: 14px; }
-.gender-label-row { display: flex; justify-content: space-between; margin-bottom: 5px; }
-.gender-label-row span { font-size: 13px; font-weight: 600; color: var(--text1); }
-.gender-label-row small { font-size: 12px; color: var(--text3); font-family: 'DM Mono', monospace; }
-
-/* ── OVERLAY ─────────────────────────────────────────────── */
-.overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.4); z-index: 150; }
-.overlay.open { display: block; }
-
-/* ── RESPONSIVE ──────────────────────────────────────────── */
-@media (max-width: 900px) {
-  .sidebar { transform: translateX(-100%); }
-  .sidebar.open { transform: translateX(0); }
-  .main { margin-left: 0; }
-  .menu-toggle { display: block; }
-  .content { padding: 16px; }
-  .kpi-grid { grid-template-columns: repeat(2, 1fr); }
-  .kpi-val { font-size: 22px; }
-  .two-col { grid-template-columns: 1fr; }
-  .top-banner { padding: 0 16px; }
-  .banner-title { font-size: 14px; }
-}
+:root{--green:#1A6B3C;--green-mid:#2E8B57;--green-light:#4CAF7D;--green-pale:#E8F5EE;--red:#C0392B;--red-light:#E74C3C;--red-pale:#FDECEA;--amber:#D4860B;--amber-pale:#FEF3CD;--blue:#1A5C8F;--blue-pale:#E3EEF7;--slate:#1E2D3D;--slate2:#2C3E50;--bg:#F4F6F8;--surface:#FFFFFF;--surface2:#F0F2F4;--border:#DDE1E7;--border2:#C8CDD6;--text1:#111827;--text2:#4B5563;--text3:#9CA3AF;--sidebar-w:256px;--header-h:72px;--r:8px;--r-lg:12px;--shadow-sm:0 1px 3px rgba(0,0,0,.06),0 1px 2px rgba(0,0,0,.04);--shadow:0 4px 12px rgba(0,0,0,.08),0 1px 3px rgba(0,0,0,.05)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}html{font-size:14px}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text1);min-height:100vh;line-height:1.5}
+.app{display:flex;min-height:100vh}
+.sidebar{width:var(--sidebar-w);background:var(--slate);position:fixed;top:0;left:0;bottom:0;display:flex;flex-direction:column;z-index:200;overflow-y:auto;transition:transform .25s ease;box-shadow:2px 0 16px rgba(0,0,0,.18)}
+.sidebar-logo{padding:22px 20px 18px;background:linear-gradient(135deg,var(--green) 0%,var(--green-mid) 60%,#3D6B5A 100%);border-bottom:1px solid rgba(255,255,255,.1)}
+.logo-eyebrow{font-size:9.5px;font-weight:600;letter-spacing:.14em;color:rgba(255,255,255,.6);text-transform:uppercase;margin-bottom:5px}
+.logo-name{font-size:16px;font-weight:700;color:#fff;margin-bottom:2px;line-height:1.25}
+.logo-project{font-size:11px;color:rgba(255,255,255,.55);line-height:1.4}
+.logo-divider{height:1px;background:rgba(255,255,255,.15);margin:12px 0 0}
+.nav-section{padding:14px 10px 6px}
+.nav-section-label{font-size:9.5px;font-weight:700;letter-spacing:.1em;color:rgba(255,255,255,.28);text-transform:uppercase;padding:0 10px;margin-bottom:4px}
+.nav-btn{display:flex;align-items:center;gap:9px;width:100%;padding:9px 10px;border-radius:var(--r);border:none;background:none;cursor:pointer;font-size:13px;font-weight:500;color:rgba(255,255,255,.55);transition:all .15s;text-align:left}
+.nav-btn:hover{background:rgba(255,255,255,.07);color:rgba(255,255,255,.9)}
+.nav-btn.active{background:rgba(255,255,255,.12);color:#fff}
+.nav-btn .ico{font-size:14px;width:20px;flex-shrink:0;text-align:center}
+.nav-btn .nbadge{margin-left:auto;font-size:10px;font-weight:700;padding:1px 7px;border-radius:999px;background:rgba(192,57,43,.35);color:#FF9B9B}
+.nav-btn.active .nbadge{background:rgba(255,255,255,.15);color:rgba(255,255,255,.9)}
+.sidebar-bottom{margin-top:auto;padding:14px 10px 10px;border-top:1px solid rgba(255,255,255,.08)}
+.filter-head{font-size:9.5px;font-weight:700;letter-spacing:.1em;color:rgba(255,255,255,.28);text-transform:uppercase;padding:0 6px;margin-bottom:8px}
+.date-mode-wrap{background:rgba(255,255,255,.06);border-radius:7px;padding:3px;display:flex;gap:2px;margin-bottom:10px}
+.dmode-btn{flex:1;padding:5px 4px;border-radius:5px;border:none;background:none;color:rgba(255,255,255,.4);font-size:10px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s;line-height:1.3;text-align:center}
+.dmode-btn.active{background:var(--green-mid);color:#fff}
+.dmode-label{font-size:10px;color:rgba(255,255,255,.3);text-align:center;margin-bottom:7px;font-style:italic}
+.fgroup{margin-bottom:9px}
+.fgroup label{font-size:11px;color:rgba(255,255,255,.4);display:block;margin-bottom:3px;padding-left:2px}
+.fgroup input[type=date],.fgroup select{width:100%;padding:7px 9px;border-radius:6px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.07);color:rgba(255,255,255,.85);font-size:12px;font-family:'DM Sans',sans-serif;outline:none;transition:border-color .15s}
+.fgroup input:focus,.fgroup select:focus{border-color:var(--green-light)}
+.fgroup select option{background:var(--slate2)}
+.filter-actions{display:flex;gap:7px;margin-top:12px}
+.btn-apply{flex:1;padding:8px 0;border-radius:6px;border:none;background:var(--green-mid);color:#fff;font-size:12px;font-weight:600;cursor:pointer;transition:background .15s;font-family:'DM Sans',sans-serif}
+.btn-apply:hover{background:var(--green)}
+.btn-reset{padding:8px 12px;border-radius:6px;border:1px solid rgba(255,255,255,.15);background:transparent;color:rgba(255,255,255,.5);font-size:12px;cursor:pointer;transition:all .15s;font-family:'DM Sans',sans-serif}
+.btn-reset:hover{background:rgba(255,255,255,.06);color:rgba(255,255,255,.8)}
+.rec-count{text-align:center;font-size:11px;color:rgba(255,255,255,.3);margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,255,255,.07)}
+.rec-count strong{color:var(--green-light);font-weight:600}
+.main{margin-left:var(--sidebar-w);flex:1;min-width:0;display:flex;flex-direction:column}
+.top-banner{background:linear-gradient(135deg,#1A6B3C 0%,#2E6B45 30%,#6B2E2E 70%,#C0392B 100%);padding:0 28px;height:var(--header-h);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.2)}
+.banner-left{display:flex;align-items:center;gap:14px}
+.menu-toggle{display:none;background:none;border:none;color:rgba(255,255,255,.8);font-size:20px;cursor:pointer;padding:4px}
+.banner-title{font-size:17px;font-weight:700;color:#fff;letter-spacing:-.01em}
+.banner-sub{font-size:11px;color:rgba(255,255,255,.55);margin-top:1px}
+.banner-right{display:flex;align-items:center;gap:12px}
+.file-chip{display:flex;align-items:center;gap:7px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:999px;padding:5px 13px;font-size:12px;font-weight:500;color:rgba(255,255,255,.85)}
+.file-chip .dot{width:7px;height:7px;border-radius:50%;background:#4CAF7D;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.upload-cta{display:flex;align-items:center;gap:7px;padding:8px 18px;border-radius:999px;background:rgba(255,255,255,.95);color:var(--green);font-size:13px;font-weight:700;cursor:pointer;border:none;transition:all .15s;font-family:'DM Sans',sans-serif;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+.upload-cta:hover{background:#fff;transform:translateY(-1px)}
+input[type=file]{display:none}
+.content{flex:1;padding:24px 28px}
+.pane{display:none;animation:fadeIn .2s ease}.pane.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+.upload-screen{min-height:calc(100vh - var(--header-h));display:flex;align-items:center;justify-content:center;padding:40px}
+.upload-card{background:var(--surface);border-radius:var(--r-lg);box-shadow:var(--shadow);max-width:480px;width:100%;overflow:hidden}
+.upload-card-header{background:linear-gradient(135deg,#1A6B3C 0%,#2E6B45 40%,#6B2E2E 75%,#C0392B 100%);padding:28px 32px 24px;text-align:center}
+.upload-card-header .big-icon{font-size:40px;margin-bottom:10px;display:block}
+.upload-card-header h2{font-size:20px;font-weight:700;color:#fff;margin-bottom:4px}
+.upload-card-header p{font-size:12.5px;color:rgba(255,255,255,.6)}
+.upload-card-body{padding:28px 32px}
+.drop-zone{border:2px dashed var(--border2);border-radius:var(--r);padding:28px 20px;text-align:center;cursor:pointer;transition:all .2s;margin-bottom:16px}
+.drop-zone:hover,.drop-zone.drag{border-color:var(--green-mid);background:var(--green-pale)}
+.drop-zone p{font-size:13px;color:var(--text2);margin-bottom:14px}
+.drop-zone .choose-btn{display:inline-flex;align-items:center;gap:7px;padding:9px 22px;border-radius:999px;background:var(--green-mid);color:#fff;font-size:13px;font-weight:600;cursor:pointer;border:none;font-family:'DM Sans',sans-serif}
+.drop-hint{font-size:11px;color:var(--text3);text-align:center}
+.sec-head{margin-bottom:18px}
+.sec-eyebrow{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin-bottom:3px}
+.sec-title{font-size:20px;font-weight:700;color:var(--text1);display:flex;align-items:center;gap:8px}
+.mode-pill{font-size:10px;font-weight:700;padding:3px 10px;border-radius:999px}
+.mode-screen{background:var(--blue-pale);color:var(--blue)}
+.mode-result{background:var(--amber-pale);color:var(--amber)}
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(148px,1fr));gap:12px;margin-bottom:16px}
+.kpi{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:16px 18px;box-shadow:var(--shadow-sm);position:relative;overflow:hidden}
+.kpi-stripe{position:absolute;top:0;left:0;right:0;height:3px}
+.kpi-ico{font-size:18px;margin-bottom:10px;display:block}
+.kpi-val{font-size:28px;font-weight:700;line-height:1;font-family:'DM Mono',monospace;letter-spacing:-.02em;margin-bottom:3px}
+.kpi-lbl{font-size:12px;font-weight:500;color:var(--text2)}
+.kpi-sub{font-size:11px;color:var(--text3);margin-top:2px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);box-shadow:var(--shadow-sm);overflow:hidden;margin-bottom:16px}
+.card-head{display:flex;align-items:center;justify-content:space-between;padding:13px 18px;border-bottom:1px solid var(--border)}
+.card-title{font-size:13px;font-weight:700;color:var(--text1)}
+.card-sub{font-size:11px;color:var(--text3)}
+.card-body{padding:18px}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px}
+.tbl-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+thead th{padding:9px 13px;text-align:left;background:var(--surface2);border-bottom:1px solid var(--border);font-size:10.5px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;white-space:nowrap;cursor:pointer;user-select:none}
+thead th:hover{color:var(--text1);background:#E8EAEC}
+thead th.asc::after{content:' ↑';color:var(--green-mid)}
+thead th.desc::after{content:' ↓';color:var(--red)}
+tbody td{padding:9px 13px;border-bottom:1px solid var(--border);color:var(--text1);white-space:nowrap}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover td{background:#F7F9FA}
+tbody tr.row-flagged td{background:#FFF5F5}
+tbody tr.row-flagged:hover td{background:#FFECEC}
+tbody tr.row-suspect td{background:#FFFBF0}
+tbody tr.row-suspect:hover td{background:#FFF5D6}
+.mono{font-family:'DM Mono',monospace;font-size:12px;color:var(--text2)}
+.badge{display:inline-flex;align-items:center;font-size:11px;font-weight:600;padding:2px 8px;border-radius:999px}
+.bg{background:var(--green-pale);color:var(--green)}.br{background:var(--red-pale);color:var(--red)}.ba{background:var(--amber-pale);color:var(--amber)}.bb{background:var(--blue-pale);color:var(--blue)}.bsl{background:var(--surface2);color:var(--text2)}
+.err-chip{display:inline-block;font-size:10px;font-weight:600;padding:1px 6px;border-radius:4px;background:var(--red-pale);color:var(--red);margin:1px 2px}
+.warn-chip{display:inline-block;font-size:10px;font-weight:600;padding:1px 6px;border-radius:4px;background:var(--amber-pale);color:var(--amber);margin:1px 2px}
+.prog{background:var(--surface2);border-radius:999px;height:5px;overflow:hidden}
+.prog-fill{height:100%;border-radius:999px}
+.cascade-row{display:flex;align-items:center;gap:12px;padding:12px 18px;border-bottom:1px solid var(--border)}
+.cascade-row:last-child{border-bottom:none}
+.casc-ico{font-size:16px;width:22px;flex-shrink:0}
+.casc-lbl{font-size:12.5px;font-weight:500;color:var(--text2);min-width:160px}
+.casc-val{font-family:'DM Mono',monospace;font-size:20px;font-weight:700;color:var(--text1);min-width:80px}
+.casc-pct{font-size:11px;color:var(--text3);min-width:52px}
+.casc-bar{flex:1}
+.toolbar{display:flex;gap:9px;padding:12px 16px;flex-wrap:wrap;align-items:center;border-bottom:1px solid var(--border);background:var(--surface2)}
+.srch{flex:1;min-width:160px;padding:7px 11px;border-radius:6px;border:1px solid var(--border2);background:var(--surface);font-size:12.5px;color:var(--text1);outline:none;font-family:'DM Sans',sans-serif;transition:border-color .15s}
+.srch:focus{border-color:var(--green-mid)}
+.sel{padding:7px 11px;border-radius:6px;border:1px solid var(--border2);background:var(--surface);font-size:12.5px;color:var(--text2);outline:none;cursor:pointer;min-width:140px;font-family:'DM Sans',sans-serif}
+.dl-btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:6px;border:1px solid var(--border2);background:var(--surface);font-size:12px;font-weight:600;color:var(--text2);cursor:pointer;transition:all .15s;font-family:'DM Sans',sans-serif}
+.dl-btn:hover{background:var(--green-pale);border-color:var(--green-mid);color:var(--green)}
+.daily-sel{width:100%;max-width:340px;padding:9px 13px;border-radius:8px;border:1px solid var(--border2);background:var(--surface);font-size:13px;outline:none;cursor:pointer;font-family:'DM Sans',sans-serif;margin-bottom:14px}
+.fbar-row{display:flex;align-items:center;gap:10px;margin-bottom:9px}
+.fbar-lbl{font-size:11.5px;color:var(--text2);min-width:150px}
+.fbar-prog{flex:1}.fbar-n{font-size:12px;font-weight:700;color:var(--text1);min-width:38px;text-align:right;font-family:'DM Mono',monospace}
+.fbar-p{font-size:11px;color:var(--text3);min-width:44px;text-align:right}
+.rule-box{background:var(--surface2);border:1px solid var(--border);border-left:3px solid var(--green-mid);border-radius:0 var(--r) var(--r) 0;padding:13px 15px;font-size:12px;color:var(--text2);line-height:1.9}
+.rule-box strong{color:var(--text1);font-weight:600}
+.gender-row{margin-bottom:14px}
+.gender-label-row{display:flex;justify-content:space-between;margin-bottom:5px}
+.gender-label-row span{font-size:13px;font-weight:600}
+.gender-label-row small{font-size:12px;color:var(--text3);font-family:'DM Mono',monospace}
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:150}
+.overlay.open{display:block}
+/* ── CAD→Test cascade styles ── */
+.tc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+.tc-card{border-radius:var(--r-lg);padding:16px 18px;border:1px solid var(--border);background:var(--surface);box-shadow:var(--shadow-sm);position:relative;overflow:hidden;cursor:pointer;transition:box-shadow .15s,transform .15s}
+.tc-card:hover{box-shadow:var(--shadow);transform:translateY(-1px)}
+.tc-card.tc-w15{border-top:3px solid var(--green-mid)}
+.tc-card.tc-w30{border-top:3px solid var(--amber)}
+.tc-card.tc-o30{border-top:3px solid var(--red-light)}
+.tc-card.tc-none{border-top:3px solid #9CA3AF}
+.tc-ico{font-size:18px;margin-bottom:8px;display:block}
+.tc-val{font-size:26px;font-weight:700;font-family:'DM Mono',monospace;letter-spacing:-.02em;line-height:1}
+.tc-pct{font-size:12px;font-weight:600;margin-top:2px}
+.tc-lbl{font-size:12px;color:var(--text2);margin-top:4px;font-weight:500}
+.tc-sub{font-size:11px;color:var(--text3);margin-top:2px}
+.tc-dl{font-size:11px;font-weight:600;margin-top:10px;padding:4px 10px;border-radius:5px;border:1px solid var(--border2);background:var(--surface2);cursor:pointer;transition:all .15s;font-family:'DM Sans',sans-serif;color:var(--text2);display:inline-flex;align-items:center;gap:5px}
+.tc-dl:hover{background:var(--green-pale);border-color:var(--green-mid);color:var(--green)}
+.tc-chart-bar{display:flex;align-items:center;gap:10px;margin-bottom:7px}
+.tc-chart-lbl{font-size:11.5px;color:var(--text2);min-width:115px}
+.tc-chart-seg{height:18px;border-radius:4px;transition:width .4s ease;min-width:2px}
+.tc-chart-n{font-size:11.5px;font-weight:700;color:var(--text1);font-family:'DM Mono',monospace;margin-left:4px}
+.tc-chart-p{font-size:10.5px;color:var(--text3);margin-left:2px}
+@media(max-width:900px){.tc-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:900px){.sidebar{transform:translateX(-100%)}.sidebar.open{transform:translateX(0)}.main{margin-left:0}.menu-toggle{display:block}.content{padding:16px}.kpi-grid{grid-template-columns:repeat(2,1fr)}.two-col{grid-template-columns:1fr}.top-banner{padding:0 16px}.banner-title{font-size:14px}}
 </style>
 </head>
 <body>
-
 <div class="overlay" id="overlay" onclick="closeSidebar()"></div>
-
 <div class="app">
-
-<!-- SIDEBAR -->
 <aside class="sidebar" id="sidebar">
   <div class="sidebar-logo">
     <div class="logo-eyebrow">FC-SDS Project</div>
     <div class="logo-name">HEED Bangladesh</div>
-    <div class="logo-project">in Partnership with icddr,b <br>Life Saving Facility &amp; Community Based Service Delivery Support Project Bangladesh</div>
+    <div class="logo-project">TB Control Programme<br>Life Saving Facility &amp; CBSD Support</div>
     <div class="logo-divider"></div>
   </div>
-
   <div class="nav-section">
     <div class="nav-section-label">Reports</div>
     <button class="nav-btn active" onclick="showTab('overview',this)"><span class="ico">📊</span> Overview</button>
@@ -376,16 +179,21 @@ tbody tr:hover td { background: #F7F9FA; }
     <button class="nav-btn" onclick="showTab('cf',this)"><span class="ico">👤</span> Community Facilitators</button>
     <button class="nav-btn" onclick="showTab('district',this)"><span class="ico">🗺️</span> District</button>
     <button class="nav-btn" onclick="showTab('garden',this)"><span class="ico">🌿</span> Tea Gardens</button>
+    <button class="nav-btn" onclick="showTab('tbcase',this)"><span class="ico">🏥</span> TB Cases</button>
     <button class="nav-btn" onclick="showTab('validation',this)">
       <span class="ico">⚠️</span> Validation
       <span class="nbadge" id="err-badge">0</span>
     </button>
   </div>
-
   <div class="sidebar-bottom">
-    <div class="filter-head">Filters</div>
-    <div class="fgroup"><label>From date</label><input type="date" id="d1"></div>
-    <div class="fgroup"><label>To date</label><input type="date" id="d2"></div>
+    <div class="filter-head">Date Filter</div>
+    <div class="dmode-label" id="dmode-label">Mode: Screening Date</div>
+    <div class="date-mode-wrap">
+      <button class="dmode-btn active" id="btn-screen" onclick="setMode('screen')">Screening<br>Date</button>
+      <button class="dmode-btn" id="btn-result" onclick="setMode('result')">Result/Test<br>Date</button>
+    </div>
+    <div class="fgroup"><label>From</label><input type="date" id="d1"></div>
+    <div class="fgroup"><label>To</label><input type="date" id="d2"></div>
     <div class="fgroup"><label>District</label><select id="fDist"><option value="">All districts</option></select></div>
     <div class="fgroup"><label>Community Facilitator</label><select id="fCF"><option value="">All CFs</option></select></div>
     <div class="filter-actions">
@@ -395,23 +203,17 @@ tbody tr:hover td { background: #F7F9FA; }
     <div class="rec-count" id="recCount">No data loaded</div>
   </div>
 </aside>
-
-<!-- MAIN -->
 <div class="main">
-  <!-- HEADER BANNER -->
   <header class="top-banner">
     <div class="banner-left">
       <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
-      <div class="banner-title-group">
+      <div>
         <div class="banner-title" id="bannerTitle">TB Screening Dashboard</div>
         <div class="banner-sub" id="bannerSub">Upload a CSV file to begin</div>
       </div>
     </div>
     <div class="banner-right">
-      <div class="file-chip" id="fileChip" style="display:none">
-        <div class="dot"></div>
-        <span id="fileName">—</span>
-      </div>
+      <div class="file-chip" id="fileChip" style="display:none"><div class="dot"></div><span id="fileName">—</span></div>
       <label class="upload-cta" for="csvIn">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
         Upload CSV
@@ -419,10 +221,7 @@ tbody tr:hover td { background: #F7F9FA; }
       <input type="file" id="csvIn" accept=".csv">
     </div>
   </header>
-
   <div class="content">
-
-    <!-- UPLOAD SCREEN -->
     <div id="upload-screen">
       <div class="upload-screen">
         <div class="upload-card">
@@ -439,28 +238,24 @@ tbody tr:hover td { background: #F7F9FA; }
                 Choose CSV file
               </label>
             </div>
-            <div class="drop-hint">or drag and drop anywhere on this card</div>
+            <div class="drop-hint">or drag and drop anywhere</div>
           </div>
         </div>
       </div>
     </div>
-
     <!-- OVERVIEW -->
     <div class="pane" id="pane-overview">
-      <div class="sec-head">
-        <div class="sec-eyebrow">Programme Summary</div>
-        <div class="sec-title">Overview</div>
-      </div>
-      <div class="kpi-grid" id="kpi-grid"></div>
+      <div class="sec-head"><div class="sec-eyebrow">Programme Summary</div><div class="sec-title">Overview <span id="ov-pill"></span></div></div>
+      <div class="kpi-grid" id="kpi-r1"></div>
+      <div class="kpi-grid" id="kpi-r2"></div>
       <div class="two-col">
         <div class="card"><div class="card-head"><span class="card-title">Screening Cascade</span></div><div id="cascade-body"></div></div>
-        <div class="card"><div class="card-head"><span class="card-title">Gender Distribution</span></div><div class="card-body" id="gender-body"></div></div>
+        <div class="card"><div class="card-head"><span class="card-title">TB Case Breakdown</span></div><div class="card-body" id="tb-breakdown"></div></div>
       </div>
     </div>
-
     <!-- DATE-WISE -->
     <div class="pane" id="pane-datewise">
-      <div class="sec-head"><div class="sec-eyebrow">Daily Records</div><div class="sec-title">Date-wise Screening Log</div></div>
+      <div class="sec-head"><div class="sec-eyebrow">Daily Records</div><div class="sec-title">Date-wise Log <span id="dw-pill"></span></div></div>
       <div class="card">
         <div class="tbl-wrap"><table id="dateTable">
           <thead><tr>
@@ -469,24 +264,25 @@ tbody tr:hover td { background: #F7F9FA; }
             <th onclick="srt('dateTable',2,true)">Presumptive</th>
             <th onclick="srt('dateTable',3,true)">Yield %</th>
             <th onclick="srt('dateTable',4,true)">CAD X-ray</th>
-            <th onclick="srt('dateTable',5,true)">X-ray</th>
-            <th onclick="srt('dateTable',6,true)">GXP</th>
-            <th onclick="srt('dateTable',7,true)">Diagnosed</th>
-            <th onclick="srt('dateTable',8,true)">Treated</th>
-            <th onclick="srt('dateTable',9,true)">Active CFs</th>
-            <th onclick="srt('dateTable',10,true)">Gardens</th>
-            <th onclick="srt('dateTable',11,true)">Errors</th>
+            <th onclick="srt('dateTable',5,true)">CXR Abn.</th>
+            <th onclick="srt('dateTable',6,true)">X-ray</th>
+            <th onclick="srt('dateTable',7,true)">GXP Sputum</th>
+            <th onclick="srt('dateTable',8,true)">Other Tests</th>
+            <th onclick="srt('dateTable',9,true)">Diagnosed</th>
+            <th onclick="srt('dateTable',10,true)">Treated</th>
+            <th onclick="srt('dateTable',11,true)">Active CFs</th>
+            <th onclick="srt('dateTable',12,true)">Gardens</th>
+            <th onclick="srt('dateTable',13,true)">Errors</th>
           </tr></thead>
           <tbody id="dateBody"></tbody>
         </table></div>
       </div>
     </div>
-
     <!-- CF -->
     <div class="pane" id="pane-cf">
       <div class="sec-head"><div class="sec-eyebrow">Field Staff</div><div class="sec-title">Community Facilitators</div></div>
       <div class="card">
-        <div class="card-head"><span class="card-title">CF Performance</span><span class="card-sub">Click any column header to sort</span></div>
+        <div class="card-head"><span class="card-title">CF Performance</span><div style="display:flex;align-items:center;gap:10px"><span class="card-sub">Click column headers to sort</span><button class="dl-btn" onclick="downloadCFTable()">⬇ Download Excel</button></div></div>
         <div class="toolbar"><input class="srch" id="cfSearch" placeholder="Search by name…" oninput="filterCF()"></div>
         <div class="tbl-wrap"><table id="cfTable">
           <thead><tr>
@@ -496,15 +292,18 @@ tbody tr:hover td { background: #F7F9FA; }
             <th onclick="srt('cfTable',3,true)">Screened</th>
             <th onclick="srt('cfTable',4,true)">Avg/day</th>
             <th onclick="srt('cfTable',5,true)">Presumptive</th>
-            <th onclick="srt('cfTable',6,true)">CAD</th>
-            <th onclick="srt('cfTable',7,true)">X-ray</th>
-            <th onclick="srt('cfTable',8,true)">GXP</th>
-            <th onclick="srt('cfTable',9,true)">Diagnosed</th>
-            <th onclick="srt('cfTable',10,false)">Avg Start</th>
-            <th onclick="srt('cfTable',11,false)">Avg End</th>
-            <th onclick="srt('cfTable',12,false)">Avg Session</th>
-            <th onclick="srt('cfTable',13,true)">Errors</th>
-            <th onclick="srt('cfTable',14,true)">Error %</th>
+            <th onclick="srt('cfTable',6,true)">Pres.%</th>
+            <th onclick="srt('cfTable',7,true)">Tested</th>
+            <th onclick="srt('cfTable',8,true)">CAD</th>
+            <th onclick="srt('cfTable',9,true)">CXR Abn.</th>
+            <th onclick="srt('cfTable',10,true)">X-ray</th>
+            <th onclick="srt('cfTable',11,true)">GXP</th>
+            <th onclick="srt('cfTable',12,true)">Diagnosed</th>
+            <th onclick="srt('cfTable',13,false)">Avg Start</th>
+            <th onclick="srt('cfTable',14,false)">Avg End</th>
+            <th onclick="srt('cfTable',15,false)">Avg Session</th>
+            <th onclick="srt('cfTable',16,true)">Errors</th>
+            <th onclick="srt('cfTable',17,true)">Error %</th>
           </tr></thead>
           <tbody id="cfBody"></tbody>
         </table></div>
@@ -512,14 +311,11 @@ tbody tr:hover td { background: #F7F9FA; }
       <div class="card">
         <div class="card-head"><span class="card-title">Daily Activity Log</span><span class="card-sub">Select a CF to view day-by-day detail</span></div>
         <div class="card-body">
-          <select class="daily-sel" id="cfDailySel" onchange="buildCFDaily()">
-            <option value="">— Select a Community Facilitator —</option>
-          </select>
+          <select class="daily-sel" id="cfDailySel" onchange="buildCFDaily()"><option value="">— Select a Community Facilitator —</option></select>
           <div id="cfDailyLog"></div>
         </div>
       </div>
     </div>
-
     <!-- DISTRICT -->
     <div class="pane" id="pane-district">
       <div class="sec-head"><div class="sec-eyebrow">Geographic</div><div class="sec-title">District Summary</div></div>
@@ -533,17 +329,40 @@ tbody tr:hover td { background: #F7F9FA; }
             <th onclick="srt('districtTable',4,true)">Presumptive</th>
             <th onclick="srt('districtTable',5,true)">Yield %</th>
             <th onclick="srt('districtTable',6,true)">CAD X-ray</th>
-            <th onclick="srt('districtTable',7,true)">X-ray</th>
-            <th onclick="srt('districtTable',8,true)">GXP</th>
-            <th onclick="srt('districtTable',9,true)">Diagnosed</th>
-            <th onclick="srt('districtTable',10,true)">Treated</th>
-            <th onclick="srt('districtTable',11,true)">Errors</th>
+            <th onclick="srt('districtTable',7,true)">CXR Abn.</th>
+            <th onclick="srt('districtTable',8,true)">X-ray</th>
+            <th onclick="srt('districtTable',9,true)">GXP</th>
+            <th onclick="srt('districtTable',10,true)">Diagnosed</th>
+            <th onclick="srt('districtTable',11,true)">Treated</th>
+            <th onclick="srt('districtTable',12,true)">Errors</th>
           </tr></thead>
           <tbody id="districtBody"></tbody>
         </table></div>
       </div>
-    </div>
 
+      <!-- CAD → Further Test Cascade -->
+      <div class="card" style="margin-top:4px">
+        <div class="card-head">
+          <div>
+            <span class="card-title">⏱ CAD Abnormal → Further Test Cascade</span>
+            <div class="card-sub" style="margin-top:3px">Days from CAD X-ray date to first downstream test (GXP, AFB, X-ray, etc.) — patients with CXR score ≥ 40</div>
+          </div>
+        </div>
+        <div class="card-body" style="padding-bottom:10px">
+          <div class="tc-grid" id="tc-kpi-grid"></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+            <div>
+              <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);margin-bottom:10px">By District</div>
+              <div id="tc-district-chart"></div>
+            </div>
+            <div>
+              <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);margin-bottom:10px">Cascade Overview</div>
+              <div id="tc-cascade-chart"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
     <!-- GARDEN -->
     <div class="pane" id="pane-garden">
       <div class="sec-head"><div class="sec-eyebrow">Facilities</div><div class="sec-title">Tea Gardens</div></div>
@@ -562,46 +381,79 @@ tbody tr:hover td { background: #F7F9FA; }
             <th onclick="srt('gardenTable',4,true)">Presumptive</th>
             <th onclick="srt('gardenTable',5,true)">Yield %</th>
             <th onclick="srt('gardenTable',6,true)">CAD X-ray</th>
-            <th onclick="srt('gardenTable',7,true)">X-ray</th>
-            <th onclick="srt('gardenTable',8,true)">GXP</th>
-            <th onclick="srt('gardenTable',9,true)">Diagnosed</th>
-            <th onclick="srt('gardenTable',10,true)">Treated</th>
-            <th onclick="srt('gardenTable',11,true)">Errors</th>
+            <th onclick="srt('gardenTable',7,true)">CXR Abn.</th>
+            <th onclick="srt('gardenTable',8,true)">X-ray</th>
+            <th onclick="srt('gardenTable',9,true)">GXP</th>
+            <th onclick="srt('gardenTable',10,true)">Diagnosed</th>
+            <th onclick="srt('gardenTable',11,true)">Treated</th>
+            <th onclick="srt('gardenTable',12,true)">Errors</th>
           </tr></thead>
           <tbody id="gardenBody"></tbody>
         </table></div>
       </div>
     </div>
-
+    <!-- TB CASES -->
+    <div class="pane" id="pane-tbcase">
+      <div class="sec-head"><div class="sec-eyebrow">Clinical</div><div class="sec-title">TB Cases <span id="tb-pill"></span></div></div>
+      <div class="kpi-grid" id="tb-kpi"></div>
+      <div class="card">
+        <div class="card-head">
+          <span class="card-title">TB Case Registry</span>
+          <button class="dl-btn" onclick="downloadTBCases()">⬇ Download Excel</button>
+        </div>
+        <div class="toolbar">
+          <input class="srch" id="tbSearch" placeholder="Search patient, PID, CF…" oninput="filterTB()">
+          <select class="sel" id="tbType" onchange="filterTB()"><option value="">All TB types</option><option>PTB</option><option>EPTB</option></select>
+          <select class="sel" id="tbBact" onchange="filterTB()"><option value="">All bact. status</option><option>B+</option><option>CD</option></select>
+          <select class="sel" id="tbFlag" onchange="filterTB()"><option value="">All rows</option><option value="1">Flagged only</option></select>
+        </div>
+        <div class="tbl-wrap"><table id="tbTable">
+          <thead><tr>
+            <th>Flags</th>
+            <th onclick="srt('tbTable',1,false)">Screen Date</th>
+            <th onclick="srt('tbTable',2,false)">Diagnosed Date</th>
+            <th>PID</th>
+            <th onclick="srt('tbTable',4,false)">Patient</th>
+            <th>Age</th><th>Gender</th>
+            <th onclick="srt('tbTable',7,false)">CF</th>
+            <th onclick="srt('tbTable',8,false)">District</th>
+            <th>Tea Garden</th>
+            <th>TB Type</th><th>Bact.Status</th><th>EPTB Site</th>
+            <th>CAD Done</th><th>CAD Score</th><th>X-ray</th>
+            <th>GXP Sputum</th><th>GXP Result</th>
+            <th>AFB</th><th>AFB Result</th>
+            <th>Truenat</th><th>Truenat Result</th>
+            <th>FNAC</th><th>Biopsy</th><th>ADA</th><th>GXP EPTB</th>
+            <th>Treatment</th>
+          </tr></thead>
+          <tbody id="tbBody"></tbody>
+        </table></div>
+      </div>
+    </div>
     <!-- VALIDATION -->
     <div class="pane" id="pane-validation">
       <div class="sec-head"><div class="sec-eyebrow">Data Quality</div><div class="sec-title">Validation Report</div></div>
       <div class="kpi-grid" id="val-kpi" style="grid-template-columns:repeat(auto-fit,minmax(160px,1fr))"></div>
       <div class="two-col">
-        <div class="card">
-          <div class="card-head"><span class="card-title">Error Frequency by Field</span></div>
-          <div class="card-body" id="val-bars"></div>
-        </div>
-        <div class="card">
-          <div class="card-head"><span class="card-title">Validation Rules</span></div>
+        <div class="card"><div class="card-head"><span class="card-title">Error Frequency by Field</span></div><div class="card-body" id="val-bars"></div></div>
+        <div class="card"><div class="card-head"><span class="card-title">Validation Rules</span></div>
           <div class="card-body">
             <div class="rule-box">
-              <strong>Gender</strong> — Male or Female only. Any other value = error.<br>
-              <strong>Diabetes</strong> — Cannot be blank.<br>
-              <strong>Cough</strong> — Cannot be blank.<br>
-              <strong>Cough Duration</strong> — Required if Cough = Yes. Max 180 days.<br>
-              <strong>Fever</strong> — Cannot be blank.<br>
-              <strong>Fever Duration</strong> — Required if Fever = Yes. Max 180 days.<br>
-              <strong>Weight Loss</strong> — Cannot be blank.<br>
-              <strong>Night Sweats</strong> — Yes/No for age ≥ 15. Must be blank for age &lt; 15.<br>
-              <strong>Playfulness</strong> — "Yes" only valid for age &lt; 15. Error if Yes and age ≥ 15.<br>
-              <strong>Swelling / Gland</strong> — Cannot be blank.
+              <strong>Gender</strong> — Male or Female only<br>
+              <strong>Diabetes / Cough / Fever / Weight Loss / Swelling</strong> — Cannot be blank<br>
+              <strong>Cough Duration</strong> — Required if Cough=Yes, max 180 days<br>
+              <strong>Fever Duration</strong> — Required if Fever=Yes, max 180 days<br>
+              <strong>Night Sweats</strong> — Yes/No for age ≥15; blank for age &lt;15<br>
+              <strong>Playfulness</strong> — "Yes" only valid for age &lt;15<br>
+              <strong>Child Diabetes</strong> — Age ≤15 with Diabetes=Yes is flagged<br>
+              <strong>Advised/Done mismatch</strong> — Test Done=Yes but Advised=No<br>
+              <strong>GXP Sputum + Cough=No</strong> — GXP Sputum done without reported cough
             </div>
           </div>
         </div>
       </div>
       <div class="card" style="margin-bottom:16px">
-        <div class="card-head"><span class="card-title">Errors by Community Facilitator</span></div>
+        <div class="card-head"><span class="card-title">Errors by CF</span></div>
         <div class="tbl-wrap"><table id="cfErrTable">
           <thead><tr>
             <th onclick="srt('cfErrTable',0,false)">CF Name</th>
@@ -615,16 +467,19 @@ tbody tr:hover td { background: #F7F9FA; }
         </table></div>
       </div>
       <div class="card">
-        <div class="card-head"><span class="card-title">Flagged Records</span><span class="card-sub">Up to 300 shown · use filters to narrow</span></div>
+        <div class="card-head">
+          <span class="card-title">Flagged Records</span>
+          <div style="display:flex;gap:8px">
+            <button class="dl-btn" onclick="downloadErrors('__all__')">⬇ All Errors</button>
+            <button class="dl-btn" onclick="toggleErrPanel()">⬇ By Error Type</button>
+          </div>
+        </div>
+        <div id="errTypePanel" style="display:none;padding:14px 18px;border-bottom:1px solid var(--border);background:var(--surface2)">
+          <div id="errTypeList"></div>
+        </div>
         <div class="toolbar">
           <input class="srch" id="valSearch" placeholder="Search PID, patient, CF…" oninput="filterVal()">
-          <select class="sel" id="valField" onchange="filterVal()">
-            <option value="">All error types</option>
-            <option>Gender</option><option>Diabetes</option><option>Cough</option>
-            <option>Cough Duration</option><option>Fever</option><option>Fever Duration</option>
-            <option>Weight Loss</option><option>Night Sweats</option>
-            <option>Playfulness</option><option>Swelling</option>
-          </select>
+          <select class="sel" id="valField" onchange="filterVal()"><option value="">All error types</option></select>
           <select class="sel" id="valDist" onchange="filterVal()"><option value="">All districts</option></select>
         </div>
         <div class="tbl-wrap"><table id="valTable">
@@ -638,79 +493,286 @@ tbody tr:hover td { background: #F7F9FA; }
         </table></div>
       </div>
     </div>
-
-  </div><!-- /content -->
-</div><!-- /main -->
-</div><!-- /app -->
-
+  </div>
+</div>
+</div>
 <script>
-let ALL=[], FILTERED=[], CFD={};
-const TABS=['overview','datewise','cf','district','garden','validation'];
-const TITLES={overview:'Overview',datewise:'Date-wise Log',cf:'Community Facilitators',district:'District',garden:'Tea Gardens',validation:'Validation Report'};
-const sortSt={};
+// ════════════════════════════════════════════════
+// COLUMN INDICES (raw CSV, 0-based)
+// ════════════════════════════════════════════════
+const C={
+  SCREEN_DT:0,DIVISION:1,DISTRICT:2,FACILITY:3,FAC_TYPE:4,CF:5,PLACE:6,
+  PATIENT:7,GENDER:8,AGE_Y:9,AGE_M:10,AGE_D:11,
+  DIABETES:12,COUGH:13,COUGH_DUR:14,FEVER:15,FEVER_DUR:16,
+  WEIGHT_LOSS:17,NIGHT_SWEATS:18,PLAYFULNESS:19,GLAND:20,CONTACT:21,
+  PRESUMPTIVE:22,DOB:23,GUARDIAN:24,PHONE:25,ADDRESS:26,
+  WEIGHT:27,HEIGHT:28,SEEN_PHYS:29,PRES_PHYS:30,PID:31,BARCODE:32,APPROVED:33,
+  // CAD
+  CAD_ADV:34,CAD_DONE:35,CAD_DATE:36,CAD_METHOD:37,CAD_RESULT:38,
+  // X-Ray
+  XRAY_ADV:39,XRAY_DONE:40,XRAY_DATE:41,XRAY_RESULT:42,
+  // MT
+  MT_ADV:43,MT_DONE:44,MT_DATE:45,MT_RESULT:46,
+  // GXP Stool
+  STOOL_ADV:47,STOOL_DONE:48,STOOL_DATE:49,STOOL_RESULT:50,
+  // GXP Sputum
+  GXP_ADV:51,GXP_DONE:52,GXP_DATE:53,GXP_RESULT:54,
+  // Induced Sputum
+  IND_ADV:55,IND_DONE:56,IND_DATE:57,IND_RESULT:58,
+  // GL
+  GL_ADV:59,GL_DONE:60,GL_DATE:61,GL_RESULT:62,
+  // GXP EPTB Ultra
+  EPTB_ADV:63,EPTB_DONE:64,EPTB_DATE:65,EPTB_SPEC:66,EPTB_SPEC_OTH:67,EPTB_RESULT:68,
+  // Truenat
+  TRUENAT_ADV:69,TRUENAT_DONE:70,TRUENAT_DATE:71,TRUENAT_RESULT:72,
+  // AFB
+  AFB_ADV:73,AFB_DONE:74,AFB_DATE:75,AFB_RESULT:76,
+  // FNAC
+  FNAC_ADV:77,FNAC_DONE:78,FNAC_DATE:79,FNAC_RESULT:80,
+  // Biopsy
+  BIOPSY_ADV:81,BIOPSY_DONE:82,BIOPSY_DATE:83,BIOPSY_RESULT:84,
+  // ADA
+  ADA_ADV:85,ADA_DONE:86,ADA_DATE:87,ADA_RESULT:88,
+  OTHER_TEST:89,DIAG_ENTRY_DATE:90,DIAG_DATE:91,
+  TB_DIAG:92,TB_TYPE:93,BACT_STATUS:94,EPTB_SITE:95,EPTB_SITE_OTH:96,
+  TX_STARTED:97,TX_REASON:98,
+  DOTS_DIV:99,DOTS_DIST:100,DOTS_UPZ:101,DOTS_NAME:102,OTHER_DOTS:103,
+  TR_NUM:104,ETB_ID:105,TX_INIT_DATE:106,TX_OUTCOME:107,DATE_DECISION:108,REMARKS:109
+};
 
-// ── SIDEBAR ──────────────────────────────────────────────────
-function toggleSidebar(){ document.getElementById('sidebar').classList.toggle('open'); document.getElementById('overlay').classList.toggle('open'); }
-function closeSidebar(){ document.getElementById('sidebar').classList.remove('open'); document.getElementById('overlay').classList.remove('open'); }
+// All test date column indices (for result-date filtering, excluding diag_date here)
+const TEST_DATE_COLS=[C.CAD_DATE,C.XRAY_DATE,C.MT_DATE,C.STOOL_DATE,C.GXP_DATE,
+  C.IND_DATE,C.GL_DATE,C.EPTB_DATE,C.TRUENAT_DATE,C.AFB_DATE,C.FNAC_DATE,C.BIOPSY_DATE,C.ADA_DATE];
 
-// ── FILE ────────────────────────────────────────────────────
-document.getElementById('csvIn').addEventListener('change', e=>{ if(e.target.files[0]) loadFile(e.target.files[0]); });
+// Done columns for "any tested" check
+const DONE_COLS=[C.CAD_DONE,C.XRAY_DONE,C.MT_DONE,C.STOOL_DONE,C.GXP_DONE,
+  C.IND_DONE,C.GL_DONE,C.EPTB_DONE,C.TRUENAT_DONE,C.AFB_DONE,C.FNAC_DONE,C.BIOPSY_DONE,C.ADA_DONE];
+
+const ADV_DONE=[
+  {name:'CAD X-Ray',adv:C.CAD_ADV,done:C.CAD_DONE},
+  {name:'X-Ray',adv:C.XRAY_ADV,done:C.XRAY_DONE},
+  {name:'MT',adv:C.MT_ADV,done:C.MT_DONE},
+  {name:'GXP Stool',adv:C.STOOL_ADV,done:C.STOOL_DONE},
+  {name:'GXP Sputum',adv:C.GXP_ADV,done:C.GXP_DONE},
+  {name:'Induced Sputum',adv:C.IND_ADV,done:C.IND_DONE},
+  {name:'GL',adv:C.GL_ADV,done:C.GL_DONE},
+  {name:'GXP EPTB Ultra',adv:C.EPTB_ADV,done:C.EPTB_DONE},
+  {name:'Truenat',adv:C.TRUENAT_ADV,done:C.TRUENAT_DONE},
+  {name:'AFB',adv:C.AFB_ADV,done:C.AFB_DONE},
+  {name:'FNAC',adv:C.FNAC_ADV,done:C.FNAC_DONE},
+  {name:'Biopsy',adv:C.BIOPSY_ADV,done:C.BIOPSY_DONE},
+  {name:'ADA',adv:C.ADA_ADV,done:C.ADA_DONE}
+];
+
+// STATE
+let ALL=[],FILTERED=[],CFD={},RAW_HEADERS=[];
+let DATE_MODE='screen';
+const SS={};
+
+// ── SIDEBAR UTILS ────────────────────────────────
+function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.getElementById('overlay').classList.toggle('open');}
+function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.getElementById('overlay').classList.remove('open');}
+
+function setMode(m){
+  DATE_MODE=m;
+  document.getElementById('btn-screen').classList.toggle('active',m==='screen');
+  document.getElementById('btn-result').classList.toggle('active',m==='result');
+  document.getElementById('dmode-label').textContent='Mode: '+(m==='screen'?'Screening Date':'Result / Test Date');
+}
+
+// ── FILE LOAD ────────────────────────────────────
+document.getElementById('csvIn').addEventListener('change',e=>{if(e.target.files[0])loadFile(e.target.files[0]);});
 const dz=document.getElementById('dropZone');
-if(dz){ dz.addEventListener('dragover',e=>{e.preventDefault();dz.classList.add('drag');}); dz.addEventListener('dragleave',()=>dz.classList.remove('drag')); dz.addEventListener('drop',e=>{e.preventDefault();dz.classList.remove('drag');if(e.dataTransfer.files[0])loadFile(e.dataTransfer.files[0]);}); }
+dz.addEventListener('dragover',e=>{e.preventDefault();dz.classList.add('drag');});
+dz.addEventListener('dragleave',()=>dz.classList.remove('drag'));
+dz.addEventListener('drop',e=>{e.preventDefault();dz.classList.remove('drag');if(e.dataTransfer.files[0])loadFile(e.dataTransfer.files[0]);});
 
 function loadFile(file){
   Papa.parse(file,{header:false,skipEmptyLines:true,complete:r=>{
-    const raw=r.data[0]; const rows=r.data.slice(1);
+    RAW_HEADERS=r.data[0];
+    // Resolve duplicate Duration columns by position
     const hIdx={};
-    raw.forEach((h,i)=>{const k=h.trim();if(hIdx[k]===undefined)hIdx[k]=i;else if(hIdx[k+'_2']===undefined)hIdx[k+'_2']=i;});
-    const CD=hIdx['Duration'], FD=hIdx['Duration_2'];
-    const objs=rows.map(row=>{
-      const o={};
-      raw.forEach((h,i)=>{if(o[h.trim()]===undefined)o[h.trim()]=row[i]||'';});
-      o._cd=row[CD]||''; o._fd=row[FD]||'';
-      return o;
+    RAW_HEADERS.forEach((h,i)=>{const k=h.trim();if(hIdx[k]===undefined)hIdx[k]=i;else if(hIdx[k+'_2']===undefined)hIdx[k+'_2']=i;});
+    const CD_I=hIdx['Duration'],FD_I=hIdx['Duration_2'];
+    const rows=r.data.slice(1).map(row=>{
+      row._cd=row[CD_I]||'';
+      row._fd=row[FD_I]||'';
+      return row;
     });
-    init(objs,file.name);
+    initData(rows,file.name);
   }});
 }
 
-function tv(r,c){return(r[c]||'').toString().trim();}
-function tn(s){const x=parseFloat(s);return isNaN(x)?null:x;}
+// ── CORE HELPERS ─────────────────────────────────
+function cv(r,i){return(r[i]||'').toString().trim();}
+function cn(r,i){const x=parseFloat(r[i]);return isNaN(x)?null:x;}
 function pct(n,d){return d>0?((n/d)*100).toFixed(1)+'%':'0%';}
-function cnt(arr,c,v){return arr.filter(r=>tv(r,c)===v).length;}
+function pd(s){if(!s||!s.trim())return null;const d=new Date(s);return isNaN(d)?null:d;}
+function ds(d){return d?d.toISOString().slice(0,10):'';}
 function fmtT(dt){return dt?dt.toTimeString().slice(0,5):'—';}
-function fmtD(m){if(!m||m<0)return'—';const h=Math.floor(m/60),mn=Math.round(m%60);return h>0?`${h}h ${mn}m`:`${mn}m`;}
+function fmtDur(m){if(!m||m<0)return'—';const h=Math.floor(m/60),mn=Math.round(m%60);return h>0?`${h}h ${mn}m`:`${mn}m`;}
+function b(n,cls){return n>0?`<span class="badge ${cls}">${n}</span>`:`<span style="color:var(--text3)">0</span>`;}
+function chk(){return`<span style="color:var(--green);font-weight:700">✓</span>`;}
+function uDays(rows){return new Set(rows.filter(r=>r._sds).map(r=>r._sds)).size;}
 
+// MTB result classification
+// POSITIVE (B+): "MTB detected, Rif resistance not detected", "MTB Trace Detected", or any value
+//   containing "mtb detected" but NOT "mtb not detected"
+// NEGATIVE (CD): "MTB Not Detected", "Negative", blank, etc.
+function isMTBPositive(val){
+  if(!val||!val.trim())return false;
+  const v=val.toLowerCase().trim();
+  if(v==='')return false;
+  // Explicitly negative patterns
+  if(v.includes('mtb not detected'))return false;
+  if(v==='negative'||v==='not detected'||v==='no'||v.includes('not found'))return false;
+  // Explicitly positive patterns
+  if(v.includes('mtb detected'))return true;       // covers "MTB detected, Rif resistance not detected"
+  if(v.includes('mtb trace detected'))return true; // trace detected = positive
+  // For AFB / non-GXP tests: any non-blank non-negative result = positive
+  if(v.includes('positive')||v.includes('seen')||v.includes('present'))return true;
+  return false;
+}
+// Alias used throughout
+const isPositive=isMTBPositive;
+
+// ── VALIDATION LOGIC ─────────────────────────────
 function validate(r){
-  const age=tn(tv(r,'Age-Year')); const errs=[];
-  const g=tv(r,'Gender'); if(g!=='Male'&&g!=='Female') errs.push('Gender');
-  if(tv(r,'Diabetes History')==='') errs.push('Diabetes');
-  const cough=tv(r,'Cough'); if(cough==='') errs.push('Cough');
-  const cd=tn(r._cd); if(cough==='Yes'&&(cd===null||cd>180)) errs.push('Cough Duration');
-  const fever=tv(r,'Fever'); if(fever==='') errs.push('Fever');
-  const fd=tn(r._fd); if(fever==='Yes'&&(fd===null||fd>180)) errs.push('Fever Duration');
-  if(tv(r,'Weight Loss')==='') errs.push('Weight Loss');
-  const ns=tv(r,'Night Sweats');
-  if(age!==null){if(age>=15&&ns!=='Yes'&&ns!=='No')errs.push('Night Sweats');if(age<15&&ns!=='')errs.push('Night Sweats');}
-  if(age!==null&&age>=15&&tv(r,'Reduced Playfulness')==='Yes') errs.push('Playfulness');
-  if(tv(r,'Swelling or Gland')==='') errs.push('Swelling');
+  const age=cn(r,C.AGE_Y);
+  const errs=[];
+  const g=cv(r,C.GENDER);
+  if(g!=='Male'&&g!=='Female')errs.push('Gender');
+  if(cv(r,C.DIABETES)==='')errs.push('Diabetes');
+  const cough=cv(r,C.COUGH);
+  if(cough==='')errs.push('Cough');
+  const cd=parseFloat(r._cd);
+  if(cough==='Yes'&&(isNaN(cd)||cd>180))errs.push('Cough Duration');
+  const fever=cv(r,C.FEVER);
+  if(fever==='')errs.push('Fever');
+  const fd=parseFloat(r._fd);
+  if(fever==='Yes'&&(isNaN(fd)||fd>180))errs.push('Fever Duration');
+  if(cv(r,C.WEIGHT_LOSS)==='')errs.push('Weight Loss');
+  const ns=cv(r,C.NIGHT_SWEATS);
+  if(age!==null){
+    if(age>=15&&ns!=='Yes'&&ns!=='No')errs.push('Night Sweats');
+    if(age<15&&ns!=='')errs.push('Night Sweats');
+  }
+  if(age!==null&&age>=15&&cv(r,C.PLAYFULNESS)==='Yes')errs.push('Playfulness');
+  if(cv(r,C.GLAND)==='')errs.push('Swelling');
+  if(age!==null&&age<=15&&cv(r,C.DIABETES)==='Yes')errs.push('Child Diabetes');
+  ADV_DONE.forEach(p=>{if(cv(r,p.adv)==='No'&&cv(r,p.done)==='Yes')errs.push(p.name+' Advise Error');});
+  if(cv(r,C.GXP_DONE)==='Yes'&&cv(r,C.COUGH)==='No')errs.push('GXP Sputum Without Cough');
   return errs;
 }
 
-function init(rows,fname){
+// ── TB CASE FLAGS ─────────────────────────────────
+function tbFlags(r){
+  const flags=[];
+  const tbType=cv(r,C.TB_TYPE),bact=cv(r,C.BACT_STATUS);
+  const sDt=r._sdt,diagDt=pd(cv(r,C.DIAG_DATE));
+
+  // Test dates must not be BEFORE screening date (same day is fine)
+  // r._sds is already the date-only string of screening datetime
+  const testDateDefs=[
+    {n:'CAD',i:C.CAD_DATE},{n:'X-Ray',i:C.XRAY_DATE},{n:'GXP Sputum',i:C.GXP_DATE},
+    {n:'AFB',i:C.AFB_DATE},{n:'Truenat',i:C.TRUENAT_DATE},{n:'MT',i:C.MT_DATE},
+    {n:'GXP Stool',i:C.STOOL_DATE},{n:'FNAC',i:C.FNAC_DATE},
+    {n:'Biopsy',i:C.BIOPSY_DATE},{n:'ADA',i:C.ADA_DATE},{n:'GXP EPTB',i:C.EPTB_DATE}
+  ];
+  const screenDateOnly=r._sds; // already YYYY-MM-DD string
+  testDateDefs.forEach(({n,i})=>{
+    const dt=pd(cv(r,i));
+    if(dt&&screenDateOnly){
+      const testDateOnly=ds(dt); // YYYY-MM-DD string
+      if(testDateOnly<screenDateOnly)flags.push(`${n} date before screening`);
+      // same date (testDateOnly===screenDateOnly) is allowed — no flag
+    }
+  });
+
+  if(diagDt&&screenDateOnly&&ds(diagDt)<screenDateOnly)flags.push('Diagnosed date before screening');
+
+  // Diagnosed date must be after or equal to last test date
+  if(diagDt){
+    testDateDefs.forEach(({n,i})=>{
+      const dt=pd(cv(r,i));
+      if(dt&&ds(diagDt)<ds(dt))flags.push(`Diagnosed before ${n} test date`);
+    });
+  }
+
+  // No test but diagnosed
+  if(!r._anyTested)flags.push('Diagnosed with no test done');
+
+  // PTB bact status
+  if(tbType==='PTB'){
+    if(bact!=='B+'&&bact!=='CD'&&bact!=='')flags.push('Invalid bacteriological status for PTB');
+    if(bact==='B+'){
+      const ok=[
+        {d:C.GXP_DONE,res:C.GXP_RESULT},{d:C.STOOL_DONE,res:C.STOOL_RESULT},
+        {d:C.AFB_DONE,res:C.AFB_RESULT},{d:C.TRUENAT_DONE,res:C.TRUENAT_RESULT}
+      ].some(p=>cv(r,p.d)==='Yes'&&isPositive(cv(r,p.res)));
+      if(!ok)flags.push('B+ but no confirmatory positive test result (GXP/AFB/Truenat)');
+    }
+    if(bact==='CD'){
+      const hasPos=[
+        {d:C.GXP_DONE,res:C.GXP_RESULT},{d:C.AFB_DONE,res:C.AFB_RESULT},
+        {d:C.TRUENAT_DONE,res:C.TRUENAT_RESULT}
+      ].some(p=>cv(r,p.d)==='Yes'&&isPositive(cv(r,p.res)));
+      if(hasPos)flags.push('CD but has positive bacteriological test result');
+    }
+  }
+
+  // EPTB B+ must have FNAC/Biopsy/ADA/GXP EPTB confirmation
+  if(tbType==='EPTB'&&bact==='B+'){
+    const ok=[
+      {d:C.FNAC_DONE,res:C.FNAC_RESULT},{d:C.BIOPSY_DONE,res:C.BIOPSY_RESULT},
+      {d:C.ADA_DONE,res:C.ADA_RESULT},{d:C.EPTB_DONE,res:C.EPTB_RESULT}
+    ].some(p=>cv(r,p.d)==='Yes'&&isPositive(cv(r,p.res)));
+    if(!ok)flags.push('EPTB B+ but no confirmatory test (FNAC/Biopsy/ADA/GXP EPTB)');
+  }
+
+  if(r._suspect)flags.push('Suspicious: same name & DOB found in dataset');
+  return flags;
+}
+
+// ── INIT ─────────────────────────────────────────
+function initData(rows,fname){
   rows.forEach(r=>{
-    const raw=tv(r,'Screening Date & Time'); r._dt=null; r._ds='';
-    if(raw){const d=new Date(raw);if(!isNaN(d)){r._dt=d;r._ds=d.toISOString().slice(0,10);}}
+    r._sdt=pd(cv(r,C.SCREEN_DT));
+    r._sds=ds(r._sdt);
+    r._diagDt=pd(cv(r,C.DIAG_DATE));
+    r._diagDs=ds(r._diagDt);
+    // All test dates as array
+    r._testDates=TEST_DATE_COLS.map(i=>pd(cv(r,i))).filter(Boolean);
+    r._anyTested=DONE_COLS.some(i=>cv(r,i)==='Yes');
     r._errs=validate(r);
   });
-  ALL=rows; FILTERED=rows;
-  const dists=[...new Set(rows.map(r=>tv(r,'District')).filter(Boolean))].sort();
-  const cfs=[...new Set(rows.map(r=>tv(r,'Name of FA')).filter(Boolean))].sort();
-  ['fDist','garDist','valDist'].forEach(id=>{ const el=document.getElementById(id); if(el){el.innerHTML='<option value="">All districts</option>'; dists.forEach(d=>el.innerHTML+=`<option>${d}</option>`);} });
-  ['fCF'].forEach(id=>{ const el=document.getElementById(id); if(el){el.innerHTML='<option value="">All CFs</option>'; cfs.forEach(c=>el.innerHTML+=`<option>${c}</option>`);} });
-  const cfSel=document.getElementById('cfDailySel'); if(cfSel){cfSel.innerHTML='<option value="">— Select a CF —</option>'; cfs.forEach(c=>cfSel.innerHTML+=`<option>${c}</option>`);}
-  const dates=rows.filter(r=>r._dt).map(r=>r._dt).sort((a,b)=>a-b);
-  if(dates.length){document.getElementById('d1').value=dates[0].toISOString().slice(0,10);document.getElementById('d2').value=dates[dates.length-1].toISOString().slice(0,10);}
+  ALL=rows; FILTERED=rows; window.FILTERED_BASE=rows;
+  // Dropdowns
+  const dists=[...new Set(rows.map(r=>cv(r,C.DISTRICT)).filter(Boolean))].sort();
+  const cfs=[...new Set(rows.map(r=>cv(r,C.CF)).filter(Boolean))].sort();
+  ['fDist','garDist','valDist'].forEach(id=>{
+    const el=document.getElementById(id);if(!el)return;
+    el.innerHTML='<option value="">All districts</option>';
+    dists.forEach(d=>el.innerHTML+=`<option>${d}</option>`);
+  });
+  const fCF=document.getElementById('fCF');
+  fCF.innerHTML='<option value="">All CFs</option>';
+  cfs.forEach(cf=>fCF.innerHTML+=`<option>${cf}</option>`);
+  const cfSel=document.getElementById('cfDailySel');
+  cfSel.innerHTML='<option value="">— Select a CF —</option>';
+  cfs.forEach(cf=>cfSel.innerHTML+=`<option>${cf}</option>`);
+  // Validation field filter options (dynamic)
+  const allErrTypes=new Set();
+  rows.forEach(r=>r._errs.forEach(e=>allErrTypes.add(e)));
+  const vf=document.getElementById('valField');
+  vf.innerHTML='<option value="">All error types</option>';
+  [...allErrTypes].sort().forEach(e=>vf.innerHTML+=`<option>${e}</option>`);
+  // Default date range from screening dates
+  const sdates=rows.filter(r=>r._sdt).map(r=>r._sdt).sort((a,b)=>a-b);
+  if(sdates.length){
+    document.getElementById('d1').value=ds(sdates[0]);
+    document.getElementById('d2').value=ds(sdates[sdates.length-1]);
+  }
   document.getElementById('upload-screen').style.display='none';
   document.getElementById('fileChip').style.display='flex';
   document.getElementById('fileName').textContent=fname.replace('.csv','');
@@ -718,30 +780,78 @@ function init(rows,fname){
   applyFilters();
 }
 
+// ── FILTERS ───────────────────────────────────────
 function applyFilters(){
   const d1=document.getElementById('d1').value,d2=document.getElementById('d2').value;
   const dist=document.getElementById('fDist').value,cf=document.getElementById('fCF').value;
-  FILTERED=ALL.filter(r=>{
-    if(d1&&r._ds&&r._ds<d1)return false;
-    if(d2&&r._ds&&r._ds>d2)return false;
-    if(dist&&tv(r,'District')!==dist)return false;
-    if(cf&&tv(r,'Name of FA')!==cf)return false;
-    return true;
-  });
+
+  // In result mode we need TWO filtered sets:
+  // 1. FILTERED = rows where any test date OR diag date is in range (for test-based tabs)
+  // 2. ALL rows always available for Screened/Presumptive counts (they have no result date)
+  // We implement this by: result mode filters by test/diag dates for test-tabs,
+  // but Overview always shows Screened/Presumptive from the FULL date-filtered set
+  // using a separate pass that only applies district/CF filters (not date).
+
+  if(DATE_MODE==='screen'){
+    FILTERED=ALL.filter(r=>{
+      if(d1&&r._sds&&r._sds<d1)return false;
+      if(d2&&r._sds&&r._sds>d2)return false;
+      if(dist&&cv(r,C.DISTRICT)!==dist)return false;
+      if(cf&&cv(r,C.CF)!==cf)return false;
+      return true;
+    });
+    window.FILTERED_BASE=FILTERED;
+  } else {
+    // Result mode:
+    // FILTERED_BASE = filtered by SCREENING DATE (same d1/d2) + district/CF
+    //   → used for Screened, Presumptive, Days, Errors (no result date for these)
+    // FILTERED = filtered by any TEST DATE or DIAG DATE in range + district/CF
+    //   → used for test counts, diagnosed, treated
+    window.FILTERED_BASE=ALL.filter(r=>{
+      if(d1&&r._sds&&r._sds<d1)return false;
+      if(d2&&r._sds&&r._sds>d2)return false;
+      if(dist&&cv(r,C.DISTRICT)!==dist)return false;
+      if(cf&&cv(r,C.CF)!==cf)return false;
+      return true;
+    });
+    // FILTERED = rows where any test date OR diagnosed date falls in range
+    FILTERED=ALL.filter(r=>{
+      if(dist&&cv(r,C.DISTRICT)!==dist)return false;
+      if(cf&&cv(r,C.CF)!==cf)return false;
+      if(d1||d2){
+        const diagInRange=r._diagDs&&(!d1||r._diagDs>=d1)&&(!d2||r._diagDs<=d2);
+        const testInRange=r._testDates.some(dt=>{const s=ds(dt);return(!d1||s>=d1)&&(!d2||s<=d2);});
+        if(!diagInRange&&!testInRange)return false;
+      }
+      return true;
+    });
+  }
+
   const ec=FILTERED.filter(r=>r._errs.length>0).length;
   document.getElementById('recCount').innerHTML=`<strong>${FILTERED.length.toLocaleString()}</strong> records in view`;
   document.getElementById('err-badge').textContent=ec;
+
+  // Update mode pills
+  const pillHtml=DATE_MODE==='screen'
+    ?'<span class="mode-pill mode-screen">Screening Date</span>'
+    :'<span class="mode-pill mode-result">Result / Test Date</span>';
+  ['ov-pill','dw-pill','tb-pill'].forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML=pillHtml;});
+
   renderAll();
 }
-function resetFilters(){
-  const dates=ALL.filter(r=>r._dt).map(r=>r._dt).sort((a,b)=>a-b);
-  if(dates.length){document.getElementById('d1').value=dates[0].toISOString().slice(0,10);document.getElementById('d2').value=dates[dates.length-1].toISOString().slice(0,10);}
-  document.getElementById('fDist').value='';document.getElementById('fCF').value='';
-  applyFilters();
-}
-function renderAll(){buildOverview();buildDatewise();buildCF();buildDistrict();buildGarden();buildValidation();}
 
-// ── TABS ──────────────────────────────────────────────────────
+function resetFilters(){
+  const sdates=ALL.filter(r=>r._sdt).map(r=>r._sdt).sort((a,b)=>a-b);
+  if(sdates.length){document.getElementById('d1').value=ds(sdates[0]);document.getElementById('d2').value=ds(sdates[sdates.length-1]);}
+  document.getElementById('fDist').value='';document.getElementById('fCF').value='';
+  setMode('screen');applyFilters();
+}
+
+function renderAll(){buildOverview();buildDatewise();buildCF();buildDistrict();buildTestCascade();buildGarden();buildTBCases();buildValidation();}
+
+// ── TABS ──────────────────────────────────────────
+const TABS=['overview','datewise','cf','district','garden','tbcase','validation'];
+const TITLES={overview:'Overview',datewise:'Date-wise Log',cf:'Community Facilitators',district:'District',garden:'Tea Gardens',tbcase:'TB Cases',validation:'Validation Report'};
 function showTab(id,el){
   TABS.forEach(t=>{document.getElementById('pane-'+t)?.classList.remove('active');});
   document.getElementById('pane-'+id)?.classList.add('active');
@@ -751,10 +861,10 @@ function showTab(id,el){
   closeSidebar();
 }
 
-// ── SORT ──────────────────────────────────────────────────────
+// ── SORT ──────────────────────────────────────────
 function srt(tid,col,num){
   const tbody=document.querySelector(`#${tid} tbody`);if(!tbody)return;
-  const k=tid+col; sortSt[k]=sortSt[k]==='asc'?'desc':'asc'; const asc=sortSt[k]==='asc';
+  const k=tid+col;SS[k]=SS[k]==='asc'?'desc':'asc';const asc=SS[k]==='asc';
   document.querySelectorAll(`#${tid} thead th`).forEach((th,i)=>{th.classList.remove('asc','desc');if(i===col)th.classList.add(asc?'asc':'desc');});
   [...tbody.rows].sort((a,b)=>{
     const av=(a.cells[col]?.textContent||'').replace(/[^0-9.\-]/g,'');
@@ -764,155 +874,816 @@ function srt(tid,col,num){
   }).forEach(r=>tbody.appendChild(r));
 }
 
-// ── HELPERS ───────────────────────────────────────────────────
-function b(n,cls){return n>0?`<span class="badge ${cls}">${n}</span>`:`<span style="color:var(--text3)">0</span>`;}
-function chk(){return`<span style="color:var(--green);font-weight:700">✓</span>`;}
-function kpi(ico,val,lbl,sub,cls=''){return`<div class="kpi ${cls}"><div class="kpi-stripe" style="background:var(--kc,var(--border))"></div><span class="kpi-ico">${ico}</span><div class="kpi-val">${val}</div><div class="kpi-lbl">${lbl}</div><div class="kpi-sub">${sub}</div></div>`;}
-
-function uniqueDays(rows){return new Set(rows.filter(r=>r._ds).map(r=>r._ds)).size;}
-
-// ── OVERVIEW ──────────────────────────────────────────────────
+// ═══════════════════════════════════════════════
+// OVERVIEW
+// ═══════════════════════════════════════════════
 function buildOverview(){
-  const rows=FILTERED,total=rows.length;
-  const pres=cnt(rows,'Presumptive','Yes'),diag=cnt(rows,'TB Diagnosed','Yes'),tx=cnt(rows,'TB Treatment Started','Yes');
-  const cad=cnt(rows,'CAD X-Ray Done','Yes'),xray=cnt(rows,'X-Ray Done','Yes'),gxp=cnt(rows,'GXP Sputum Done','Yes');
-  const mtb=rows.filter(r=>(tv(r,'Result.4')||'').toLowerCase().includes('mtb detected,')).length;
-  const male=cnt(rows,'Gender','Male'),female=cnt(rows,'Gender','Female');
-  const errs=rows.filter(r=>r._errs.length>0).length;
-  const days=Math.max(uniqueDays(rows),1);
-  document.getElementById('kpi-grid').innerHTML=`
-    <div class="kpi"><div class="kpi-stripe" style="background:var(--green-mid)"></div><span class="kpi-ico">📋</span><div class="kpi-val" style="color:var(--green)">${total.toLocaleString()}</div><div class="kpi-lbl">Total Screened</div><div class="kpi-sub">${(total/days).toFixed(1)} per active day</div></div>
-    <div class="kpi"><div class="kpi-stripe" style="background:var(--amber)"></div><span class="kpi-ico">🔍</span><div class="kpi-val" style="color:var(--amber)">${pres.toLocaleString()}</div><div class="kpi-lbl">Presumptive TB</div><div class="kpi-sub">${pct(pres,total)} yield rate</div></div>
-    <div class="kpi"><div class="kpi-stripe" style="background:#0891B2)"></div><span class="kpi-ico">🩻</span><div class="kpi-val" style="color:var(--blue)">${cad}</div><div class="kpi-lbl">CAD X-ray Done</div><div class="kpi-sub">${pct(cad,pres)} of presumptive</div></div>
-    <div class="kpi"><div class="kpi-stripe" style="background:var(--blue)"></div><span class="kpi-ico">🩻</span><div class="kpi-val" style="color:var(--blue)">${xray}</div><div class="kpi-lbl">X-ray Done</div><div class="kpi-sub">${pct(xray,pres)} of presumptive</div></div>
-    <div class="kpi"><div class="kpi-stripe" style="background:var(--green-light)"></div><span class="kpi-ico">🧬</span><div class="kpi-val" style="color:var(--green)">${gxp}</div><div class="kpi-lbl">GXP Tests Done</div><div class="kpi-sub">${mtb} MTB positive</div></div>
-    <div class="kpi"><div class="kpi-stripe" style="background:var(--red)"></div><span class="kpi-ico">🏥</span><div class="kpi-val" style="color:var(--red)">${diag}</div><div class="kpi-lbl">TB Diagnosed</div><div class="kpi-sub">${pct(diag,pres)} of presumptive</div></div>
-    <div class="kpi"><div class="kpi-stripe" style="background:var(--green)"></div><span class="kpi-ico">💊</span><div class="kpi-val" style="color:var(--green)">${tx}</div><div class="kpi-lbl">On Treatment</div><div class="kpi-sub">${pct(tx,diag)} of diagnosed</div></div>
-    <div class="kpi"><div class="kpi-stripe" style="background:var(--red-light)"></div><span class="kpi-ico">⚠️</span><div class="kpi-val" style="color:${errs>0?'var(--red)':'var(--green)'}">${errs}</div><div class="kpi-lbl">Validation Errors</div><div class="kpi-sub">${pct(errs,total)} of records</div></div>
-  `;
+  const baseRows=window.FILTERED_BASE||FILTERED;
+  const testRows=FILTERED;
+
+  // TB rows use same logic as buildTBCases: result mode = diag date filter, screen mode = FILTERED
+  let tbRows;
+  if(DATE_MODE==='result'){
+    const d1=document.getElementById('d1').value,d2=document.getElementById('d2').value;
+    const dist=document.getElementById('fDist').value,cfv=document.getElementById('fCF').value;
+    tbRows=ALL.filter(r=>{
+      if(cv(r,C.TB_DIAG)!=='Yes')return false;
+      if(dist&&cv(r,C.DISTRICT)!==dist)return false;
+      if(cfv&&cv(r,C.CF)!==cfv)return false;
+      if(d1||d2){
+        if(!r._diagDs)return false;
+        if(d1&&r._diagDs<d1)return false;
+        if(d2&&r._diagDs>d2)return false;
+      }
+      return true;
+    });
+  } else {
+    tbRows=FILTERED.filter(r=>cv(r,C.TB_DIAG)==='Yes');
+  }
+
+  const tot=baseRows.length;
+  const pres=baseRows.filter(r=>cv(r,C.PRESUMPTIVE)==='Yes').length;
+  const presTested=baseRows.filter(r=>cv(r,C.PRESUMPTIVE)==='Yes'&&r._anyTested).length;
+  const errs=baseRows.filter(r=>r._errs.length>0).length;
+  const days=Math.max(uDays(baseRows),1);
+  const male=baseRows.filter(r=>cv(r,C.GENDER)==='Male').length;
+  const female=baseRows.filter(r=>cv(r,C.GENDER)==='Female').length;
+
+  const cadDone=testRows.filter(r=>cv(r,C.CAD_DONE)==='Yes').length;
+  const cxrAbn=testRows.filter(r=>{const v=cn(r,C.CAD_RESULT);return v!==null&&v>=40;}).length;
+  const xrayDone=testRows.filter(r=>cv(r,C.XRAY_DONE)==='Yes').length;
+  const gxpDone=testRows.filter(r=>cv(r,C.GXP_DONE)==='Yes').length;
+
+  // TB counts — all from tbRows so they are internally consistent
+  const diag=tbRows.length;
+  const tx=tbRows.filter(r=>cv(r,C.TX_STARTED)==='Yes').length;
+  const childTB=tbRows.filter(r=>cn(r,C.AGE_Y)!==null&&cn(r,C.AGE_Y)<=15).length;
+  const ptb=tbRows.filter(r=>cv(r,C.TB_TYPE)==='PTB').length;
+  const eptb=tbRows.filter(r=>cv(r,C.TB_TYPE)==='EPTB').length;
+  const bplus=tbRows.filter(r=>cv(r,C.BACT_STATUS)==='B+').length;
+  const cd=tbRows.filter(r=>cv(r,C.BACT_STATUS)==='CD').length;
+
+  const K=(stripe,ico,val,lbl,sub,col='var(--text1)')=>
+    `<div class="kpi"><div class="kpi-stripe" style="background:${stripe}"></div><span class="kpi-ico">${ico}</span><div class="kpi-val" style="color:${col}">${val}</div><div class="kpi-lbl">${lbl}</div><div class="kpi-sub">${sub}</div></div>`;
+
+  document.getElementById('kpi-r1').innerHTML=
+    K('var(--green-mid)','📋',tot.toLocaleString(),'Total Screened',(tot/days).toFixed(1)+' per day avg','var(--green)')+
+    K('var(--amber)','🔍',pres.toLocaleString(),'Presumptive TB',pct(pres,tot)+' yield rate','var(--amber)')+
+    K('#7B68EE','🧪',presTested.toLocaleString(),'Presumptive Tested',pct(presTested,pres)+' of presumptive','#7B68EE')+
+    K('var(--blue)','🩻',cadDone,'CAD X-ray Done',pct(cadDone,pres)+' of presumptive','var(--blue)')+
+    K('#E67E22','🔴',cxrAbn,'CXR Abnormal (≥40)',pct(cxrAbn,cadDone)+' of CAD done','#E67E22')+
+    K('#0891B2','🩻',xrayDone,'X-ray Done',pct(xrayDone,pres)+' of presumptive','#0891B2')+
+    K('var(--green-light)','🧬',gxpDone,'GXP Sputum Done',pct(gxpDone,pres)+' of presumptive','var(--green)');
+
+  document.getElementById('kpi-r2').innerHTML=
+    K('var(--red)','🏥',diag,'TB Diagnosed',pct(diag,pres)+' of presumptive','var(--red)')+
+    K('#FF6B6B','👶',childTB,'Child TB (≤15y)',pct(childTB,diag)+' of diagnosed','#FF6B6B')+
+    K('var(--green)','💊',tx,'On Treatment',pct(tx,diag)+' of diagnosed','var(--green)')+
+    K('#8B4513','🫁',ptb,'PTB',pct(ptb,diag)+' of total TB','#8B4513')+
+    K('#556B2F','🔬',eptb,'EPTB',pct(eptb,diag)+' of total TB','#556B2F')+
+    K('var(--red-light)','⚠️',errs,'Validation Errors',pct(errs,tot)+' of records',errs>0?'var(--red)':'var(--green)');
+
   document.getElementById('cascade-body').innerHTML=[
-    ['📋','Screened',total,total,'var(--green-mid)'],
-    ['🔍','Presumptive',pres,total,'var(--amber)'],
-    ['🩻','CAD X-ray Done',cad,pres,'var(--blue)'],
-    ['🩻','X-ray Done',xray,pres,'#0891B2'],
-    ['🧬','GXP Done',gxp,pres,'var(--green-light)'],
+    ['📋','Total Screened',tot,tot,'var(--green-mid)'],
+    ['🔍','Presumptive',pres,tot,'var(--amber)'],
+    ['🧪','Presumptive Tested',presTested,pres,'#7B68EE'],
+    ['🩻','CAD X-ray Done',cadDone,pres,'var(--blue)'],
+    ['🔴','CXR Abnormal (Score ≥40)',cxrAbn,cadDone,'#E67E22'],
+    ['🩻','X-ray Done',xrayDone,pres,'#0891B2'],
+    ['🧬','GXP Sputum Done',gxpDone,pres,'var(--green-light)'],
     ['🏥','TB Diagnosed',diag,pres,'var(--red)'],
     ['💊','On Treatment',tx,diag,'var(--green)']
   ].map(([ico,lbl,n,d,col])=>{
     const w=d>0?Math.round(n/d*100):0;
     return`<div class="cascade-row"><span class="casc-ico">${ico}</span><span class="casc-lbl">${lbl}</span><span class="casc-val">${n.toLocaleString()}</span><span class="casc-pct">${pct(n,d)}</span><div class="casc-bar"><div class="prog"><div class="prog-fill" style="width:${w}%;background:${col}"></div></div></div></div>`;
   }).join('');
+
   const mW=Math.max(male,female,1);
-  document.getElementById('gender-body').innerHTML=`
-    <div class="gender-row"><div class="gender-label-row"><span>Male</span><small>${male.toLocaleString()} &nbsp; ${pct(male,total)}</small></div><div class="prog"><div class="prog-fill" style="width:${Math.round(male/mW*100)}%;background:var(--blue)"></div></div></div>
-    <div class="gender-row"><div class="gender-label-row"><span>Female</span><small>${female.toLocaleString()} &nbsp; ${pct(female,total)}</small></div><div class="prog"><div class="prog-fill" style="width:${Math.round(female/mW*100)}%;background:var(--green-mid)"></div></div></div>
+  document.getElementById('tb-breakdown').innerHTML=`
+    <div style="margin-bottom:14px">
+      <div style="font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">TB Type</div>
+      <div style="display:flex;gap:10px">
+        <div style="flex:1;background:var(--surface2);border-radius:8px;padding:10px;text-align:center"><div style="font-size:24px;font-weight:700;color:#8B4513;font-family:'DM Mono',monospace">${ptb}</div><div style="font-size:11px;color:var(--text2)">PTB</div></div>
+        <div style="flex:1;background:var(--surface2);border-radius:8px;padding:10px;text-align:center"><div style="font-size:24px;font-weight:700;color:#556B2F;font-family:'DM Mono',monospace">${eptb}</div><div style="font-size:11px;color:var(--text2)">EPTB</div></div>
+      </div>
+    </div>
+    <div style="margin-bottom:14px">
+      <div style="font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">Bacteriological Status</div>
+      <div style="display:flex;gap:10px">
+        <div style="flex:1;background:var(--red-pale);border-radius:8px;padding:10px;text-align:center"><div style="font-size:24px;font-weight:700;color:var(--red);font-family:'DM Mono',monospace">${bplus}</div><div style="font-size:11px;color:var(--red)">B+ (Bacteriologically Confirmed)</div></div>
+        <div style="flex:1;background:var(--amber-pale);border-radius:8px;padding:10px;text-align:center"><div style="font-size:24px;font-weight:700;color:var(--amber);font-family:'DM Mono',monospace">${cd}</div><div style="font-size:11px;color:var(--amber)">CD (Clinically Diagnosed)</div></div>
+      </div>
+    </div>
+    <div style="font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">Gender</div>
+    <div class="gender-row"><div class="gender-label-row"><span>Male</span><small>${male.toLocaleString()} · ${pct(male,tot)}</small></div><div class="prog"><div class="prog-fill" style="width:${Math.round(male/mW*100)}%;background:var(--blue)"></div></div></div>
+    <div class="gender-row"><div class="gender-label-row"><span>Female</span><small>${female.toLocaleString()} · ${pct(female,tot)}</small></div><div class="prog"><div class="prog-fill" style="width:${Math.round(female/mW*100)}%;background:var(--green-mid)"></div></div></div>
   `;
 }
 
-// ── DATE-WISE ─────────────────────────────────────────────────
+// ═══════════════════════════════════════════════
+// DATE-WISE
+// ═══════════════════════════════════════════════
 function buildDatewise(){
-  const rows=FILTERED,bd={};
-  rows.forEach(r=>{
-    const dk=r._ds||'Unknown';
-    if(!bd[dk])bd[dk]={n:0,pres:0,cad:0,xray:0,gxp:0,diag:0,tx:0,errs:0,cfs:new Set(),gardens:new Set()};
-    const d=bd[dk];d.n++;
-    if(tv(r,'Presumptive')==='Yes')d.pres++;if(tv(r,'CAD X-Ray Done')==='Yes')d.cad++;if(tv(r,'X-Ray Done')==='Yes')d.xray++;if(tv(r,'GXP Sputum Done')==='Yes')d.gxp++;if(tv(r,'TB Diagnosed')==='Yes')d.diag++;if(tv(r,'TB Treatment Started')==='Yes')d.tx++;if(r._errs.length>0)d.errs++;
-    d.cfs.add(tv(r,'Name of FA'));d.gardens.add(tv(r,'Facility'));
-  });
-  document.getElementById('dateBody').innerHTML=Object.keys(bd).filter(k=>k!=='Unknown').sort().map(dk=>{
+  // In result mode: screened/presumptive come from FILTERED_BASE (no date filter),
+  // test/diag/treatment counts come from FILTERED (result-date filtered).
+  // We merge by screening date: base provides the date keys, screened & pres counts;
+  // FILTERED provides the test/diag counts for the same date keys.
+  const base=window.FILTERED_BASE||FILTERED;
+  const result=FILTERED;
+
+  // Build base map (screened, presumptive) keyed by screening date
+  const bd={};
+  base.forEach(r=>{
+    const dk=r._sds||'Unknown';
+    if(!bd[dk])bd[dk]={n:0,pres:0,cad:0,cxrAbn:0,xray:0,gxp:0,other:0,diag:0,tx:0,errs:0,cfs:new Set(),gardens:new Set()};
     const d=bd[dk];
-    return`<tr><td><strong>${dk}</strong></td><td><strong>${d.n}</strong></td><td>${b(d.pres,'ba')}</td><td style="color:var(--amber);font-weight:600">${pct(d.pres,d.n)}</td><td>${d.cad>0?b(d.cad,'bsl'):'—'}</td><td>${d.xray>0?b(d.xray,'bsl'):'—'}</td><td>${d.gxp>0?b(d.gxp,'bg'):'—'}</td><td>${b(d.diag,'bb')}</td><td>${b(d.tx,'bg')}</td><td>${d.cfs.size}</td><td>${d.gardens.size}</td><td>${d.errs>0?b(d.errs,'br'):chk()}</td></tr>`;
+    d.n++;
+    if(cv(r,C.PRESUMPTIVE)==='Yes')d.pres++;
+    if(r._errs.length>0)d.errs++;
+    d.cfs.add(cv(r,C.CF));d.gardens.add(cv(r,C.FACILITY));
+  });
+
+  // Overlay test/diag/treatment counts from result-filtered set
+  result.forEach(r=>{
+    const dk=r._sds||'Unknown';
+    if(!bd[dk])bd[dk]={n:0,pres:0,cad:0,cxrAbn:0,xray:0,gxp:0,other:0,diag:0,tx:0,errs:0,cfs:new Set(),gardens:new Set()};
+    const d=bd[dk];
+    if(cv(r,C.CAD_DONE)==='Yes')d.cad++;
+    const cadScore=cn(r,C.CAD_RESULT);if(cadScore!==null&&cadScore>=40)d.cxrAbn++;
+    if(cv(r,C.XRAY_DONE)==='Yes')d.xray++;
+    if(cv(r,C.GXP_DONE)==='Yes')d.gxp++;
+    const otherDone=[C.MT_DONE,C.STOOL_DONE,C.IND_DONE,C.GL_DONE,C.EPTB_DONE,C.TRUENAT_DONE,C.AFB_DONE,C.FNAC_DONE,C.BIOPSY_DONE,C.ADA_DONE].some(i=>cv(r,i)==='Yes');
+    if(otherDone)d.other++;
+    if(cv(r,C.TB_DIAG)==='Yes')d.diag++;
+    if(cv(r,C.TX_STARTED)==='Yes')d.tx++;
+  });
+
+  // In result mode, only show date rows that actually have screened records (from base).
+  // This prevents test/diag rows with screening dates outside the selected range from
+  // creating extra rows in the table.
+  const validDateKeys=new Set(base.map(r=>r._sds).filter(s=>s&&s!=='Unknown'));
+  document.getElementById('dateBody').innerHTML=Object.keys(bd).filter(k=>k!=='Unknown'&&(DATE_MODE==='screen'||validDateKeys.has(k))).sort().map(dk=>{
+    const d=bd[dk];
+    return`<tr><td><strong>${dk}</strong></td><td><strong>${d.n}</strong></td><td>${b(d.pres,'ba')}</td><td style="color:var(--amber);font-weight:600">${pct(d.pres,d.n)}</td><td>${d.cad>0?b(d.cad,'bsl'):'—'}</td><td>${d.cxrAbn>0?`<span class="badge" style="background:#FDEBD0;color:#E67E22">${d.cxrAbn}</span>`:'—'}</td><td>${d.xray>0?b(d.xray,'bsl'):'—'}</td><td>${d.gxp>0?b(d.gxp,'bg'):'—'}</td><td>${d.other>0?b(d.other,'bsl'):'—'}</td><td>${b(d.diag,'br')}</td><td>${b(d.tx,'bg')}</td><td>${d.cfs.size}</td><td>${d.gardens.size}</td><td>${d.errs>0?b(d.errs,'br'):chk()}</td></tr>`;
   }).join('');
 }
 
-// ── CF ────────────────────────────────────────────────────────
+// ═══════════════════════════════════════════════
+// CF
+// ═══════════════════════════════════════════════
 function buildCF(){
-  const rows=FILTERED; CFD={};
-  rows.forEach(r=>{
-    const cf=tv(r,'Name of FA')||'Unknown';
-    if(!CFD[cf])CFD[cf]={name:cf,rows:[],days:{},district:tv(r,'District')};
-    CFD[cf].rows.push(r);
-    if(r._dt){const dk=r._ds;if(!CFD[cf].days[dk])CFD[cf].days[dk]={min:r._dt,max:r._dt,count:0,gardens:new Set()};const dy=CFD[cf].days[dk];dy.count++;if(r._dt<dy.min)dy.min=r._dt;if(r._dt>dy.max)dy.max=r._dt;dy.gardens.add(tv(r,'Facility'));}
+  const base=window.FILTERED_BASE||FILTERED;
+  const result=FILTERED;
+  CFD={};
+
+  // In result mode, TB diag count must align with Overview/TBCases (diag date only).
+  // The broad FILTERED set can include rows diagnosed outside the range.
+  let tbResult;
+  if(DATE_MODE==='result'){
+    const d1=document.getElementById('d1').value,d2=document.getElementById('d2').value;
+    const dist=document.getElementById('fDist').value,cfv=document.getElementById('fCF').value;
+    tbResult=ALL.filter(r=>{
+      if(dist&&cv(r,C.DISTRICT)!==dist)return false;
+      if(cfv&&cv(r,C.CF)!==cfv)return false;
+      if(d1||d2){
+        if(!r._diagDs)return false;
+        if(d1&&r._diagDs<d1)return false;
+        if(d2&&r._diagDs>d2)return false;
+      }
+      return true;
+    });
+  } else {
+    tbResult=result;
+  }
+
+  // Build CF entries from base rows (screened, presumptive, days, timing, errors)
+  base.forEach(r=>{
+    const cf=cv(r,C.CF)||'Unknown';
+    if(!CFD[cf])CFD[cf]={name:cf,baseRows:[],resultRows:[],tbRows:[],days:{},district:cv(r,C.DISTRICT)};
+    CFD[cf].baseRows.push(r);
+    if(r._sdt){
+      const dk=r._sds;
+      if(!CFD[cf].days[dk])CFD[cf].days[dk]={min:r._sdt,max:r._sdt,count:0,gardens:new Set()};
+      const dy=CFD[cf].days[dk];
+      dy.count++;
+      if(r._sdt<dy.min)dy.min=r._sdt;
+      if(r._sdt>dy.max)dy.max=r._sdt;
+      dy.gardens.add(cv(r,C.FACILITY));
+    }
   });
-  const cfArr=Object.values(CFD).sort((a,b)=>b.rows.length-a.rows.length);
+
+  // Add result rows (test counts) — may be a different set in result mode
+  result.forEach(r=>{
+    const cf=cv(r,C.CF)||'Unknown';
+    if(!CFD[cf])CFD[cf]={name:cf,baseRows:[],resultRows:[],tbRows:[],days:{},district:cv(r,C.DISTRICT)};
+    CFD[cf].resultRows.push(r);
+  });
+
+  // Add TB-aligned rows (diag counts) using corrected filter
+  tbResult.forEach(r=>{
+    const cf=cv(r,C.CF)||'Unknown';
+    if(!CFD[cf])CFD[cf]={name:cf,baseRows:[],resultRows:[],tbRows:[],days:{},district:cv(r,C.DISTRICT)};
+    CFD[cf].tbRows.push(r);
+  });
+
+  const cfArr=Object.values(CFD).sort((a,b)=>b.baseRows.length-a.baseRows.length);
   document.getElementById('cfBody').innerHTML=cfArr.map(cf=>{
-    const r=cf.rows,total=r.length,pres=cnt(r,'Presumptive','Yes'),diag=cnt(r,'TB Diagnosed','Yes');
-    const cad=cnt(r,'CAD X-Ray Done','Yes'),xray=cnt(r,'X-Ray Done','Yes'),gxp=cnt(r,'GXP Sputum Done','Yes');
-    const errs=r.filter(x=>x._errs.length>0).length;
+    const br=cf.baseRows, rr=cf.resultRows, tr=cf.tbRows;
+    const tot=br.length;
+    const pres=br.filter(x=>cv(x,C.PRESUMPTIVE)==='Yes').length;
+    const errs=br.filter(x=>x._errs.length>0).length;
+    const diag=tr.filter(x=>cv(x,C.TB_DIAG)==='Yes').length;
+    const tested=rr.filter(x=>x._anyTested).length;
+    const cad=rr.filter(x=>cv(x,C.CAD_DONE)==='Yes').length;
+    const cxrAbn=rr.filter(x=>{const v=cn(x,C.CAD_RESULT);return v!==null&&v>=40;}).length;
+    const xray=rr.filter(x=>cv(x,C.XRAY_DONE)==='Yes').length;
+    const gxp=rr.filter(x=>cv(x,C.GXP_DONE)==='Yes').length;
     const dA=Object.values(cf.days),nd=dA.length;
     const aS=nd?Math.round(dA.reduce((s,d)=>s+d.min.getHours()*60+d.min.getMinutes(),0)/nd):0;
     const aE=nd?Math.round(dA.reduce((s,d)=>s+d.max.getHours()*60+d.max.getMinutes(),0)/nd):0;
     const aDur=nd?dA.reduce((s,d)=>s+(d.max-d.min)/60000,0)/nd:0;
     const sh=Math.floor(aS/60),sm=aS%60,eh=Math.floor(aE/60),em=aE%60;
-    return`<tr data-name="${cf.name.toLowerCase()}"><td><strong>${cf.name}</strong></td><td style="color:var(--text2)">${cf.district}</td><td>${nd}</td><td><strong>${total.toLocaleString()}</strong></td><td class="mono">${nd>0?(total/nd).toFixed(1):'-'}</td><td>${b(pres,'ba')}</td><td>${cad>0?b(cad,'bsl'):'—'}</td><td>${xray>0?b(xray,'bsl'):'—'}</td><td>${gxp>0?b(gxp,'bg'):'—'}</td><td>${b(diag,'bg')}</td><td class="mono">${String(sh).padStart(2,'0')}:${String(sm).padStart(2,'0')}</td><td class="mono">${String(eh).padStart(2,'0')}:${String(em).padStart(2,'0')}</td><td>${fmtD(aDur)}</td><td>${errs>0?b(errs,'br'):chk()}</td><td style="color:${errs>0?'var(--red)':'var(--green)'};font-weight:600">${pct(errs,total)}</td></tr>`;
+    return`<tr data-name="${cf.name.toLowerCase()}">
+      <td><strong>${cf.name}</strong></td>
+      <td style="color:var(--text2)">${cf.district}</td>
+      <td>${nd}</td><td><strong>${tot.toLocaleString()}</strong></td>
+      <td class="mono">${nd>0?(tot/nd).toFixed(1):'-'}</td>
+      <td>${b(pres,'ba')}</td>
+      <td style="color:var(--amber);font-weight:600">${pct(pres,tot)}</td>
+      <td>${b(tested,'bb')}</td>
+      <td>${cad>0?b(cad,'bsl'):'—'}</td>
+      <td>${cxrAbn>0?`<span class="badge" style="background:#FDEBD0;color:#E67E22">${cxrAbn}</span>`:'—'}</td>
+      <td>${xray>0?b(xray,'bsl'):'—'}</td>
+      <td>${gxp>0?b(gxp,'bg'):'—'}</td>
+      <td>${b(diag,'br')}</td>
+      <td class="mono">${String(sh).padStart(2,'0')}:${String(sm).padStart(2,'0')}</td>
+      <td class="mono">${String(eh).padStart(2,'0')}:${String(em).padStart(2,'0')}</td>
+      <td>${fmtDur(aDur)}</td>
+      <td>${errs>0?b(errs,'br'):chk()}</td>
+      <td style="color:${errs>0?'var(--red)':'var(--green)'};font-weight:600">${pct(errs,tot)}</td>
+    </tr>`;
   }).join('');
 }
 window.filterCF=function(){const q=(document.getElementById('cfSearch').value||'').toLowerCase();document.querySelectorAll('#cfBody tr').forEach(tr=>{tr.style.display=tr.dataset.name?.includes(q)?'':'none';});};
 window.buildCFDaily=function(){
   const sel=document.getElementById('cfDailySel').value,log=document.getElementById('cfDailyLog');
-  if(!sel){log.innerHTML='';return;}
-  const cf=CFD[sel];if(!cf){log.innerHTML='';return;}
+  if(!sel){log.innerHTML='';return;}const cf=CFD[sel];if(!cf){log.innerHTML='';return;}
   const days=Object.entries(cf.days).sort((a,b)=>a[0].localeCompare(b[0]));
-  log.innerHTML=`<div class="tbl-wrap"><table><thead><tr><th>Date</th><th>Start</th><th>End</th><th>Session Duration</th><th>Records</th><th>Tea Garden(s)</th></tr></thead><tbody>${days.map(([dk,d])=>`<tr><td><strong>${dk}</strong></td><td class="mono">${fmtT(d.min)}</td><td class="mono">${fmtT(d.max)}</td><td>${fmtD((d.max-d.min)/60000)}</td><td>${d.count}</td><td style="color:var(--text2);max-width:220px;overflow:hidden;text-overflow:ellipsis" title="${[...d.gardens].join(', ')}">${[...d.gardens].join(', ')}</td></tr>`).join('')}</tbody></table></div>`;
+  log.innerHTML=`<div class="tbl-wrap"><table><thead><tr><th>Date</th><th>Start</th><th>End</th><th>Session Duration</th><th>Records</th><th>Tea Garden(s)</th></tr></thead><tbody>${days.map(([dk,d])=>`<tr><td><strong>${dk}</strong></td><td class="mono">${fmtT(d.min)}</td><td class="mono">${fmtT(d.max)}</td><td>${fmtDur((d.max-d.min)/60000)}</td><td>${d.count}</td><td style="color:var(--text2);max-width:220px;overflow:hidden;text-overflow:ellipsis" title="${[...d.gardens].join(', ')}">${[...d.gardens].join(', ')}</td></tr>`).join('')}</tbody></table></div>`;
 };
 
-// ── DISTRICT ──────────────────────────────────────────────────
+// ═══════════════════════════════════════════════
+// DISTRICT
+// ═══════════════════════════════════════════════
 function buildDistrict(){
-  const rows=FILTERED,ds={};
-  rows.forEach(r=>{
-    const d=tv(r,'District')||'Unknown';
-    if(!ds[d])ds[d]={n:0,pres:0,cad:0,xray:0,gxp:0,diag:0,tx:0,errs:0,cfs:new Set(),gar:new Set()};
-    const di=ds[d];di.n++;
-    if(tv(r,'Presumptive')==='Yes')di.pres++;if(tv(r,'CAD X-Ray Done')==='Yes')di.cad++;if(tv(r,'X-Ray Done')==='Yes')di.xray++;if(tv(r,'GXP Sputum Done')==='Yes')di.gxp++;if(tv(r,'TB Diagnosed')==='Yes')di.diag++;if(tv(r,'TB Treatment Started')==='Yes')di.tx++;if(r._errs.length>0)di.errs++;
-    di.cfs.add(tv(r,'Name of FA'));di.gar.add(tv(r,'Facility'));
+  const base=window.FILTERED_BASE||FILTERED;
+  const result=FILTERED;
+  const distMap={};
+
+  // In result mode, TB diagnosed/tx must use the same diag-date-only filter as Overview/TBCases.
+  // Using the broad FILTERED set (test OR diag date) would count cases whose diag date is
+  // outside the range but happened to have a test date inside it.
+  let tbResult;
+  if(DATE_MODE==='result'){
+    const d1=document.getElementById('d1').value,d2=document.getElementById('d2').value;
+    const dist=document.getElementById('fDist').value,cfv=document.getElementById('fCF').value;
+    tbResult=ALL.filter(r=>{
+      if(dist&&cv(r,C.DISTRICT)!==dist)return false;
+      if(cfv&&cv(r,C.CF)!==cfv)return false;
+      if(d1||d2){
+        if(!r._diagDs)return false;
+        if(d1&&r._diagDs<d1)return false;
+        if(d2&&r._diagDs>d2)return false;
+      }
+      return true;
+    });
+  } else {
+    tbResult=result;
+  }
+
+  base.forEach(r=>{
+    const d=cv(r,C.DISTRICT)||'Unknown';
+    if(!distMap[d])distMap[d]={n:0,pres:0,cad:0,cxrAbn:0,xray:0,gxp:0,diag:0,tx:0,errs:0,cfs:new Set(),gar:new Set()};
+    distMap[d].n++;
+    if(cv(r,C.PRESUMPTIVE)==='Yes')distMap[d].pres++;
+    if(r._errs.length>0)distMap[d].errs++;
+    distMap[d].cfs.add(cv(r,C.CF));distMap[d].gar.add(cv(r,C.FACILITY));
   });
-  document.getElementById('districtBody').innerHTML=Object.entries(ds).sort((a,b)=>b[1].n-a[1].n).map(([nm,d])=>`<tr><td><strong>${nm}</strong></td><td>${d.cfs.size}</td><td>${d.gar.size}</td><td><strong>${d.n.toLocaleString()}</strong></td><td>${b(d.pres,'ba')}</td><td style="color:var(--amber);font-weight:600">${pct(d.pres,d.n)}</td><td>${d.cad>0?b(d.cad,'bsl'):'—'}</td><td>${d.xray>0?b(d.xray,'bsl'):'—'}</td><td>${d.gxp>0?b(d.gxp,'bg'):'—'}</td><td>${b(d.diag,'bb')}</td><td>${b(d.tx,'bg')}</td><td>${d.errs>0?b(d.errs,'br'):chk()}</td></tr>`).join('');
+
+  result.forEach(r=>{
+    const d=cv(r,C.DISTRICT)||'Unknown';
+    if(!distMap[d])distMap[d]={n:0,pres:0,cad:0,cxrAbn:0,xray:0,gxp:0,diag:0,tx:0,errs:0,cfs:new Set(),gar:new Set()};
+    if(cv(r,C.CAD_DONE)==='Yes')distMap[d].cad++;
+    const cadScore=cn(r,C.CAD_RESULT);if(cadScore!==null&&cadScore>=40)distMap[d].cxrAbn++;
+    if(cv(r,C.XRAY_DONE)==='Yes')distMap[d].xray++;
+    if(cv(r,C.GXP_DONE)==='Yes')distMap[d].gxp++;
+  });
+
+  // TB diag/tx use the corrected diag-date-aligned set
+  tbResult.forEach(r=>{
+    const d=cv(r,C.DISTRICT)||'Unknown';
+    if(!distMap[d])distMap[d]={n:0,pres:0,cad:0,cxrAbn:0,xray:0,gxp:0,diag:0,tx:0,errs:0,cfs:new Set(),gar:new Set()};
+    if(cv(r,C.TB_DIAG)==='Yes')distMap[d].diag++;
+    if(cv(r,C.TX_STARTED)==='Yes')distMap[d].tx++;
+  });
+
+  document.getElementById('districtBody').innerHTML=Object.entries(distMap).sort((a,x)=>x[1].n-a[1].n).map(([nm,d])=>`<tr><td><strong>${nm}</strong></td><td>${d.cfs.size}</td><td>${d.gar.size}</td><td><strong>${d.n.toLocaleString()}</strong></td><td>${b(d.pres,'ba')}</td><td style="color:var(--amber);font-weight:600">${pct(d.pres,d.n)}</td><td>${d.cad>0?b(d.cad,'bsl'):'—'}</td><td>${d.cxrAbn>0?`<span class="badge" style="background:#FDEBD0;color:#E67E22">${d.cxrAbn}</span>`:'—'}</td><td>${d.xray>0?b(d.xray,'bsl'):'—'}</td><td>${d.gxp>0?b(d.gxp,'bg'):'—'}</td><td>${b(d.diag,'br')}</td><td>${b(d.tx,'bg')}</td><td>${d.errs>0?b(d.errs,'br'):chk()}</td></tr>`).join('');
 }
 
-// ── GARDEN ────────────────────────────────────────────────────
-function buildGarden(){
-  const rows=FILTERED,gar={};
-  rows.forEach(r=>{
-    const g=tv(r,'Facility')||'Unknown';
-    if(!gar[g])gar[g]={n:0,pres:0,cad:0,xray:0,gxp:0,diag:0,tx:0,errs:0,district:tv(r,'District'),cfs:new Set()};
-    const gi=gar[g];gi.n++;
-    if(tv(r,'Presumptive')==='Yes')gi.pres++;if(tv(r,'CAD X-Ray Done')==='Yes')gi.cad++;if(tv(r,'X-Ray Done')==='Yes')gi.xray++;if(tv(r,'GXP Sputum Done')==='Yes')gi.gxp++;if(tv(r,'TB Diagnosed')==='Yes')gi.diag++;if(tv(r,'TB Treatment Started')==='Yes')gi.tx++;if(r._errs.length>0)gi.errs++;
-    gi.cfs.add(tv(r,'Name of FA'));
+// ═══════════════════════════════════════════════
+// CAD → FURTHER TEST CASCADE
+// ═══════════════════════════════════════════════
+// All downstream tests after an abnormal CAD result
+const DOWNSTREAM_TESTS=[
+  {name:'MT',        done:C.MT_DONE,     date:C.MT_DATE},
+  {name:'GXP Stool', done:C.STOOL_DONE,  date:C.STOOL_DATE},
+  {name:'GXP Sputum',done:C.GXP_DONE,   date:C.GXP_DATE},
+  {name:'Ind.Sputum',done:C.IND_DONE,   date:C.IND_DATE},
+  {name:'GL',        done:C.GL_DONE,     date:C.GL_DATE},
+  {name:'GXP EPTB',  done:C.EPTB_DONE,  date:C.EPTB_DATE},
+  {name:'Truenat',   done:C.TRUENAT_DONE,date:C.TRUENAT_DATE},
+  {name:'AFB',       done:C.AFB_DONE,    date:C.AFB_DATE},
+  {name:'FNAC',      done:C.FNAC_DONE,   date:C.FNAC_DATE},
+  {name:'Biopsy',    done:C.BIOPSY_DONE, date:C.BIOPSY_DATE},
+  {name:'ADA',       done:C.ADA_DONE,    date:C.ADA_DATE},
+];
+
+// Returns {cadAbn, w15, w30, o30, untested} arrays from a row set
+function computeTestCascade(rows){
+  const cadAbn=rows.filter(r=>{
+    if(cv(r,C.CAD_DONE)!=='Yes')return false;
+    const score=cn(r,C.CAD_RESULT);
+    return score!==null&&score>=40;
   });
+
+  const w15=[],w30=[],o30=[],untested=[];
+  cadAbn.forEach(r=>{
+    const cadDt=pd(cv(r,C.CAD_DATE));
+    // Find earliest downstream test date
+    let earliest=null;
+    DOWNSTREAM_TESTS.forEach(t=>{
+      if(cv(r,t.done)==='Yes'){
+        const dt=pd(cv(r,t.date));
+        if(dt&&(!earliest||dt<earliest))earliest=dt;
+      }
+    });
+    if(!earliest){untested.push(r);return;}
+    if(!cadDt){w15.push(r);return;} // no CAD date — count as ≤15 (best effort)
+    const days=Math.round((earliest-cadDt)/(1000*60*60*24));
+    if(days<=15)w15.push(r);
+    else if(days<=30)w30.push(r);
+    else o30.push(r);
+  });
+  return{cadAbn,w15,w30,o30,untested};
+}
+
+function buildTestCascade(){
+  const rows=FILTERED;
+  const{cadAbn,w15,w30,o30,untested}=computeTestCascade(rows);
+  const total=cadAbn.length;
+  if(!total){
+    document.getElementById('tc-kpi-grid').innerHTML=`<div style="grid-column:1/-1;color:var(--text3);font-size:13px;padding:8px 0">No patients with abnormal CAD result (score ≥ 40) in current filter.</div>`;
+    document.getElementById('tc-district-chart').innerHTML='';
+    document.getElementById('tc-cascade-chart').innerHTML='';
+    return;
+  }
+
+  // ── KPI cards ──────────────────────────────────
+  const cards=[
+    {cls:'tc-w15',ico:'⚡',val:w15.length,pct:pct(w15.length,total),
+     lbl:'Tested ≤ 15 days',sub:'Fast-track referral',col:'var(--green-mid)',key:'w15'},
+    {cls:'tc-w30',ico:'🕐',val:w30.length,pct:pct(w30.length,total),
+     lbl:'Tested 16–30 days',sub:'Delayed referral',col:'var(--amber)',key:'w30'},
+    {cls:'tc-o30',ico:'⏰',val:o30.length,pct:pct(o30.length,total),
+     lbl:'Tested > 30 days',sub:'Significantly delayed',col:'var(--red-light)',key:'o30'},
+    {cls:'tc-none',ico:'❓',val:untested.length,pct:pct(untested.length,total),
+     lbl:'No test recorded',sub:'Needs follow-up',col:'var(--text3)',key:'untested'},
+  ];
+
+  document.getElementById('tc-kpi-grid').innerHTML=cards.map(c=>`
+    <div class="tc-card ${c.cls}">
+      <span class="tc-ico">${c.ico}</span>
+      <div class="tc-val" style="color:${c.col}">${c.val.toLocaleString()}</div>
+      <div class="tc-pct" style="color:${c.col}">${c.pct} of ${total.toLocaleString()} abn.</div>
+      <div class="tc-lbl">${c.lbl}</div>
+      <div class="tc-sub">${c.sub}</div>
+      <button class="tc-dl" onclick="downloadCascade('${c.key}')">⬇ Download</button>
+    </div>`).join('');
+
+  // ── By-district bar chart ───────────────────────
+  const distMap={};
+  cadAbn.forEach(r=>{
+    const d=cv(r,C.DISTRICT)||'Unknown';
+    if(!distMap[d])distMap[d]={total:0,w15:0,w30:0,o30:0,untested:0};
+    distMap[d].total++;
+  });
+  w15.forEach(r=>{const d=cv(r,C.DISTRICT)||'Unknown';if(distMap[d])distMap[d].w15++;});
+  w30.forEach(r=>{const d=cv(r,C.DISTRICT)||'Unknown';if(distMap[d])distMap[d].w30++;});
+  o30.forEach(r=>{const d=cv(r,C.DISTRICT)||'Unknown';if(distMap[d])distMap[d].o30++;});
+  untested.forEach(r=>{const d=cv(r,C.DISTRICT)||'Unknown';if(distMap[d])distMap[d].untested++;});
+
+  const maxDist=Math.max(...Object.values(distMap).map(x=>x.total),1);
+  document.getElementById('tc-district-chart').innerHTML=Object.entries(distMap)
+    .sort((a,b)=>b[1].total-a[1].total)
+    .map(([dist,d])=>{
+      const barW=Math.round((d.total/maxDist)*100);
+      const w15w=d.total?Math.round((d.w15/d.total)*barW):0;
+      const w30w=d.total?Math.round((d.w30/d.total)*barW):0;
+      const o30w=d.total?Math.round((d.o30/d.total)*barW):0;
+      const untw=barW-w15w-w30w-o30w;
+      return`<div class="tc-chart-bar">
+        <div class="tc-chart-lbl">${dist}</div>
+        <div style="flex:1;display:flex;align-items:center;gap:0;height:18px;border-radius:4px;overflow:hidden;background:var(--surface2)">
+          ${w15w>0?`<div class="tc-chart-seg" style="width:${w15w}%;background:var(--green-mid)" title="≤15d: ${d.w15}"></div>`:''}
+          ${w30w>0?`<div class="tc-chart-seg" style="width:${w30w}%;background:var(--amber)" title="16-30d: ${d.w30}"></div>`:''}
+          ${o30w>0?`<div class="tc-chart-seg" style="width:${o30w}%;background:var(--red-light)" title=">30d: ${d.o30}"></div>`:''}
+          ${untw>0?`<div class="tc-chart-seg" style="width:${untw}%;background:#CBD5E1" title="Untested: ${d.untested}"></div>`:''}
+        </div>
+        <span class="tc-chart-n">${d.total}</span>
+        <span class="tc-chart-p">${pct(d.w15,d.total)}</span>
+      </div>`;
+    }).join('');
+
+  // ── Cascade waterfall chart ─────────────────────
+  const steps=[
+    {lbl:'CAD Abnormal (≥40)',n:total,col:'#1E2D3D'},
+    {lbl:'Any test done',n:w15.length+w30.length+o30.length,col:'var(--blue)'},
+    {lbl:'Tested ≤ 15 days',n:w15.length,col:'var(--green-mid)'},
+    {lbl:'Tested 16–30 days',n:w30.length,col:'var(--amber)'},
+    {lbl:'Tested > 30 days', n:o30.length,col:'var(--red-light)'},
+    {lbl:'No test recorded',n:untested.length,col:'#9CA3AF'},
+  ];
+  document.getElementById('tc-cascade-chart').innerHTML=steps.map(s=>`
+    <div class="tc-chart-bar">
+      <div class="tc-chart-lbl">${s.lbl}</div>
+      <div style="flex:1;background:var(--surface2);border-radius:4px;height:18px;overflow:hidden">
+        <div style="height:100%;width:${total?Math.round((s.n/total)*100):0}%;background:${s.col};border-radius:4px;transition:width .4s ease;min-width:${s.n>0?'2px':'0'}"></div>
+      </div>
+      <span class="tc-chart-n">${s.n}</span>
+      <span class="tc-chart-p">${pct(s.n,total)}</span>
+    </div>`).join('');
+}
+
+window.downloadCascade=function(key){
+  const rows=FILTERED;
+  const{w15,w30,o30,untested}=computeTestCascade(rows);
+  const map={w15,w30,o30,untested};
+  const subset=map[key];
+  if(!subset||!subset.length){alert('No records in this category.');return;}
+
+  const labels={w15:'Tested_within_15days',w30:'Tested_16to30days',o30:'Tested_over_30days',untested:'No_Test_Recorded'};
+
+  // Compute days column for each row (for tested groups)
+  const data=subset.map(r=>{
+    const cadDt=pd(cv(r,C.CAD_DATE));
+    let earliest=null,testName='';
+    DOWNSTREAM_TESTS.forEach(t=>{
+      if(cv(r,t.done)==='Yes'){
+        const dt=pd(cv(r,t.date));
+        if(dt&&(!earliest||dt<earliest)){earliest=dt;testName=t.name;}
+      }
+    });
+    const days=(cadDt&&earliest)?Math.round((earliest-cadDt)/(1000*60*60*24)):null;
+    return rowToObj(r,{
+      '__CAD_Score':cv(r,C.CAD_RESULT),
+      '__CAD_Date':cv(r,C.CAD_DATE),
+      '__First_Test':testName||'—',
+      '__First_Test_Date':earliest?ds(earliest):'—',
+      '__Days_CAD_to_Test':days!==null?days:'—',
+    });
+  });
+
+  const ws=XLSX.utils.json_to_sheet(data);
+  const wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,ws,'CAD Cascade');
+  const d1=document.getElementById('d1').value,d2=document.getElementById('d2').value;
+  const range=(d1&&d2)?`_${d1}_to_${d2}`:'';
+  XLSX.writeFile(wb,`CAD_Cascade_${labels[key]}${range}.xlsx`);
+};
+
+// ═══════════════════════════════════════════════
+// GARDEN
+// ═══════════════════════════════════════════════
+function buildGarden(){
+  const base=window.FILTERED_BASE||FILTERED;
+  const result=FILTERED;
+  const gar={};
+
+  // Same diag-date alignment fix as buildDistrict
+  let tbResult;
+  if(DATE_MODE==='result'){
+    const d1=document.getElementById('d1').value,d2=document.getElementById('d2').value;
+    const dist=document.getElementById('fDist').value,cfv=document.getElementById('fCF').value;
+    tbResult=ALL.filter(r=>{
+      if(dist&&cv(r,C.DISTRICT)!==dist)return false;
+      if(cfv&&cv(r,C.CF)!==cfv)return false;
+      if(d1||d2){
+        if(!r._diagDs)return false;
+        if(d1&&r._diagDs<d1)return false;
+        if(d2&&r._diagDs>d2)return false;
+      }
+      return true;
+    });
+  } else {
+    tbResult=result;
+  }
+
+  base.forEach(r=>{
+    const g=cv(r,C.FACILITY)||'Unknown';
+    if(!gar[g])gar[g]={n:0,pres:0,cad:0,cxrAbn:0,xray:0,gxp:0,diag:0,tx:0,errs:0,district:cv(r,C.DISTRICT),cfs:new Set()};
+    gar[g].n++;
+    if(cv(r,C.PRESUMPTIVE)==='Yes')gar[g].pres++;
+    if(r._errs.length>0)gar[g].errs++;
+    gar[g].cfs.add(cv(r,C.CF));
+  });
+
+  result.forEach(r=>{
+    const g=cv(r,C.FACILITY)||'Unknown';
+    if(!gar[g])gar[g]={n:0,pres:0,cad:0,cxrAbn:0,xray:0,gxp:0,diag:0,tx:0,errs:0,district:cv(r,C.DISTRICT),cfs:new Set()};
+    if(cv(r,C.CAD_DONE)==='Yes')gar[g].cad++;
+    const cadScore=cn(r,C.CAD_RESULT);if(cadScore!==null&&cadScore>=40)gar[g].cxrAbn++;
+    if(cv(r,C.XRAY_DONE)==='Yes')gar[g].xray++;
+    if(cv(r,C.GXP_DONE)==='Yes')gar[g].gxp++;
+  });
+
+  // TB diag/tx use the corrected diag-date-aligned set
+  tbResult.forEach(r=>{
+    const g=cv(r,C.FACILITY)||'Unknown';
+    if(!gar[g])gar[g]={n:0,pres:0,cad:0,cxrAbn:0,xray:0,gxp:0,diag:0,tx:0,errs:0,district:cv(r,C.DISTRICT),cfs:new Set()};
+    if(cv(r,C.TB_DIAG)==='Yes')gar[g].diag++;
+    if(cv(r,C.TX_STARTED)==='Yes')gar[g].tx++;
+  });
+
   const arr=Object.entries(gar).sort((a,b)=>b[1].n-a[1].n);
   document.getElementById('garCount').textContent=arr.length+' gardens';
-  document.getElementById('gardenBody').innerHTML=arr.map(([g,d])=>`<tr data-name="${g.toLowerCase()}" data-dist="${d.district.toLowerCase()}"><td><strong>${g}</strong></td><td style="color:var(--text2)">${d.district}</td><td>${d.cfs.size}</td><td><strong>${d.n}</strong></td><td>${b(d.pres,'ba')}</td><td style="color:var(--amber);font-weight:600">${pct(d.pres,d.n)}</td><td>${d.cad>0?b(d.cad,'bsl'):'—'}</td><td>${d.xray>0?b(d.xray,'bsl'):'—'}</td><td>${d.gxp>0?b(d.gxp,'bg'):'—'}</td><td>${b(d.diag,'bb')}</td><td>${b(d.tx,'bg')}</td><td>${d.errs>0?b(d.errs,'br'):chk()}</td></tr>`).join('');
+  document.getElementById('gardenBody').innerHTML=arr.map(([g,d])=>`<tr data-name="${g.toLowerCase()}" data-dist="${d.district.toLowerCase()}"><td><strong>${g}</strong></td><td style="color:var(--text2)">${d.district}</td><td>${d.cfs.size}</td><td><strong>${d.n}</strong></td><td>${b(d.pres,'ba')}</td><td style="color:var(--amber);font-weight:600">${pct(d.pres,d.n)}</td><td>${d.cad>0?b(d.cad,'bsl'):'—'}</td><td>${d.cxrAbn>0?`<span class="badge" style="background:#FDEBD0;color:#E67E22">${d.cxrAbn}</span>`:'—'}</td><td>${d.xray>0?b(d.xray,'bsl'):'—'}</td><td>${d.gxp>0?b(d.gxp,'bg'):'—'}</td><td>${b(d.diag,'br')}</td><td>${b(d.tx,'bg')}</td><td>${d.errs>0?b(d.errs,'br'):chk()}</td></tr>`).join('');
 }
 window.filterGarden=function(){const q=(document.getElementById('garSearch').value||'').toLowerCase(),dist=(document.getElementById('garDist').value||'').toLowerCase();document.querySelectorAll('#gardenBody tr').forEach(tr=>{tr.style.display=(tr.dataset.name?.includes(q)&&(!dist||tr.dataset.dist===dist))?'':'none';});};
 
-// ── VALIDATION ────────────────────────────────────────────────
+// ═══════════════════════════════════════════════
+// TB CASES
+// ═══════════════════════════════════════════════
+function buildTBCases(){
+  // TB Cases: in result mode filter ONLY by diagnosed date (not test dates)
+  let tbRows;
+  if(DATE_MODE==='result'){
+    const d1=document.getElementById('d1').value,d2=document.getElementById('d2').value;
+    const dist=document.getElementById('fDist').value,cfv=document.getElementById('fCF').value;
+    tbRows=ALL.filter(r=>{
+      if(cv(r,C.TB_DIAG)!=='Yes')return false;
+      if(dist&&cv(r,C.DISTRICT)!==dist)return false;
+      if(cfv&&cv(r,C.CF)!==cfv)return false;
+      if(d1||d2){
+        if(!r._diagDs)return false;
+        if(d1&&r._diagDs<d1)return false;
+        if(d2&&r._diagDs>d2)return false;
+      }
+      return true;
+    });
+  } else {
+    tbRows=FILTERED.filter(r=>cv(r,C.TB_DIAG)==='Yes');
+  }
+
+  // Suspicious: same name+DOB combination
+  const seen={};
+  tbRows.forEach(r=>{
+    const key=(cv(r,C.PATIENT)+cv(r,C.DOB)).toLowerCase().replace(/\s/g,'');
+    if(key.length>3)seen[key]=(seen[key]||0)+1;
+  });
+  tbRows.forEach(r=>{
+    const key=(cv(r,C.PATIENT)+cv(r,C.DOB)).toLowerCase().replace(/\s/g,'');
+    r._suspect=key.length>3&&seen[key]>1;
+  });
+
+  const withFlags=tbRows.map(r=>({r,fl:tbFlags(r)}));
+  withFlags.sort((a,b)=>b.fl.length-a.fl.length);
+
+  const tot=tbRows.length,ptb=tbRows.filter(r=>cv(r,C.TB_TYPE)==='PTB').length;
+  const eptb=tbRows.filter(r=>cv(r,C.TB_TYPE)==='EPTB').length;
+  const bplus=tbRows.filter(r=>cv(r,C.BACT_STATUS)==='B+').length;
+  const cd=tbRows.filter(r=>cv(r,C.BACT_STATUS)==='CD').length;
+  const child=tbRows.filter(r=>cn(r,C.AGE_Y)!==null&&cn(r,C.AGE_Y)<=15).length;
+  const tx=tbRows.filter(r=>cv(r,C.TX_STARTED)==='Yes').length;
+  const flagged=withFlags.filter(x=>x.fl.length>0).length;
+
+  const K=(s,i,v,l,sub,col='var(--text1)')=>`<div class="kpi"><div class="kpi-stripe" style="background:${s}"></div><span class="kpi-ico">${i}</span><div class="kpi-val" style="color:${col}">${v}</div><div class="kpi-lbl">${l}</div><div class="kpi-sub">${sub}</div></div>`;
+  document.getElementById('tb-kpi').innerHTML=
+    K('var(--red)','🏥',tot,'Total TB Cases','','var(--red)')+
+    K('#8B4513','🫁',ptb,'PTB',pct(ptb,tot),'#8B4513')+
+    K('#556B2F','🔬',eptb,'EPTB',pct(eptb,tot),'#556B2F')+
+    K('var(--red-light)','🧫',bplus,'B+ Confirmed',pct(bplus,tot),'var(--red-light)')+
+    K('var(--amber)','🩺',cd,'CD Clinical',pct(cd,tot),'var(--amber)')+
+    K('#FF6B6B','👶',child,'Child TB (≤15y)',pct(child,tot),'#FF6B6B')+
+    K('var(--green)','💊',tx,'On Treatment',pct(tx,tot),'var(--green)')+
+    K('var(--red)','⚠️',flagged,'Flagged Cases',pct(flagged,tot),flagged>0?'var(--red)':'var(--green)');
+
+  document.getElementById('tbBody').innerHTML=withFlags.map(({r,fl})=>{
+    const isFl=fl.length>0,isSus=r._suspect;
+    const rowCls=isSus?'row-suspect':isFl?'row-flagged':'';
+    const cadScore=cv(r,C.CAD_RESULT)?parseFloat(cv(r,C.CAD_RESULT)).toFixed(1):'—';
+    const flagCell=fl.length>0?fl.map(f=>`<span class="err-chip" style="display:block;margin-bottom:2px">${f}</span>`).join(''):`<span style="color:var(--green);font-weight:700">✓ Clean</span>`;
+    return`<tr class="${rowCls}" data-fl="${isFl?'1':'0'}" data-type="${cv(r,C.TB_TYPE)}" data-bact="${cv(r,C.BACT_STATUS)}" data-q="${(cv(r,C.PATIENT)+cv(r,C.PID)+cv(r,C.CF)).toLowerCase()}">
+      <td style="min-width:200px">${flagCell}</td>
+      <td>${r._sds||'—'}</td>
+      <td>${cv(r,C.DIAG_DATE)||'—'}</td>
+      <td class="mono" style="color:var(--text3)">${cv(r,C.PID)}</td>
+      <td><strong>${cv(r,C.PATIENT)}</strong></td>
+      <td>${cv(r,C.AGE_Y)}</td>
+      <td>${cv(r,C.GENDER)}</td>
+      <td>${cv(r,C.CF)}</td>
+      <td>${cv(r,C.DISTRICT)}</td>
+      <td>${cv(r,C.FACILITY)}</td>
+      <td><span class="badge ${cv(r,C.TB_TYPE)==='PTB'?'br':'bg'}">${cv(r,C.TB_TYPE)||'—'}</span></td>
+      <td><span class="badge ${cv(r,C.BACT_STATUS)==='B+'?'br':'ba'}">${cv(r,C.BACT_STATUS)||'—'}</span></td>
+      <td style="color:var(--text2)">${cv(r,C.EPTB_SITE)||'—'}</td>
+      <td>${cv(r,C.CAD_DONE)||'—'}</td>
+      <td class="mono">${cadScore}</td>
+      <td>${cv(r,C.XRAY_DONE)||'—'}</td>
+      <td>${cv(r,C.GXP_DONE)||'—'}</td>
+      <td style="font-size:11px;max-width:130px;overflow:hidden;text-overflow:ellipsis" title="${cv(r,C.GXP_RESULT)}">${cv(r,C.GXP_RESULT)||'—'}</td>
+      <td>${cv(r,C.AFB_DONE)||'—'}</td>
+      <td>${cv(r,C.AFB_RESULT)||'—'}</td>
+      <td>${cv(r,C.TRUENAT_DONE)||'—'}</td>
+      <td style="font-size:11px">${cv(r,C.TRUENAT_RESULT)||'—'}</td>
+      <td>${cv(r,C.FNAC_DONE)||'—'}</td>
+      <td>${cv(r,C.BIOPSY_DONE)||'—'}</td>
+      <td>${cv(r,C.ADA_DONE)||'—'}</td>
+      <td>${cv(r,C.EPTB_DONE)||'—'}</td>
+      <td><span class="badge ${cv(r,C.TX_STARTED)==='Yes'?'bg':'bsl'}">${cv(r,C.TX_STARTED)||'—'}</span></td>
+    </tr>`;
+  }).join('');
+}
+window.filterTB=function(){
+  const q=(document.getElementById('tbSearch').value||'').toLowerCase();
+  const type=document.getElementById('tbType').value;
+  const bact=document.getElementById('tbBact').value;
+  const flagOnly=document.getElementById('tbFlag').value==='1';
+  document.querySelectorAll('#tbBody tr').forEach(tr=>{
+    const mq=!q||tr.dataset.q?.includes(q);
+    const mt=!type||tr.dataset.type===type;
+    const mb=!bact||tr.dataset.bact===bact;
+    const mf=!flagOnly||tr.dataset.fl==='1';
+    tr.style.display=(mq&&mt&&mb&&mf)?'':'none';
+  });
+};
+
+// ═══════════════════════════════════════════════
+// VALIDATION
+// ═══════════════════════════════════════════════
 function buildValidation(){
-  const rows=FILTERED,errRows=rows.filter(r=>r._errs.length>0),total=rows.length;
-  const flds={Gender:0,Diabetes:0,Cough:0,'Cough Duration':0,Fever:0,'Fever Duration':0,'Weight Loss':0,'Night Sweats':0,Playfulness:0,Swelling:0};
-  errRows.forEach(r=>r._errs.forEach(e=>{if(e in flds)flds[e]++;}));
-  const maxF=Math.max(...Object.values(flds),1);
+  const rows=FILTERED,errRows=rows.filter(r=>r._errs.length>0),tot=rows.length;
+  const allErrs={};
+  errRows.forEach(r=>r._errs.forEach(e=>{allErrs[e]=(allErrs[e]||0)+1;}));
+  const maxF=Math.max(...Object.values(allErrs),1);
+
   document.getElementById('val-kpi').innerHTML=`
-    <div class="kpi"><div class="kpi-stripe" style="background:var(--slate2)"></div><span class="kpi-ico">📋</span><div class="kpi-val">${total.toLocaleString()}</div><div class="kpi-lbl">Total Records</div><div class="kpi-sub">&nbsp;</div></div>
-    <div class="kpi"><div class="kpi-stripe" style="background:var(--red)"></div><span class="kpi-ico">⚠️</span><div class="kpi-val" style="color:${errRows.length>0?'var(--red)':'var(--green)'}">${errRows.length.toLocaleString()}</div><div class="kpi-lbl">With Errors</div><div class="kpi-sub">${pct(errRows.length,total)} error rate</div></div>
-    <div class="kpi"><div class="kpi-stripe" style="background:var(--green)"></div><span class="kpi-ico">✅</span><div class="kpi-val" style="color:var(--green)">${(total-errRows.length).toLocaleString()}</div><div class="kpi-lbl">Clean Records</div><div class="kpi-sub">${pct(total-errRows.length,total)} clean</div></div>
+    <div class="kpi"><div class="kpi-stripe" style="background:var(--slate2)"></div><span class="kpi-ico">📋</span><div class="kpi-val">${tot.toLocaleString()}</div><div class="kpi-lbl">Total Records</div><div class="kpi-sub">&nbsp;</div></div>
+    <div class="kpi"><div class="kpi-stripe" style="background:var(--red)"></div><span class="kpi-ico">⚠️</span><div class="kpi-val" style="color:${errRows.length>0?'var(--red)':'var(--green)'}">${errRows.length.toLocaleString()}</div><div class="kpi-lbl">With Errors</div><div class="kpi-sub">${pct(errRows.length,tot)} error rate</div></div>
+    <div class="kpi"><div class="kpi-stripe" style="background:var(--green)"></div><span class="kpi-ico">✅</span><div class="kpi-val" style="color:var(--green)">${(tot-errRows.length).toLocaleString()}</div><div class="kpi-lbl">Clean Records</div><div class="kpi-sub">${pct(tot-errRows.length,tot)}</div></div>
   `;
-  document.getElementById('val-bars').innerHTML=Object.entries(flds).sort((a,b)=>b[1]-a[1]).map(([k,n])=>`<div class="fbar-row"><div class="fbar-lbl">${k}</div><div class="fbar-prog"><div class="prog"><div class="prog-fill" style="width:${n>0?Math.round(n/maxF*100):0}%;background:${n>0?'var(--red)':'var(--green)'}"></div></div></div><div class="fbar-n">${n}</div><div class="fbar-p">${pct(n,total)}</div></div>`).join('');
+
+  document.getElementById('val-bars').innerHTML=Object.entries(allErrs).sort((a,b)=>b[1]-a[1]).map(([k,n])=>
+    `<div class="fbar-row"><div class="fbar-lbl">${k}</div><div class="fbar-prog"><div class="prog"><div class="prog-fill" style="width:${Math.round(n/maxF*100)}%;background:var(--red)"></div></div></div><div class="fbar-n">${n}</div><div class="fbar-p">${pct(n,tot)}</div></div>`
+  ).join('');
+
   const cfE={};
-  rows.forEach(r=>{const cf=tv(r,'Name of FA')||'?',dist=tv(r,'District');if(!cfE[cf])cfE[cf]={n:0,e:0,flds:{},dist};cfE[cf].n++;if(r._errs.length>0){cfE[cf].e++;r._errs.forEach(f=>{cfE[cf].flds[f]=(cfE[cf].flds[f]||0)+1;});}});
+  rows.forEach(r=>{const cf=cv(r,C.CF)||'?';if(!cfE[cf])cfE[cf]={n:0,e:0,flds:{},dist:cv(r,C.DISTRICT)};cfE[cf].n++;if(r._errs.length>0){cfE[cf].e++;r._errs.forEach(f=>{cfE[cf].flds[f]=(cfE[cf].flds[f]||0)+1;});}});
   document.getElementById('cfErrBody').innerHTML=Object.entries(cfE).sort((a,b)=>b[1].e-a[1].e).map(([name,d])=>{
     const topF=Object.entries(d.flds).sort((a,b)=>b[1]-a[1]).slice(0,4).map(([f,n])=>`<span class="err-chip">${f} (${n})</span>`).join('');
     return`<tr><td><strong>${name}</strong></td><td style="color:var(--text2)">${d.dist}</td><td>${d.n}</td><td>${d.e>0?b(d.e,'br'):chk()}</td><td style="color:${d.e>0?'var(--red)':'var(--green)'};font-weight:600">${pct(d.e,d.n)}</td><td>${topF||'—'}</td></tr>`;
   }).join('');
-  document.getElementById('valBody').innerHTML=errRows.slice(0,300).map(r=>`<tr data-q="${(tv(r,'PID')+tv(r,'Patient')+tv(r,'Name of FA')).toLowerCase()}" data-errs="${r._errs.join(',').toLowerCase()}" data-dist="${tv(r,'District').toLowerCase()}"><td>${r._ds||'—'}</td><td class="mono" style="color:var(--text3)">${tv(r,'PID')}</td><td>${tv(r,'Patient')}</td><td>${tv(r,'Age-Year')}</td><td>${tv(r,'Gender')||'<span style="color:var(--red)">blank</span>'}</td><td>${tv(r,'Name of FA')}</td><td>${tv(r,'District')}</td><td>${tv(r,'Facility')}</td><td>${tv(r,'Cough')||'—'}</td><td class="mono">${r._cd||'—'}</td><td>${tv(r,'Fever')||'—'}</td><td class="mono">${r._fd||'—'}</td><td>${r._errs.map(e=>`<span class="err-chip">${e}</span>`).join('')}</td></tr>`).join('');
+
+  document.getElementById('valBody').innerHTML=errRows.slice(0,300).map(r=>`<tr
+    data-q="${(cv(r,C.PID)+cv(r,C.PATIENT)+cv(r,C.CF)).toLowerCase()}"
+    data-errs="${r._errs.join('||').toLowerCase()}"
+    data-dist="${cv(r,C.DISTRICT).toLowerCase()}">
+    <td>${r._sds||'—'}</td>
+    <td class="mono" style="color:var(--text3)">${cv(r,C.PID)}</td>
+    <td>${cv(r,C.PATIENT)}</td>
+    <td>${cv(r,C.AGE_Y)}</td>
+    <td>${cv(r,C.GENDER)||'<span style="color:var(--red)">blank</span>'}</td>
+    <td>${cv(r,C.CF)}</td>
+    <td>${cv(r,C.DISTRICT)}</td>
+    <td>${cv(r,C.FACILITY)}</td>
+    <td>${cv(r,C.COUGH)||'—'}</td>
+    <td class="mono">${r._cd||'—'}</td>
+    <td>${cv(r,C.FEVER)||'—'}</td>
+    <td class="mono">${r._fd||'—'}</td>
+    <td>${r._errs.map(e=>`<span class="err-chip">${e}</span>`).join('')}</td>
+  </tr>`).join('');
+
+  // Error type download panel
+  document.getElementById('errTypeList').innerHTML=Object.entries(allErrs).sort((a,b)=>b[1]-a[1]).map(([e,n])=>`
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border)">
+      <div><span class="err-chip">${e}</span><span style="color:var(--text2);font-size:11px;margin-left:6px">${n} records</span></div>
+      <button class="dl-btn" style="padding:4px 10px;font-size:11px" onclick="downloadErrors('${e.replace(/'/g,"\\'").replace(/\\/g,'\\\\')}')" >⬇ Download</button>
+    </div>`).join('');
 }
+
 window.filterVal=function(){
   const q=(document.getElementById('valSearch').value||'').toLowerCase();
   const field=(document.getElementById('valField').value||'').toLowerCase();
   const dist=(document.getElementById('valDist').value||'').toLowerCase();
-  document.querySelectorAll('#valBody tr').forEach(tr=>{tr.style.display=((!q||tr.dataset.q?.includes(q))&&(!field||tr.dataset.errs?.includes(field))&&(!dist||tr.dataset.dist===dist))?'':'none';});
+  document.querySelectorAll('#valBody tr').forEach(tr=>{
+    tr.style.display=((!q||tr.dataset.q?.includes(q))&&(!field||tr.dataset.errs?.includes(field))&&(!dist||tr.dataset.dist===dist))?'':'none';
+  });
+};
+window.toggleErrPanel=function(){const p=document.getElementById('errTypePanel');p.style.display=p.style.display==='none'?'block':'none';};
+
+// ═══════════════════════════════════════════════
+// EXCEL DOWNLOADS
+// ═══════════════════════════════════════════════
+// Renamed column headers for Excel output
+function makeColNames(){
+  const m={};
+  // Use raw header names but rename the duplicates
+  RAW_HEADERS.forEach((h,i)=>{m[i]=h.trim();});
+  m[C.CAD_DATE]='CAD_Date'; m[C.XRAY_DATE]='XRay_Date'; m[C.MT_DATE]='MT_Date';
+  m[C.STOOL_DATE]='GXPStool_Date'; m[C.GXP_DATE]='GXPSputum_Date';
+  m[C.IND_DATE]='InducedSputum_Date'; m[C.GL_DATE]='GL_Date';
+  m[C.EPTB_DATE]='GXPEPTBUltra_Date'; m[C.TRUENAT_DATE]='Truenat_Date';
+  m[C.AFB_DATE]='AFB_Date'; m[C.FNAC_DATE]='FNAC_Date';
+  m[C.BIOPSY_DATE]='Biopsy_Date'; m[C.ADA_DATE]='ADA_Date';
+  m[C.CAD_RESULT]='CAD_Result'; m[C.XRAY_RESULT]='XRay_Result';
+  m[C.MT_RESULT]='MT_Result'; m[C.STOOL_RESULT]='GXPStool_Result';
+  m[C.GXP_RESULT]='GXPSputum_Result'; m[C.IND_RESULT]='InducedSputum_Result';
+  m[C.GL_RESULT]='GL_Result'; m[C.EPTB_RESULT]='GXPEPTBUltra_Result';
+  m[C.TRUENAT_RESULT]='Truenat_Result'; m[C.AFB_RESULT]='AFB_Result';
+  m[C.FNAC_RESULT]='FNAC_Result'; m[C.BIOPSY_RESULT]='Biopsy_Result';
+  m[C.ADA_RESULT]='ADA_Result'; m[C.COUGH_DUR]='Cough_Duration';
+  m[C.FEVER_DUR]='Fever_Duration';
+  return m;
+}
+
+function rowToObj(r,extraCols){
+  const cm=makeColNames();
+  const obj={};
+  RAW_HEADERS.forEach((_,i)=>{obj[cm[i]||i]=r[i]||'';});
+  if(extraCols)Object.assign(obj,extraCols);
+  return obj;
+}
+
+window.downloadErrors=function(errType){
+  const isAll=errType==='__all__';
+  const errRows=isAll
+    ?FILTERED.filter(r=>r._errs.length>0)
+    :FILTERED.filter(r=>r._errs.some(e=>e===errType));
+  if(!errRows.length){alert('No records found.');return;}
+  const data=errRows.map(r=>rowToObj(r,{'__Errors':r._errs.join('; ')}));
+  const ws=XLSX.utils.json_to_sheet(data);
+  const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'Errors');
+  XLSX.writeFile(wb,isAll?'Validation_Errors_All.xlsx':`Validation_Errors_${errType.replace(/[^a-zA-Z0-9]/g,'_')}.xlsx`);
 };
 
-// Init
+window.downloadTBCases=function(){
+  const tbRows=FILTERED.filter(r=>cv(r,C.TB_DIAG)==='Yes');
+  if(!tbRows.length){alert('No TB cases in current view.');return;}
+  const d1=document.getElementById('d1').value,d2=document.getElementById('d2').value;
+  const range=(d1&&d2)?`_${d1}_to_${d2}`:'';
+  const data=tbRows.map(r=>rowToObj(r,{'__TB_Case_Flags':tbFlags(r).join('; ')}));
+  const ws=XLSX.utils.json_to_sheet(data);
+  const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'TB Cases');
+  XLSX.writeFile(wb,`TB_Cases${range}.xlsx`);
+};
+
+// ═══════════════════════════════════════════════
+// CF TABLE DOWNLOAD
+// ═══════════════════════════════════════════════
+window.downloadCFTable=function(){
+  const headers=['CF Name','District','Days Worked','Total Screened','Avg/day',
+    'Presumptive','Pres. %','Tested','CAD Done','CXR Abnormal (≥40)',
+    'X-ray Done','GXP Sputum Done','Diagnosed',
+    'Avg Start Time','Avg End Time','Avg Session Duration',
+    'Error Records','Error %'];
+
+  const tbody=document.querySelector('#cfTable tbody');
+  if(!tbody){alert('No CF data to download.');return;}
+  const rows=[...tbody.rows].filter(tr=>tr.style.display!=='none');
+  if(!rows.length){alert('No visible CF rows to download.');return;}
+
+  const data=rows.map(tr=>{
+    const cells=[...tr.cells].map(td=>td.textContent.trim());
+    const obj={};
+    headers.forEach((h,i)=>obj[h]=cells[i]||'');
+    return obj;
+  });
+
+  const ws=XLSX.utils.json_to_sheet(data,{header:headers});
+  // Set column widths
+  ws['!cols']=[{wch:28},{wch:16},{wch:12},{wch:16},{wch:10},
+    {wch:14},{wch:10},{wch:10},{wch:10},{wch:18},
+    {wch:10},{wch:10},{wch:12},
+    {wch:14},{wch:14},{wch:18},
+    {wch:14},{wch:10}];
+
+  const wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,ws,'CF Performance');
+  const d1=document.getElementById('d1').value,d2=document.getElementById('d2').value;
+  const range=(d1&&d2)?`_${d1}_to_${d2}`:'';
+  XLSX.writeFile(wb,`CF_Performance${range}.xlsx`);
+};
+
+// Boot
 showTab('overview', document.querySelector('.nav-btn'));
 </script>
 </body>

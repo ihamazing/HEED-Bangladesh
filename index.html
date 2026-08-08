@@ -82,10 +82,40 @@ input[type=file]{display:none}
 .kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(148px,1fr));gap:12px;margin-bottom:16px}
 .kpi{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:16px 18px;box-shadow:var(--shadow-sm);position:relative;overflow:hidden}
 .kpi-stripe{position:absolute;top:0;left:0;right:0;height:3px}
-.kpi-ico{font-size:18px;margin-bottom:10px;display:block}
-.kpi-val{font-size:28px;font-weight:700;line-height:1;font-family:'DM Mono',monospace;letter-spacing:-.02em;margin-bottom:3px}
-.kpi-lbl{font-size:12px;font-weight:500;color:var(--text2)}
-.kpi-sub{font-size:11px;color:var(--text3);margin-top:2px}
+.kpi-ico{font-size:19px;margin-bottom:10px;display:block}
+.kpi-val{font-size:30px;font-weight:700;line-height:1;font-family:'DM Mono',monospace;letter-spacing:-.02em;margin-bottom:3px}
+.kpi-lbl{font-size:13px;font-weight:600;color:var(--text2)}
+.kpi-sub{font-size:11.5px;color:var(--text3);margin-top:2px}
+.kpi-mini-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(128px,1fr));gap:8px;margin-bottom:16px}
+.kpi-mini{background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:10px 12px;box-shadow:var(--shadow-sm);display:flex;align-items:center;gap:9px}
+.kpi-mini .mi-ico{font-size:15px;flex-shrink:0}
+.kpi-mini .mi-val{font-size:17px;font-weight:700;font-family:'DM Mono',monospace;line-height:1;letter-spacing:-.02em}
+.kpi-mini .mi-lbl{font-size:10px;color:var(--text3);margin-top:2px;font-weight:500}
+.gender-compare{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}
+.gender-donut-col{display:flex;align-items:center;gap:14px;text-align:left;padding:4px 0}
+.gd-info{flex:1;min-width:0}
+.gd-title{font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:7px}
+.gd-ring-wrap{position:relative;width:80px;height:80px;flex-shrink:0}
+.gd-ring{width:100%;height:100%;display:block}
+.gd-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none}
+.gd-total{font-size:15.5px;font-weight:700;font-family:'DM Mono',monospace;letter-spacing:-.02em;color:var(--text1)}
+.gd-total-lbl{font-size:8px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-top:1px}
+.gd-legend{display:flex;flex-direction:column;gap:4px}
+.gd-leg-item{display:flex;align-items:center;gap:6px;justify-content:flex-start;font-size:12.5px;color:var(--text2)}
+.gd-leg-item b{color:var(--text1);font-weight:700}
+.gd-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.gd-leg-pct{color:var(--text3);font-weight:600;margin-left:1px}
+.trend-toolbar{display:flex;align-items:center;gap:8px}
+.trend-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(400px,1fr));gap:14px}
+.trend-card{border-radius:var(--r-lg);padding:16px 18px 10px;border:1px solid var(--border);box-shadow:var(--shadow-sm)}
+.trend-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:2px}
+.trend-title{font-size:12px;font-weight:700;display:flex;align-items:center;gap:6px}
+.trend-big{font-size:24px;font-weight:700;font-family:'DM Mono',monospace;letter-spacing:-.02em}
+.trend-sub{font-size:10.5px;color:var(--text3);margin-bottom:6px}
+.delta-chip{font-size:10px;font-weight:700;padding:2px 7px;border-radius:999px;display:inline-flex;align-items:center;gap:2px}
+.delta-up{background:#DFF3E6;color:#2E8B57}
+.delta-down{background:#FCE4E4;color:#D9534F}
+.delta-flat{background:var(--surface2);color:var(--text3)}
 .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);box-shadow:var(--shadow-sm);overflow:hidden;margin-bottom:16px}
 .card-head{display:flex;align-items:center;justify-content:space-between;padding:13px 18px;border-bottom:1px solid var(--border)}
 .card-title{font-size:13px;font-weight:700;color:var(--text1)}
@@ -112,12 +142,12 @@ tbody tr.row-suspect:hover td{background:#FFF5D6}
 .warn-chip{display:inline-block;font-size:10px;font-weight:600;padding:1px 6px;border-radius:4px;background:var(--amber-pale);color:var(--amber);margin:1px 2px}
 .prog{background:var(--surface2);border-radius:999px;height:5px;overflow:hidden}
 .prog-fill{height:100%;border-radius:999px}
-.cascade-row{display:flex;align-items:center;gap:12px;padding:12px 18px;border-bottom:1px solid var(--border)}
+.cascade-row{display:flex;align-items:center;gap:12px;padding:15px 18px;border-bottom:1px solid var(--border)}
 .cascade-row:last-child{border-bottom:none}
-.casc-ico{font-size:16px;width:22px;flex-shrink:0}
-.casc-lbl{font-size:12.5px;font-weight:500;color:var(--text2);min-width:160px}
-.casc-val{font-family:'DM Mono',monospace;font-size:20px;font-weight:700;color:var(--text1);min-width:80px}
-.casc-pct{font-size:11px;color:var(--text3);min-width:52px}
+.casc-ico{font-size:19px;width:24px;flex-shrink:0}
+.casc-lbl{font-size:14px;font-weight:600;color:var(--text2);min-width:180px}
+.casc-val{font-family:'DM Mono',monospace;font-size:23px;font-weight:700;color:var(--text1);min-width:88px}
+.casc-pct{font-size:12.5px;font-weight:600;color:var(--text3);min-width:56px}
 .casc-bar{flex:1}
 .toolbar{display:flex;gap:9px;padding:12px 16px;flex-wrap:wrap;align-items:center;border-bottom:1px solid var(--border);background:var(--surface2)}
 .srch{flex:1;min-width:160px;padding:7px 11px;border-radius:6px;border:1px solid var(--border2);background:var(--surface);font-size:12.5px;color:var(--text1);outline:none;font-family:'DM Sans',sans-serif;transition:border-color .15s}
@@ -146,6 +176,15 @@ tbody tr.row-suspect:hover td{background:#FFF5D6}
 .tc-card.tc-w30{border-top:3px solid var(--amber)}
 .tc-card.tc-o30{border-top:3px solid var(--red-light)}
 .tc-card.tc-none{border-top:3px solid #9CA3AF}
+.tc-card.tc-comp{border-top:3px solid var(--green)}
+.tc-card.tc-early{border-top:3px solid #E67E22}
+.status-pill{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:999px;white-space:nowrap}
+.sp-comp{background:var(--green-pale);color:var(--green)}
+.sp-almost{background:#E3F5EA;color:var(--green-mid)}
+.sp-good{background:var(--amber-pale);color:var(--amber)}
+.sp-early{background:#FDEBD8;color:#E67E22}
+.sp-none{background:var(--red-pale);color:var(--red)}
+.sp-nopop{background:var(--surface2);color:var(--text3)}
 .tc-ico{font-size:18px;margin-bottom:8px;display:block}
 .tc-val{font-size:26px;font-weight:700;font-family:'DM Mono',monospace;letter-spacing:-.02em;line-height:1}
 .tc-pct{font-size:12px;font-weight:600;margin-top:2px}
@@ -178,6 +217,7 @@ tbody tr.row-suspect:hover td{background:#FFF5D6}
     <button class="nav-btn" onclick="showTab('datewise',this)"><span class="ico">📅</span> Date-wise Log</button>
     <button class="nav-btn" onclick="showTab('cf',this)"><span class="ico">👤</span> Community Facilitators</button>
     <button class="nav-btn" onclick="showTab('district',this)"><span class="ico">🗺️</span> District</button>
+    <button class="nav-btn" onclick="showTab('upazila',this)"><span class="ico">📍</span> Upazila-wise</button>
     <button class="nav-btn" onclick="showTab('garden',this)"><span class="ico">🌿</span> Tea Gardens</button>
     <button class="nav-btn" onclick="showTab('tbcase',this)"><span class="ico">🏥</span> TB Cases</button>
     <button class="nav-btn" onclick="showTab('validation',this)">
@@ -195,6 +235,7 @@ tbody tr.row-suspect:hover td{background:#FFF5D6}
     <div class="fgroup"><label>From</label><input type="date" id="d1"></div>
     <div class="fgroup"><label>To</label><input type="date" id="d2"></div>
     <div class="fgroup"><label>District</label><select id="fDist"><option value="">All districts</option></select></div>
+    <div class="fgroup"><label>Upazila</label><select id="fUpz"><option value="">All upazilas</option></select></div>
     <div class="fgroup"><label>Community Facilitator</label><select id="fCF"><option value="">All CFs</option></select></div>
     <div class="filter-actions">
       <button class="btn-apply" onclick="applyFilters()">Apply</button>
@@ -213,7 +254,13 @@ tbody tr.row-suspect:hover td{background:#FFF5D6}
       </div>
     </div>
     <div class="banner-right">
+      <div class="file-chip" id="refChip" style="display:none;background:rgba(255,255,255,.08)"><div class="dot" style="background:#FFD166"></div><span id="refName">—</span></div>
       <div class="file-chip" id="fileChip" style="display:none"><div class="dot"></div><span id="fileName">—</span></div>
+      <label class="upload-cta" for="refIn" style="background:rgba(255,255,255,.16);color:#fff;box-shadow:none">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
+        Garden Reference
+      </label>
+      <input type="file" id="refIn" accept=".xlsx,.xls">
       <label class="upload-cta" for="csvIn">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
         Upload CSV
@@ -228,7 +275,7 @@ tbody tr.row-suspect:hover td{background:#FFF5D6}
           <div class="upload-card-header">
             <span class="big-icon">🏥</span>
             <h2>TB Screening Dashboard</h2>
-            <p>HEED Bangladesh · FC-SDS Project · 112 Tea Gardens</p>
+            <p>HEED Bangladesh · FC-SDS Project · Tea Garden TB Screening</p>
           </div>
           <div class="upload-card-body">
             <div class="drop-zone" id="dropZone" onclick="document.getElementById('csvIn').click()">
@@ -239,6 +286,7 @@ tbody tr.row-suspect:hover td{background:#FFF5D6}
               </label>
             </div>
             <div class="drop-hint">or drag and drop anywhere</div>
+            <div class="drop-hint" style="margin-top:8px">Optional: use the <strong>Garden Reference</strong> button (top right) to upload your Tea Garden ↔ Upazila ↔ Population Excel sheet, for coverage % and Upazila-level reporting.</div>
           </div>
         </div>
       </div>
@@ -248,9 +296,34 @@ tbody tr.row-suspect:hover td{background:#FFF5D6}
       <div class="sec-head"><div class="sec-eyebrow">Programme Summary</div><div class="sec-title">Overview <span id="ov-pill"></span></div></div>
       <div class="kpi-grid" id="kpi-r1"></div>
       <div class="kpi-grid" id="kpi-r2"></div>
+      <div class="card" style="margin-top:4px" id="cascade-card">
+        <div class="card-head"><span class="card-title" style="font-size:15px">Screening Cascade</span></div>
+        <div id="cascade-body" style="padding:8px 18px 18px"></div>
+      </div>
       <div class="two-col">
-        <div class="card"><div class="card-head"><span class="card-title">Screening Cascade</span></div><div id="cascade-body"></div></div>
-        <div class="card"><div class="card-head"><span class="card-title">TB Case Breakdown</span></div><div class="card-body" id="tb-breakdown"></div></div>
+        <div class="card" style="display:flex;flex-direction:column"><div class="card-head"><span class="card-title" style="font-size:15px">TB Case Breakdown</span></div><div class="card-body" id="tb-breakdown" style="display:flex;flex-direction:column;justify-content:center;flex:1"></div></div>
+        <div class="card" style="display:flex;flex-direction:column">
+          <div class="card-head"><span class="card-title" style="font-size:15px">Gender Breakdown</span><span class="card-sub">Screened vs. Presumptive vs. Diagnosed</span></div>
+          <div class="card-body" id="gender-compare" style="display:flex;flex-direction:column;justify-content:center;flex:1;gap:14px"></div>
+        </div>
+      </div>
+      <div class="card" style="margin-top:4px">
+        <div class="card-head">
+          <div>
+            <span class="card-title">📈 Monthly Trends</span>
+            <div class="card-sub" style="margin-top:3px">Each metric on its own date — Screened &amp; Presumptive by Screening Date, Tested by first test done, Diagnosed by Diagnosed Date</div>
+          </div>
+          <div class="trend-toolbar">
+            <select class="sel" id="trendScope" onchange="buildTrends()">
+              <option value="3">Last 3 months</option>
+              <option value="6">Last 6 months</option>
+              <option value="all" selected>All time (since project start)</option>
+            </select>
+          </div>
+        </div>
+        <div class="card-body" style="padding-top:14px">
+          <div class="trend-grid" id="trend-grid"></div>
+        </div>
       </div>
     </div>
     <!-- DATE-WISE -->
@@ -362,6 +435,132 @@ tbody tr.row-suspect:hover td{background:#FFF5D6}
           </div>
         </div>
       </div>
+
+      <!-- Untested Presumptive -->
+      <div class="card" style="margin-top:4px">
+        <div class="card-head">
+          <div>
+            <span class="card-title">❓ Untested Presumptive</span>
+            <div class="card-sub" style="margin-top:3px">Presumptive individuals who have not undergone any test at all, starting with CAD X-ray (CXR), through X-ray, GXP, AFB, TRUNAT, etc.</div>
+          </div>
+        </div>
+        <div class="card-body" style="padding-bottom:10px">
+          <div class="tc-grid" id="up-kpi-grid" style="grid-template-columns:repeat(2,1fr)"></div>
+          <div>
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);margin-bottom:10px">By District</div>
+            <div id="up-district-chart"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- UPAZILA-WISE -->
+    <div class="pane" id="pane-upazila">
+      <div class="sec-head"><div class="sec-eyebrow">Geographic</div><div class="sec-title">Upazila-wise Coverage</div></div>
+
+      <!-- Empty state -->
+      <div class="card" id="upazilaEmptyState">
+        <div class="card-body" style="text-align:center;padding:44px 24px">
+          <div style="font-size:34px;margin-bottom:10px">📍</div>
+          <div style="font-size:15px;font-weight:700;color:var(--text1);margin-bottom:6px">No Garden Reference sheet uploaded yet</div>
+          <div style="font-size:13px;color:var(--text3);max-width:440px;margin:0 auto">Upload your Tea Garden Reference sheet (Upazila, District, Donor &amp; Survey Population) using the "Garden Reference" button in the top banner. This tab will automatically populate with district → upazila population coverage and garden-wise completion status once it's uploaded.</div>
+        </div>
+      </div>
+
+      <!-- Populated state -->
+      <div id="upazilaContent" style="display:none">
+        <div class="kpi-grid" id="upz-coverage-grid" style="margin-bottom:16px"></div>
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <span class="card-title">Upazila Summary</span>
+              <div class="card-sub" style="margin-top:3px">Population screened vs. Donor and Survey population targets, by District &amp; Upazila</div>
+            </div>
+          </div>
+          <div class="tbl-wrap"><table id="upazilaTable">
+            <thead><tr>
+              <th onclick="srt('upazilaTable',0,false)">District</th>
+              <th onclick="srt('upazilaTable',1,false)">Upazila</th>
+              <th onclick="srt('upazilaTable',2,true)">Gardens</th>
+              <th onclick="srt('upazilaTable',3,true)">Screened</th>
+              <th onclick="srt('upazilaTable',4,true)">Presumptive</th>
+              <th onclick="srt('upazilaTable',5,true)">Diagnosed</th>
+              <th onclick="srt('upazilaTable',6,true)">Donor Pop.</th>
+              <th onclick="srt('upazilaTable',7,true)">Survey Pop.</th>
+              <th onclick="srt('upazilaTable',8,true)">Cov. % (Donor)</th>
+              <th onclick="srt('upazilaTable',9,true)">Cov. % (Survey)</th>
+              <th onclick="srt('upazilaTable',10,true)">Gardens Completed (Donor)</th>
+              <th onclick="srt('upazilaTable',11,true)">Gardens Completed (Survey)</th>
+            </tr></thead>
+            <tbody id="upazilaBody"></tbody>
+          </table></div>
+        </div>
+
+        <div class="card" style="margin-top:4px">
+          <div class="card-head">
+            <div>
+              <span class="card-title">🎯 Screening Completion — by Donor Population</span>
+              <div class="card-sub" style="margin-top:3px">Each tea garden's screened count vs. its Donor Population target</div>
+            </div>
+          </div>
+          <div class="card-body" style="padding-bottom:10px">
+            <div class="tc-grid" id="comp-donor-grid" style="grid-template-columns:repeat(5,1fr)"></div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:4px">
+          <div class="card-head">
+            <div>
+              <span class="card-title">🎯 Screening Completion — by Survey Population</span>
+              <div class="card-sub" style="margin-top:3px">Each tea garden's screened count vs. its Survey (ground-truth) Population target</div>
+            </div>
+          </div>
+          <div class="card-body" style="padding-bottom:10px">
+            <div class="tc-grid" id="comp-survey-grid" style="grid-template-columns:repeat(5,1fr)"></div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:4px" id="notStartedCard">
+          <div class="card-head">
+            <div>
+              <span class="card-title">🚩 Tea Gardens Not Yet Added / No Screening Data</span>
+              <div class="card-sub" style="margin-top:3px" id="notStartedSub">Gardens listed in the Reference sheet with zero screened records in the current data — likely not yet visited, or a name mismatch worth checking.</div>
+            </div>
+          </div>
+          <div class="tbl-wrap"><table id="notStartedTable">
+            <thead><tr><th>Tea Garden</th><th>District</th><th>Upazila</th><th>Donor Pop.</th><th>Survey Pop.</th></tr></thead>
+            <tbody id="notStartedBody"></tbody>
+          </table></div>
+        </div>
+
+        <div class="card" style="margin-top:4px">
+          <div class="card-head">
+            <div>
+              <span class="card-title">Tea Garden-wise Completion</span>
+              <div class="card-sub" style="margin-top:3px">Every garden in the Reference sheet, with its completion category against both population figures</div>
+            </div>
+            <button class="tc-dl" style="position:static" onclick="downloadGardenCompletion()">⬇ Download</button>
+          </div>
+          <div class="toolbar">
+            <input class="srch" id="compSearch" placeholder="Search garden name…" oninput="filterGardenCompletion()">
+            <select class="sel" id="compDist" onchange="filterGardenCompletion()"><option value="">All districts</option></select>
+          </div>
+          <div class="tbl-wrap"><table id="gardenCompletionTable">
+            <thead><tr>
+              <th onclick="srt('gardenCompletionTable',0,false)">Tea Garden</th>
+              <th onclick="srt('gardenCompletionTable',1,false)">District</th>
+              <th onclick="srt('gardenCompletionTable',2,false)">Upazila</th>
+              <th onclick="srt('gardenCompletionTable',3,true)">Screened</th>
+              <th onclick="srt('gardenCompletionTable',4,true)">Donor Pop.</th>
+              <th onclick="srt('gardenCompletionTable',5,true)">Cov. % (Donor)</th>
+              <th>Status (Donor)</th>
+              <th onclick="srt('gardenCompletionTable',7,true)">Survey Pop.</th>
+              <th onclick="srt('gardenCompletionTable',8,true)">Cov. % (Survey)</th>
+              <th>Status (Survey)</th>
+            </tr></thead>
+            <tbody id="gardenCompletionBody"></tbody>
+          </table></div>
+        </div>
+      </div>
     </div>
     <!-- GARDEN -->
     <div class="pane" id="pane-garden">
@@ -376,19 +575,36 @@ tbody tr.row-suspect:hover td{background:#FFF5D6}
           <thead><tr>
             <th onclick="srt('gardenTable',0,false)">Tea Garden</th>
             <th onclick="srt('gardenTable',1,false)">District</th>
-            <th onclick="srt('gardenTable',2,true)">CFs</th>
-            <th onclick="srt('gardenTable',3,true)">Screened</th>
-            <th onclick="srt('gardenTable',4,true)">Presumptive</th>
-            <th onclick="srt('gardenTable',5,true)">Yield %</th>
-            <th onclick="srt('gardenTable',6,true)">CAD X-ray</th>
-            <th onclick="srt('gardenTable',7,true)">CXR Abn.</th>
-            <th onclick="srt('gardenTable',8,true)">X-ray</th>
-            <th onclick="srt('gardenTable',9,true)">GXP</th>
-            <th onclick="srt('gardenTable',10,true)">Diagnosed</th>
-            <th onclick="srt('gardenTable',11,true)">Treated</th>
-            <th onclick="srt('gardenTable',12,true)">Errors</th>
+            <th onclick="srt('gardenTable',2,false)">Upazila</th>
+            <th onclick="srt('gardenTable',3,true)">CFs</th>
+            <th onclick="srt('gardenTable',4,true)">Screened</th>
+            <th onclick="srt('gardenTable',5,true)">Presumptive</th>
+            <th onclick="srt('gardenTable',6,true)">Yield %</th>
+            <th onclick="srt('gardenTable',7,true)">CAD X-ray</th>
+            <th onclick="srt('gardenTable',8,true)">CXR Abn.</th>
+            <th onclick="srt('gardenTable',9,true)">X-ray</th>
+            <th onclick="srt('gardenTable',10,true)">GXP</th>
+            <th onclick="srt('gardenTable',11,true)">Diagnosed</th>
+            <th onclick="srt('gardenTable',12,true)">Treated</th>
+            <th onclick="srt('gardenTable',13,true)">Errors</th>
+            <th onclick="srt('gardenTable',14,true)">Donor Pop.</th>
+            <th onclick="srt('gardenTable',15,true)">Survey Pop.</th>
+            <th onclick="srt('gardenTable',16,true)">Cov. % (Donor)</th>
+            <th onclick="srt('gardenTable',17,true)">Cov. % (Survey)</th>
           </tr></thead>
           <tbody id="gardenBody"></tbody>
+        </table></div>
+      </div>
+      <div class="card" id="unmatchedGardenCard" style="display:none">
+        <div class="card-head">
+          <div>
+            <span class="card-title">⚠️ Unmatched Gardens</span>
+            <div class="card-sub" style="margin-top:3px">Garden names found in the screening data with no match in the uploaded Garden Reference sheet — check spelling, or add them to the reference sheet.</div>
+          </div>
+        </div>
+        <div class="tbl-wrap"><table id="unmatchedGardenTable">
+          <thead><tr><th>Tea Garden (as in CSV)</th><th>District</th><th>Screened</th></tr></thead>
+          <tbody id="unmatchedGardenBody"></tbody>
         </table></div>
       </div>
     </div>
@@ -414,7 +630,7 @@ tbody tr.row-suspect:hover td{background:#FFF5D6}
             <th onclick="srt('tbTable',2,false)">Diagnosed Date</th>
             <th>PID</th>
             <th onclick="srt('tbTable',4,false)">Patient</th>
-            <th>Age</th><th>Gender</th>
+            <th onclick="srt('tbTable',5,true)">Age</th><th>Gender</th>
             <th onclick="srt('tbTable',7,false)">CF</th>
             <th onclick="srt('tbTable',8,false)">District</th>
             <th>Tea Garden</th>
@@ -441,11 +657,11 @@ tbody tr.row-suspect:hover td{background:#FFF5D6}
             <div class="rule-box">
               <strong>Gender</strong> — Male or Female only<br>
               <strong>Diabetes / Cough / Fever / Weight Loss / Swelling</strong> — Cannot be blank<br>
-              <strong>Cough Duration</strong> — Required if Cough=Yes, max 180 days<br>
-              <strong>Fever Duration</strong> — Required if Fever=Yes, max 180 days<br>
+              <strong>Cough Duration</strong> — Required if Cough=Yes, max 60 days<br>
+              <strong>Fever Duration</strong> — Required if Fever=Yes, max 60 days<br>
               <strong>Night Sweats</strong> — Yes/No for age ≥15; blank for age &lt;15<br>
               <strong>Playfulness</strong> — "Yes" only valid for age &lt;15<br>
-              <strong>Child Diabetes</strong> — Age ≤15 with Diabetes=Yes is flagged<br>
+              <strong>Child Diabetes</strong> — Age &lt;15 with Diabetes=Yes is flagged<br>
               <strong>Advised/Done mismatch</strong> — Test Done=Yes but Advised=No<br>
               <strong>GXP Sputum + Cough=No</strong> — GXP Sputum done without reported cough
             </div>
@@ -566,6 +782,7 @@ const ADV_DONE=[
 
 // STATE
 let ALL=[],FILTERED=[],CFD={},RAW_HEADERS=[];
+let GARDEN_REF={},GARDEN_REF_ARRAY=[],GARDEN_REF_META=null;
 let DATE_MODE='screen';
 const SS={};
 
@@ -582,6 +799,7 @@ function setMode(m){
 
 // ── FILE LOAD ────────────────────────────────────
 document.getElementById('csvIn').addEventListener('change',e=>{if(e.target.files[0])loadFile(e.target.files[0]);});
+document.getElementById('refIn').addEventListener('change',e=>{if(e.target.files[0])loadGardenRef(e.target.files[0]);});
 const dz=document.getElementById('dropZone');
 dz.addEventListener('dragover',e=>{e.preventDefault();dz.classList.add('drag');});
 dz.addEventListener('dragleave',()=>dz.classList.remove('drag'));
@@ -601,6 +819,56 @@ function loadFile(file){
     });
     initData(rows,file.name);
   }});
+}
+
+// ── GARDEN REFERENCE (Upazila / Population mapping) ──
+// Uploaded separately as an Excel sheet: Tea Garden | Garden Code | Upazila |
+// District | Donor Population | Actual Population | Status. Re-uploading a
+// newer version of this sheet (with more rows, revised populations, etc.)
+// simply overwrites GARDEN_REF and re-renders — no code changes needed when
+// the tea garden list grows or population figures are revised.
+function normGarden(s){return(s||'').toString().trim().toLowerCase().replace(/\s+/g,' ');}
+function gardenRefFor(name){return GARDEN_REF[normGarden(name)]||null;}
+
+function loadGardenRef(file){
+  const reader=new FileReader();
+  reader.onload=e=>{
+    const wb=XLSX.read(new Uint8Array(e.target.result),{type:'array'});
+    const ws=wb.Sheets[wb.SheetNames[0]];
+    const rows=XLSX.utils.sheet_to_json(ws,{defval:''});
+    const ref={},arr=[];
+    rows.forEach(row=>{
+      const name=(row['Tea Garden']||'').toString().trim();
+      if(!name)return;
+      const rec={
+        name,
+        code:(row['Garden Code']||'').toString().trim(),
+        upazila:(row['Upazila']||'').toString().trim()||'Unknown',
+        district:(row['District']||'').toString().trim(),
+        donorPop:parseFloat(row['Donor Population'])||0,
+        surveyPop:parseFloat(row['Actual Population']!==''&&row['Actual Population']!==undefined?row['Actual Population']:row['Survey Population'])||0,
+        status:(row['Status']||'').toString().trim(),
+      };
+      ref[normGarden(name)]=rec;
+      arr.push(rec);
+    });
+    GARDEN_REF=ref;GARDEN_REF_ARRAY=arr;
+    GARDEN_REF_META={filename:file.name,uploadedAt:new Date(),count:arr.length};
+
+    document.getElementById('refChip').style.display='flex';
+    document.getElementById('refName').textContent=`${arr.length} gardens · ${GARDEN_REF_META.uploadedAt.toLocaleDateString()}`;
+
+    // Populate Upazila filter dropdown
+    const upzs=[...new Set(arr.map(r=>r.upazila).filter(Boolean))].sort();
+    const fUpz=document.getElementById('fUpz');
+    const cur=fUpz.value;
+    fUpz.innerHTML='<option value="">All upazilas</option>';
+    upzs.forEach(u=>fUpz.innerHTML+=`<option>${u}</option>`);
+    if(upzs.includes(cur))fUpz.value=cur;
+
+    if(ALL.length)renderAll();
+  };
+  reader.readAsArrayBuffer(file);
 }
 
 // ── CORE HELPERS ─────────────────────────────────
@@ -646,11 +914,11 @@ function validate(r){
   const cough=cv(r,C.COUGH);
   if(cough==='')errs.push('Cough');
   const cd=parseFloat(r._cd);
-  if(cough==='Yes'&&(isNaN(cd)||cd>180))errs.push('Cough Duration');
+  if(cough==='Yes'&&(isNaN(cd)||cd>60))errs.push('Cough Duration');
   const fever=cv(r,C.FEVER);
   if(fever==='')errs.push('Fever');
   const fd=parseFloat(r._fd);
-  if(fever==='Yes'&&(isNaN(fd)||fd>180))errs.push('Fever Duration');
+  if(fever==='Yes'&&(isNaN(fd)||fd>60))errs.push('Fever Duration');
   if(cv(r,C.WEIGHT_LOSS)==='')errs.push('Weight Loss');
   const ns=cv(r,C.NIGHT_SWEATS);
   if(age!==null){
@@ -659,7 +927,7 @@ function validate(r){
   }
   if(age!==null&&age>=15&&cv(r,C.PLAYFULNESS)==='Yes')errs.push('Playfulness');
   if(cv(r,C.GLAND)==='')errs.push('Swelling');
-  if(age!==null&&age<=15&&cv(r,C.DIABETES)==='Yes')errs.push('Child Diabetes');
+  if(age!==null&&age<15&&cv(r,C.DIABETES)==='Yes')errs.push('Child Diabetes');
   ADV_DONE.forEach(p=>{if(cv(r,p.adv)==='No'&&cv(r,p.done)==='Yes')errs.push(p.name+' Advise Error');});
   if(cv(r,C.GXP_DONE)==='Yes'&&cv(r,C.COUGH)==='No')errs.push('GXP Sputum Without Cough');
   return errs;
@@ -744,6 +1012,16 @@ function initData(rows,fname){
     // All test dates as array
     r._testDates=TEST_DATE_COLS.map(i=>pd(cv(r,i))).filter(Boolean);
     r._anyTested=DONE_COLS.some(i=>cv(r,i)==='Yes');
+    // First test done (earliest date among tests actually marked Done) — used for the
+    // "Tested" monthly trend, so a patient screened in March but first tested in May
+    // is counted toward May, not March.
+    r._firstTestDt=null;
+    for(let i=0;i<DONE_COLS.length;i++){
+      if(cv(r,DONE_COLS[i])==='Yes'){
+        const dt=pd(cv(r,TEST_DATE_COLS[i]));
+        if(dt&&(!r._firstTestDt||dt<r._firstTestDt))r._firstTestDt=dt;
+      }
+    }
     r._errs=validate(r);
   });
   ALL=rows; FILTERED=rows; window.FILTERED_BASE=rows;
@@ -784,6 +1062,8 @@ function initData(rows,fname){
 function applyFilters(){
   const d1=document.getElementById('d1').value,d2=document.getElementById('d2').value;
   const dist=document.getElementById('fDist').value,cf=document.getElementById('fCF').value;
+  const upz=document.getElementById('fUpz').value;
+  const upzMatch=r=>{if(!upz)return true;const ref=gardenRefFor(cv(r,C.FACILITY));return ref&&ref.upazila===upz;};
 
   // In result mode we need TWO filtered sets:
   // 1. FILTERED = rows where any test date OR diag date is in range (for test-based tabs)
@@ -798,6 +1078,7 @@ function applyFilters(){
       if(d2&&r._sds&&r._sds>d2)return false;
       if(dist&&cv(r,C.DISTRICT)!==dist)return false;
       if(cf&&cv(r,C.CF)!==cf)return false;
+      if(!upzMatch(r))return false;
       return true;
     });
     window.FILTERED_BASE=FILTERED;
@@ -812,12 +1093,14 @@ function applyFilters(){
       if(d2&&r._sds&&r._sds>d2)return false;
       if(dist&&cv(r,C.DISTRICT)!==dist)return false;
       if(cf&&cv(r,C.CF)!==cf)return false;
+      if(!upzMatch(r))return false;
       return true;
     });
     // FILTERED = rows where any test date OR diagnosed date falls in range
     FILTERED=ALL.filter(r=>{
       if(dist&&cv(r,C.DISTRICT)!==dist)return false;
       if(cf&&cv(r,C.CF)!==cf)return false;
+      if(!upzMatch(r))return false;
       if(d1||d2){
         const diagInRange=r._diagDs&&(!d1||r._diagDs>=d1)&&(!d2||r._diagDs<=d2);
         const testInRange=r._testDates.some(dt=>{const s=ds(dt);return(!d1||s>=d1)&&(!d2||s<=d2);});
@@ -843,15 +1126,15 @@ function applyFilters(){
 function resetFilters(){
   const sdates=ALL.filter(r=>r._sdt).map(r=>r._sdt).sort((a,b)=>a-b);
   if(sdates.length){document.getElementById('d1').value=ds(sdates[0]);document.getElementById('d2').value=ds(sdates[sdates.length-1]);}
-  document.getElementById('fDist').value='';document.getElementById('fCF').value='';
+  document.getElementById('fDist').value='';document.getElementById('fCF').value='';document.getElementById('fUpz').value='';
   setMode('screen');applyFilters();
 }
 
-function renderAll(){buildOverview();buildDatewise();buildCF();buildDistrict();buildTestCascade();buildGarden();buildTBCases();buildValidation();}
+function renderAll(){buildOverview();buildDatewise();buildCF();buildDistrict();buildTestCascade();buildUntestedPresumptive();buildGarden();buildUpazilaWise();buildTBCases();buildValidation();}
 
 // ── TABS ──────────────────────────────────────────
-const TABS=['overview','datewise','cf','district','garden','tbcase','validation'];
-const TITLES={overview:'Overview',datewise:'Date-wise Log',cf:'Community Facilitators',district:'District',garden:'Tea Gardens',tbcase:'TB Cases',validation:'Validation Report'};
+const TABS=['overview','datewise','cf','district','upazila','garden','tbcase','validation'];
+const TITLES={overview:'Overview',datewise:'Date-wise Log',cf:'Community Facilitators',district:'District',upazila:'Upazila-wise Coverage',garden:'Tea Gardens',tbcase:'TB Cases',validation:'Validation Report'};
 function showTab(id,el){
   TABS.forEach(t=>{document.getElementById('pane-'+t)?.classList.remove('active');});
   document.getElementById('pane-'+id)?.classList.add('active');
@@ -867,10 +1150,14 @@ function srt(tid,col,num){
   const k=tid+col;SS[k]=SS[k]==='asc'?'desc':'asc';const asc=SS[k]==='asc';
   document.querySelectorAll(`#${tid} thead th`).forEach((th,i)=>{th.classList.remove('asc','desc');if(i===col)th.classList.add(asc?'asc':'desc');});
   [...tbody.rows].sort((a,b)=>{
-    const av=(a.cells[col]?.textContent||'').replace(/[^0-9.\-]/g,'');
-    const bv=(b.cells[col]?.textContent||'').replace(/[^0-9.\-]/g,'');
-    if(num){const diff=(parseFloat(av)||0)-(parseFloat(bv)||0);return asc?diff:-diff;}
-    return asc?av.localeCompare(bv):bv.localeCompare(av);
+    const rawA=(a.cells[col]?.textContent||'').trim();
+    const rawB=(b.cells[col]?.textContent||'').trim();
+    if(num){
+      const av=rawA.replace(/[^0-9.\-]/g,''),bv=rawB.replace(/[^0-9.\-]/g,'');
+      const diff=(parseFloat(av)||0)-(parseFloat(bv)||0);
+      return asc?diff:-diff;
+    }
+    return asc?rawA.localeCompare(rawB):rawB.localeCompare(rawA);
   }).forEach(r=>tbody.appendChild(r));
 }
 
@@ -913,15 +1200,24 @@ function buildOverview(){
   const cxrAbn=testRows.filter(r=>{const v=cn(r,C.CAD_RESULT);return v!==null&&v>=40;}).length;
   const xrayDone=testRows.filter(r=>cv(r,C.XRAY_DONE)==='Yes').length;
   const gxpDone=testRows.filter(r=>cv(r,C.GXP_DONE)==='Yes').length;
+  const truenatDone=testRows.filter(r=>cv(r,C.TRUENAT_DONE)==='Yes').length;
+  const afbDone=testRows.filter(r=>cv(r,C.AFB_DONE)==='Yes').length;
+  const stoolDone=testRows.filter(r=>cv(r,C.STOOL_DONE)==='Yes').length;
+  const eptbUltraDone=testRows.filter(r=>cv(r,C.EPTB_DONE)==='Yes').length;
+  const fnacDone=testRows.filter(r=>cv(r,C.FNAC_DONE)==='Yes').length;
 
   // TB counts — all from tbRows so they are internally consistent
   const diag=tbRows.length;
   const tx=tbRows.filter(r=>cv(r,C.TX_STARTED)==='Yes').length;
-  const childTB=tbRows.filter(r=>cn(r,C.AGE_Y)!==null&&cn(r,C.AGE_Y)<=15).length;
+  const childTB=tbRows.filter(r=>cn(r,C.AGE_Y)!==null&&cn(r,C.AGE_Y)<15).length;
   const ptb=tbRows.filter(r=>cv(r,C.TB_TYPE)==='PTB').length;
   const eptb=tbRows.filter(r=>cv(r,C.TB_TYPE)==='EPTB').length;
   const bplus=tbRows.filter(r=>cv(r,C.BACT_STATUS)==='B+').length;
   const cd=tbRows.filter(r=>cv(r,C.BACT_STATUS)==='CD').length;
+  const presMale=baseRows.filter(r=>cv(r,C.PRESUMPTIVE)==='Yes'&&cv(r,C.GENDER)==='Male').length;
+  const presFemale=baseRows.filter(r=>cv(r,C.PRESUMPTIVE)==='Yes'&&cv(r,C.GENDER)==='Female').length;
+  const diagMale=tbRows.filter(r=>cv(r,C.GENDER)==='Male').length;
+  const diagFemale=tbRows.filter(r=>cv(r,C.GENDER)==='Female').length;
 
   const K=(stripe,ico,val,lbl,sub,col='var(--text1)')=>
     `<div class="kpi"><div class="kpi-stripe" style="background:${stripe}"></div><span class="kpi-ico">${ico}</span><div class="kpi-val" style="color:${col}">${val}</div><div class="kpi-lbl">${lbl}</div><div class="kpi-sub">${sub}</div></div>`;
@@ -933,11 +1229,16 @@ function buildOverview(){
     K('var(--blue)','🩻',cadDone,'CAD X-ray Done',pct(cadDone,pres)+' of presumptive','var(--blue)')+
     K('#E67E22','🔴',cxrAbn,'CXR Abnormal (≥40)',pct(cxrAbn,cadDone)+' of CAD done','#E67E22')+
     K('#0891B2','🩻',xrayDone,'X-ray Done',pct(xrayDone,pres)+' of presumptive','#0891B2')+
-    K('var(--green-light)','🧬',gxpDone,'GXP Sputum Done',pct(gxpDone,pres)+' of presumptive','var(--green)');
+    K('var(--green-light)','🧬',gxpDone,'GXP Sputum Done',pct(gxpDone,pres)+' of presumptive','var(--green)')+
+    K('#C77DBB','🧫',truenatDone,'Truenat Done',pct(truenatDone,pres)+' of presumptive','#C77DBB')+
+    K('#5B9279','🔬',afbDone,'AFB Done',pct(afbDone,pres)+' of presumptive','#5B9279')+
+    K('#A67C52','💩',stoolDone,'GXP Stool Done',pct(stoolDone,pres)+' of presumptive','#A67C52')+
+    K('#6C7BC7','🧬',eptbUltraDone,'GXP EPTB Ultra Done',pct(eptbUltraDone,pres)+' of presumptive','#6C7BC7')+
+    K('#D97757','💉',fnacDone,'FNAC Done',pct(fnacDone,pres)+' of presumptive','#D97757');
 
   document.getElementById('kpi-r2').innerHTML=
     K('var(--red)','🏥',diag,'TB Diagnosed',pct(diag,pres)+' of presumptive','var(--red)')+
-    K('#FF6B6B','👶',childTB,'Child TB (≤15y)',pct(childTB,diag)+' of diagnosed','#FF6B6B')+
+    K('#FF6B6B','👶',childTB,'Child TB (<15y)',pct(childTB,diag)+' of diagnosed','#FF6B6B')+
     K('var(--green)','💊',tx,'On Treatment',pct(tx,diag)+' of diagnosed','var(--green)')+
     K('#8B4513','🫁',ptb,'PTB',pct(ptb,diag)+' of total TB','#8B4513')+
     K('#556B2F','🔬',eptb,'EPTB',pct(eptb,diag)+' of total TB','#556B2F')+
@@ -958,26 +1259,221 @@ function buildOverview(){
     return`<div class="cascade-row"><span class="casc-ico">${ico}</span><span class="casc-lbl">${lbl}</span><span class="casc-val">${n.toLocaleString()}</span><span class="casc-pct">${pct(n,d)}</span><div class="casc-bar"><div class="prog"><div class="prog-fill" style="width:${w}%;background:${col}"></div></div></div></div>`;
   }).join('');
 
-  const mW=Math.max(male,female,1);
+  const miniDonut=(title,aLbl,aVal,aCol,bLbl,bVal,bCol)=>{
+    const t=aVal+bVal,r=42,circ=2*Math.PI*r;
+    const aFrac=t>0?aVal/t:0;
+    const aLen=circ*aFrac;
+    return`<div class="gender-donut-col">
+      <div class="gd-ring-wrap">
+        <svg viewBox="0 0 100 100" class="gd-ring">
+          <circle cx="50" cy="50" r="${r}" fill="none" stroke="${bCol}" stroke-width="14"/>
+          <circle cx="50" cy="50" r="${r}" fill="none" stroke="${aCol}" stroke-width="14" stroke-dasharray="${aLen} ${circ-aLen}" stroke-linecap="round" transform="rotate(-90 50 50)"/>
+        </svg>
+        <div class="gd-center"><div class="gd-total">${t.toLocaleString()}</div></div>
+      </div>
+      <div class="gd-info">
+        <div class="gd-title">${title}</div>
+        <div class="gd-legend">
+          <div class="gd-leg-item"><span class="gd-dot" style="background:${aCol}"></span>${aLbl} <b>${aVal.toLocaleString()}</b><span class="gd-leg-pct">${pct(aVal,t)}</span></div>
+          <div class="gd-leg-item"><span class="gd-dot" style="background:${bCol}"></span>${bLbl} <b>${bVal.toLocaleString()}</b><span class="gd-leg-pct">${pct(bVal,t)}</span></div>
+        </div>
+      </div>
+    </div>`;
+  };
   document.getElementById('tb-breakdown').innerHTML=`
-    <div style="margin-bottom:14px">
-      <div style="font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">TB Type</div>
-      <div style="display:flex;gap:10px">
-        <div style="flex:1;background:var(--surface2);border-radius:8px;padding:10px;text-align:center"><div style="font-size:24px;font-weight:700;color:#8B4513;font-family:'DM Mono',monospace">${ptb}</div><div style="font-size:11px;color:var(--text2)">PTB</div></div>
-        <div style="flex:1;background:var(--surface2);border-radius:8px;padding:10px;text-align:center"><div style="font-size:24px;font-weight:700;color:#556B2F;font-family:'DM Mono',monospace">${eptb}</div><div style="font-size:11px;color:var(--text2)">EPTB</div></div>
-      </div>
+    <div class="gender-compare" style="grid-template-columns:1fr">
+      ${miniDonut('TB Type','PTB',ptb,'#8B4513','EPTB',eptb,'#556B2F')}
+      ${miniDonut('Bacteriological Status','B+ (Confirmed)',bplus,'#E0646F','CD (Clinical)',cd,'#E8A96E')}
+      ${miniDonut('Age Group','Child (<15y)',childTB,'#FF6B6B','Adult',Math.max(diag-childTB,0),'#7FA8D9')}
     </div>
-    <div style="margin-bottom:14px">
-      <div style="font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">Bacteriological Status</div>
-      <div style="display:flex;gap:10px">
-        <div style="flex:1;background:var(--red-pale);border-radius:8px;padding:10px;text-align:center"><div style="font-size:24px;font-weight:700;color:var(--red);font-family:'DM Mono',monospace">${bplus}</div><div style="font-size:11px;color:var(--red)">B+ (Bacteriologically Confirmed)</div></div>
-        <div style="flex:1;background:var(--amber-pale);border-radius:8px;padding:10px;text-align:center"><div style="font-size:24px;font-weight:700;color:var(--amber);font-family:'DM Mono',monospace">${cd}</div><div style="font-size:11px;color:var(--amber)">CD (Clinically Diagnosed)</div></div>
-      </div>
-    </div>
-    <div style="font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">Gender</div>
-    <div class="gender-row"><div class="gender-label-row"><span>Male</span><small>${male.toLocaleString()} · ${pct(male,tot)}</small></div><div class="prog"><div class="prog-fill" style="width:${Math.round(male/mW*100)}%;background:var(--blue)"></div></div></div>
-    <div class="gender-row"><div class="gender-label-row"><span>Female</span><small>${female.toLocaleString()} · ${pct(female,tot)}</small></div><div class="prog"><div class="prog-fill" style="width:${Math.round(female/mW*100)}%;background:var(--green-mid)"></div></div></div>
   `;
+
+  const genderDonut=(title,m,f)=>{
+    const t=m+f,r=42,circ=2*Math.PI*r;
+    const mFrac=t>0?m/t:0;
+    const mLen=circ*mFrac;
+    return`<div class="gender-donut-col">
+      <div class="gd-ring-wrap">
+        <svg viewBox="0 0 100 100" class="gd-ring">
+          <circle cx="50" cy="50" r="${r}" fill="none" stroke="#F6C9D6" stroke-width="14"/>
+          <circle cx="50" cy="50" r="${r}" fill="none" stroke="#93C5E8" stroke-width="14" stroke-dasharray="${mLen} ${circ-mLen}" stroke-linecap="round" transform="rotate(-90 50 50)"/>
+        </svg>
+        <div class="gd-center"><div class="gd-total">${t.toLocaleString()}</div></div>
+      </div>
+      <div class="gd-info">
+        <div class="gd-title">${title}</div>
+        <div class="gd-legend">
+          <div class="gd-leg-item"><span class="gd-dot" style="background:#93C5E8"></span>Male <b>${m.toLocaleString()}</b><span class="gd-leg-pct">${pct(m,t)}</span></div>
+          <div class="gd-leg-item"><span class="gd-dot" style="background:#F6C9D6"></span>Female <b>${f.toLocaleString()}</b><span class="gd-leg-pct">${pct(f,t)}</span></div>
+        </div>
+      </div>
+    </div>`;
+  };
+  document.getElementById('gender-compare').innerHTML=
+    genderDonut('Screened',male,female)+
+    genderDonut('Presumptive',presMale,presFemale)+
+    genderDonut('Diagnosed',diagMale,diagFemale);
+
+  buildTrends();
+}
+
+// ═══════════════════════════════════════════════
+// MONTHLY TRENDS (each metric bucketed by its OWN date)
+// Screened & Presumptive → Screening Date
+// Tested                 → date of first test actually Done (r._firstTestDt)
+// Diagnosed               → Diagnosed Date
+// Independent of the global date-range filter (that filter can't cleanly
+// apply to 4 different date bases at once) — but DOES respect
+// District / CF / Upazila scope, same as everything else.
+// ═══════════════════════════════════════════════
+function monthKey(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');}
+function monthLabel(k){
+  const[y,m]=k.split('-');
+  return['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][+m-1]+" '"+y.slice(2);
+}
+function addMonths(key,n){
+  const[y,m]=key.split('-').map(Number);
+  const d=new Date(y,m-1+n,1);
+  return monthKey(d);
+}
+function smoothPath(pts){
+  if(pts.length<2)return pts.length===1?`M${pts[0][0]},${pts[0][1]}`:'';
+  let d=`M${pts[0][0]},${pts[0][1]}`;
+  for(let i=0;i<pts.length-1;i++){
+    const p0=pts[i===0?0:i-1],p1=pts[i],p2=pts[i+1],p3=pts[i+2>=pts.length?pts.length-1:i+2];
+    const c1x=p1[0]+(p2[0]-p0[0])/6,c1y=p1[1]+(p2[1]-p0[1])/6;
+    const c2x=p2[0]-(p3[0]-p1[0])/6,c2y=p2[1]-(p3[1]-p1[1])/6;
+    d+=` C${c1x},${c1y} ${c2x},${c2y} ${p2[0]},${p2[1]}`;
+  }
+  return d;
+}
+function renderTrendCard(elId,title,ico,months,vals,lineColor,fillFrom,bgTint){
+  const el=document.getElementById(elId);
+  const total=vals.reduce((a,b)=>a+b,0);
+  const last=vals[vals.length-1]||0,prev=vals[vals.length-2];
+  let deltaHtml='';
+  if(prev!==undefined){
+    if(prev===0&&last===0)deltaHtml=`<span class="delta-chip delta-flat">— flat</span>`;
+    else if(prev===0)deltaHtml=`<span class="delta-chip delta-up">▲ new</span>`;
+    else{
+      const chg=((last-prev)/prev*100);
+      const cls=chg>0.5?'delta-up':chg<-0.5?'delta-down':'delta-flat';
+      const arrow=chg>0.5?'▲':chg<-0.5?'▼':'—';
+      deltaHtml=`<span class="delta-chip ${cls}">${arrow} ${Math.abs(chg).toFixed(0)}%</span>`;
+    }
+  }
+
+  const W=560,H=180,padL=14,padR=14,padT=26,padB=26;
+  const innerW=W-padL-padR,innerH=H-padT-padB;
+  const maxV=Math.max(...vals,1);
+  const n=months.length;
+  const pts=vals.map((v,i)=>[padL+(n<=1?innerW/2:i/(n-1)*innerW),padT+innerH-(v/maxV*innerH)]);
+  const linePath=smoothPath(pts);
+  const areaPath=linePath+` L${pts[n-1][0]},${padT+innerH} L${pts[0][0]},${padT+innerH} Z`;
+  const gid='g'+elId;
+  // Show every Nth x-axis month label to avoid crowding when the scope is large
+  const step=Math.max(1,Math.ceil(n/7));
+  const labels=months.map((m,i)=>(i%step===0||i===n-1)?`<text x="${pts[i][0]}" y="${H-8}" font-size="9" fill="var(--text3)" text-anchor="middle">${monthLabel(m)}</text>`:'').join('');
+  // Every point gets its own visible value callout (not hover-only) — a soft
+  // halo behind the number keeps it legible over the line/area fill.
+  const dots=pts.map((p,i)=>{
+    const lbl=vals[i].toLocaleString();
+    return`<g>
+      <title>${monthLabel(months[i])}: ${vals[i].toLocaleString()}</title>
+      <circle cx="${p[0]}" cy="${p[1]}" r="5" fill="transparent"/>
+      <circle cx="${p[0]}" cy="${p[1]}" r="2.8" fill="${lineColor}"/>
+      <text x="${p[0]}" y="${p[1]-9}" font-size="10" font-weight="700" fill="${lineColor}" text-anchor="middle" paint-order="stroke" stroke="${bgTint}" stroke-width="3.2" stroke-linejoin="round">${lbl}</text>
+    </g>`;
+  }).join('');
+
+  el.className='trend-card';
+  el.style.background=bgTint;
+  el.innerHTML=`
+    <div class="trend-head">
+      <div class="trend-title">${ico} ${title}</div>
+      ${deltaHtml}
+    </div>
+    <div class="trend-big" style="color:${lineColor}">${total.toLocaleString()}</div>
+    <div class="trend-sub">over ${n} month${n===1?'':'s'} · last month: ${last.toLocaleString()}</div>
+    <svg viewBox="0 0 ${W} ${H}" style="width:100%;display:block">
+      <defs><linearGradient id="${gid}" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="${fillFrom}" stop-opacity="0.55"/>
+        <stop offset="100%" stop-color="${fillFrom}" stop-opacity="0.02"/>
+      </linearGradient></defs>
+      <path d="${areaPath}" fill="url(#${gid})" stroke="none"/>
+      <path d="${linePath}" fill="none" stroke="${lineColor}" stroke-width="2.4" stroke-linecap="round"/>
+      ${dots}
+      ${labels}
+    </svg>`;
+}
+
+function buildTrends(){
+  const scope=document.getElementById('trendScope').value;
+  const dist=document.getElementById('fDist').value,cfv=document.getElementById('fCF').value,upz=document.getElementById('fUpz').value;
+  const upzMatch=r=>{if(!upz)return true;const ref=gardenRefFor(cv(r,C.FACILITY));return ref&&ref.upazila===upz;};
+  const rows=ALL.filter(r=>{
+    if(dist&&cv(r,C.DISTRICT)!==dist)return false;
+    if(cfv&&cv(r,C.CF)!==cfv)return false;
+    if(!upzMatch(r))return false;
+    return true;
+  });
+
+  // Anchor the range on Screening Date only — screening always happens first,
+  // so it's the one reliable "project start" marker. A stray mis-typed test/diag
+  // date (e.g. wrong year during data entry) should never be able to drag the
+  // chart's start back before the project actually began; any such outlier is
+  // folded into the earliest real month instead of stretching the x-axis.
+  let minScreenK=null,maxK=null;
+  const considerScreen=d=>{if(!d)return;const k=monthKey(d);if(!minScreenK||k<minScreenK)minScreenK=k;if(!maxK||k>maxK)maxK=k;};
+  const considerMax=d=>{if(!d)return;const k=monthKey(d);if(!maxK||k>maxK)maxK=k;};
+  rows.forEach(r=>{
+    considerScreen(r._sdt);
+    if(cv(r,C.TB_DIAG)==='Yes')considerMax(r._diagDt);
+    if(r._anyTested)considerMax(r._firstTestDt);
+  });
+  if(!minScreenK||!maxK){document.getElementById('trend-grid').innerHTML='<div style="color:var(--text3);font-size:13px;padding:20px">No dated records in scope.</div>';return;}
+
+  let startK=minScreenK;
+  if(scope!=='all'){
+    const n=parseInt(scope,10);
+    startK=addMonths(maxK,-(n-1));
+    if(startK<minScreenK)startK=minScreenK;
+  }
+  const months=[];
+  let k=startK;
+  while(k<=maxK){months.push(k);k=addMonths(k,1);}
+  const clampKey=key=>key<startK?startK:key; // fold any pre-project-start outlier into month 1
+
+  const screenedM={},presM={},testedM={},diagM={};
+  months.forEach(m=>{screenedM[m]=0;presM[m]=0;testedM[m]=0;diagM[m]=0;});
+  rows.forEach(r=>{
+    if(r._sdt){
+      const k=clampKey(monthKey(r._sdt));
+      if(screenedM[k]!==undefined){
+        screenedM[k]++;
+        if(cv(r,C.PRESUMPTIVE)==='Yes')presM[k]++;
+      }
+    }
+    // "Tested" mirrors the Overview "Presumptive Tested" KPI exactly: presumptive
+    // AND has at least one test done — not just "anyone with a test on file".
+    if(cv(r,C.PRESUMPTIVE)==='Yes'&&r._anyTested&&r._firstTestDt){
+      const k=clampKey(monthKey(r._firstTestDt));
+      if(testedM[k]!==undefined)testedM[k]++;
+    }
+    if(cv(r,C.TB_DIAG)==='Yes'&&r._diagDt){
+      const k=clampKey(monthKey(r._diagDt));
+      if(diagM[k]!==undefined)diagM[k]++;
+    }
+  });
+
+  document.getElementById('trend-grid').innerHTML=`
+    <div id="trend-screened"></div><div id="trend-pres"></div>
+    <div id="trend-tested"></div><div id="trend-diag"></div>`;
+
+  renderTrendCard('trend-screened','Screened','📋',months,months.map(m=>screenedM[m]),'#7FA8D9','#BFDBFA','#F3F7FC');
+  renderTrendCard('trend-pres','Presumptive','🔍',months,months.map(m=>presM[m]),'#E8A96E','#FBDCB8','#FDF6EE');
+  renderTrendCard('trend-tested','Tested','🧪',months,months.map(m=>testedM[m]),'#B39DDB','#E1D5F5','#F8F5FC');
+  renderTrendCard('trend-diag','Diagnosed','🏥',months,months.map(m=>diagM[m]),'#EC9BB6','#FBD3E0','#FDF3F6');
 }
 
 // ═══════════════════════════════════════════════
@@ -1362,6 +1858,244 @@ window.downloadCascade=function(key){
 };
 
 // ═══════════════════════════════════════════════
+// UNTESTED PRESUMPTIVE
+// ═══════════════════════════════════════════════
+// Presumptive individuals with NO test done at all, starting from CXR
+// (CAD X-ray) through every downstream test (DONE_COLS covers all of them).
+function computeUntestedPresumptive(rows){
+  return rows.filter(r=>cv(r,C.PRESUMPTIVE)==='Yes'&&!r._anyTested);
+}
+
+function buildUntestedPresumptive(){
+  const rows=FILTERED;
+  const pres=rows.filter(r=>cv(r,C.PRESUMPTIVE)==='Yes').length;
+  const untested=computeUntestedPresumptive(rows);
+
+  document.getElementById('up-kpi-grid').innerHTML=`
+    <div class="tc-card tc-none">
+      <span class="tc-ico">❓</span>
+      <div class="tc-val" style="color:var(--text3)">${untested.length.toLocaleString()}</div>
+      <div class="tc-pct" style="color:var(--text3)">${pct(untested.length,pres)} of presumptive</div>
+      <div class="tc-lbl">Untested Presumptive</div>
+      <div class="tc-sub">No test recorded at all</div>
+      <button class="tc-dl" onclick="downloadUntestedPresumptive()">⬇ Download</button>
+    </div>
+    <div class="tc-card tc-w15">
+      <span class="tc-ico">📋</span>
+      <div class="tc-val" style="color:var(--blue)">${pres.toLocaleString()}</div>
+      <div class="tc-pct" style="color:var(--blue)">100% of presumptive</div>
+      <div class="tc-lbl">Total Presumptive</div>
+      <div class="tc-sub">In current filter</div>
+    </div>`;
+
+  const distMap={};
+  rows.forEach(r=>{
+    if(cv(r,C.PRESUMPTIVE)!=='Yes')return;
+    const d=cv(r,C.DISTRICT)||'Unknown';
+    if(!distMap[d])distMap[d]={pres:0,untested:0};
+    distMap[d].pres++;
+  });
+  untested.forEach(r=>{const d=cv(r,C.DISTRICT)||'Unknown';if(distMap[d])distMap[d].untested++;});
+
+  const maxDist=Math.max(...Object.values(distMap).map(x=>x.pres),1);
+  document.getElementById('up-district-chart').innerHTML=Object.entries(distMap)
+    .sort((a,b)=>b[1].untested-a[1].untested)
+    .map(([dist,d])=>{
+      const barW=Math.round((d.pres/maxDist)*100);
+      const untw=d.pres?Math.round((d.untested/d.pres)*barW):0;
+      return`<div class="tc-chart-bar">
+        <div class="tc-chart-lbl">${dist}</div>
+        <div style="flex:1;display:flex;align-items:center;gap:0;height:18px;border-radius:4px;overflow:hidden;background:var(--surface2)">
+          ${untw>0?`<div class="tc-chart-seg" style="width:${untw}%;background:#9CA3AF" title="Untested: ${d.untested}"></div>`:''}
+        </div>
+        <span class="tc-chart-n">${d.untested}</span>
+        <span class="tc-chart-p">${pct(d.untested,d.pres)}</span>
+      </div>`;
+    }).join('');
+}
+
+window.downloadUntestedPresumptive=function(){
+  const rows=FILTERED;
+  const untested=computeUntestedPresumptive(rows);
+  if(!untested.length){alert('No records in this category.');return;}
+
+  const data=untested.map(r=>rowToObj(r,{}));
+  const ws=XLSX.utils.json_to_sheet(data);
+  const wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,ws,'Untested Presumptive');
+  const d1=document.getElementById('d1').value,d2=document.getElementById('d2').value;
+  const range=(d1&&d2)?`_${d1}_to_${d2}`:'';
+  XLSX.writeFile(wb,`Untested_Presumptive${range}.xlsx`);
+};
+
+// ═══════════════════════════════════════════════
+// UPAZILA-WISE COVERAGE
+// ═══════════════════════════════════════════════
+// Population figures come entirely from GARDEN_REF_ARRAY (the uploaded
+// reference sheet). Screened counts come from the screening CSV, matched
+// to a garden via gardenRefFor(). Re-uploading a bigger/updated reference
+// sheet (more gardens, revised populations) just changes what this shows —
+// no code changes required, and everything else in the app works exactly
+// as before if no reference sheet has been uploaded at all.
+
+// 5 fixed completion categories, evaluated per garden against ONE population figure at a time.
+function classifyCoverage(screened,pop){
+  if(!pop||pop<=0)return{key:'nopop',label:'No Population Data',cls:'sp-nopop',barCls:'tc-none'};
+  const cov=(screened/pop)*100;
+  if(cov>=100)return{key:'comp',label:'Completed',cls:'sp-comp',barCls:'tc-comp'};
+  if(cov>=90)return{key:'almost',label:'Almost Completed',cls:'sp-almost',barCls:'tc-w15'};
+  if(cov>=50)return{key:'good',label:'Good Progress',cls:'sp-good',barCls:'tc-w30'};
+  if(cov>0)return{key:'early',label:'Getting Started',cls:'sp-early',barCls:'tc-early'};
+  return{key:'none',label:'Not Started',cls:'sp-none',barCls:'tc-o30'};
+}
+const COMPLETION_CATS=[
+  {key:'comp',ico:'✅',label:'Completed',sub:'≥ 100% of target'},
+  {key:'almost',ico:'🟢',label:'Almost Completed',sub:'90–99.9% of target'},
+  {key:'good',ico:'🟡',label:'Good Progress',sub:'50–89.9% of target'},
+  {key:'early',ico:'🟠',label:'Getting Started',sub:'1–49.9% of target'},
+  {key:'none',ico:'🔴',label:'Not Started',sub:'0% — no screening yet'},
+];
+
+function computeGardenScreenedCounts(base){
+  const m={};
+  base.forEach(r=>{
+    const ref=gardenRefFor(cv(r,C.FACILITY));
+    if(ref)m[ref.name]=(m[ref.name]||0)+1;
+  });
+  return m;
+}
+
+function buildUpazilaWise(){
+  const hasRef=GARDEN_REF_ARRAY.length>0;
+  document.getElementById('upazilaEmptyState').style.display=hasRef?'none':'block';
+  document.getElementById('upazilaContent').style.display=hasRef?'block':'none';
+  if(!hasRef)return;
+
+  const base=window.FILTERED_BASE||FILTERED;
+  const dist=document.getElementById('fDist').value;
+  const screenedByGarden=computeGardenScreenedCounts(base);
+
+  // Presumptive/diagnosed per garden (for the Upazila table only)
+  const presByGarden={},diagByGarden={};
+  base.forEach(r=>{
+    const ref=gardenRefFor(cv(r,C.FACILITY));
+    if(ref&&cv(r,C.PRESUMPTIVE)==='Yes')presByGarden[ref.name]=(presByGarden[ref.name]||0)+1;
+  });
+  FILTERED.forEach(r=>{
+    const ref=gardenRefFor(cv(r,C.FACILITY));
+    if(ref&&cv(r,C.TB_DIAG)==='Yes')diagByGarden[ref.name]=(diagByGarden[ref.name]||0)+1;
+  });
+
+  const gardens=GARDEN_REF_ARRAY.filter(g=>!dist||g.district===dist);
+
+  // ── Coverage KPI cards (moved here from Overview) ──
+  const covTot=base.length;
+  const covDonorPop=gardens.reduce((a,g)=>a+(g.donorPop||0),0);
+  const covSurveyPop=gardens.reduce((a,g)=>a+(g.surveyPop||0),0);
+  const KC=(stripe,ico,val,lbl,sub,col)=>
+    `<div class="kpi"><div class="kpi-stripe" style="background:${stripe}"></div><span class="kpi-ico">${ico}</span><div class="kpi-val" style="color:${col}">${val}</div><div class="kpi-lbl">${lbl}</div><div class="kpi-sub">${sub}</div></div>`;
+  document.getElementById('upz-coverage-grid').innerHTML=
+    KC('var(--green-mid)','📋',covTot.toLocaleString(),'Total Screened (in scope)','matches sidebar filters','var(--green)')+
+    KC('var(--blue)','📍',covDonorPop>0?pct(covTot,covDonorPop):'—','Coverage (Donor Pop.)',covDonorPop>0?covDonorPop.toLocaleString()+' target':'no population in scope','var(--blue)')+
+    KC('var(--green-mid)','📍',covSurveyPop>0?pct(covTot,covSurveyPop):'—','Coverage (Survey Pop.)',covSurveyPop>0?covSurveyPop.toLocaleString()+' target':'no population in scope','var(--green-mid)');
+
+  // ── Upazila Summary table ──
+  const upzMap={};
+  gardens.forEach(g=>{
+    const u=g.upazila||'Unknown';
+    if(!upzMap[u])upzMap[u]={district:g.district,gardens:0,donorPop:0,surveyPop:0,n:0,pres:0,diag:0,compDonor:0,compSurvey:0};
+    const b=upzMap[u];
+    const scr=screenedByGarden[g.name]||0;
+    b.gardens++;b.donorPop+=g.donorPop||0;b.surveyPop+=g.surveyPop||0;
+    b.n+=scr;b.pres+=presByGarden[g.name]||0;b.diag+=diagByGarden[g.name]||0;
+    if(classifyCoverage(scr,g.donorPop).key==='comp')b.compDonor++;
+    if(classifyCoverage(scr,g.surveyPop).key==='comp')b.compSurvey++;
+  });
+
+  document.getElementById('upazilaBody').innerHTML=Object.entries(upzMap).sort((a,b)=>b[1].n-a[1].n).map(([u,d])=>{
+    const covDonor=d.donorPop>0?pct(d.n,d.donorPop):'—';
+    const covSurvey=d.surveyPop>0?pct(d.n,d.surveyPop):'—';
+    return`<tr><td style="color:var(--text2)">${d.district||'—'}</td><td><strong>${u}</strong></td><td>${d.gardens||'—'}</td><td><strong>${d.n.toLocaleString()}</strong></td><td>${b(d.pres,'ba')}</td><td>${b(d.diag,'br')}</td><td class="mono">${d.donorPop>0?d.donorPop.toLocaleString():'—'}</td><td class="mono">${d.surveyPop>0?d.surveyPop.toLocaleString():'—'}</td><td style="font-weight:600;color:var(--blue)">${covDonor}</td><td style="font-weight:600;color:var(--green-mid)">${covSurvey}</td><td>${d.compDonor} / ${d.gardens}</td><td>${d.compSurvey} / ${d.gardens}</td></tr>`;
+  }).join('');
+
+  // ── 5-category KPI grids (donor & survey) ──
+  const buildCatGrid=(elId,popKey)=>{
+    const counts={comp:0,almost:0,good:0,early:0,none:0,nopop:0};
+    gardens.forEach(g=>{
+      const scr=screenedByGarden[g.name]||0;
+      counts[classifyCoverage(scr,g[popKey]).key]++;
+    });
+    const total=gardens.length||1;
+    document.getElementById(elId).innerHTML=COMPLETION_CATS.map(c=>{
+      const barCls=c.key==='comp'?'tc-comp':c.key==='almost'?'tc-w15':c.key==='good'?'tc-w30':c.key==='early'?'tc-early':'tc-o30';
+      return`<div class="tc-card ${barCls}">
+        <span class="tc-ico">${c.ico}</span>
+        <div class="tc-val">${counts[c.key]}</div>
+        <div class="tc-pct">${pct(counts[c.key],total)} of gardens</div>
+        <div class="tc-lbl">${c.label}</div>
+        <div class="tc-sub">${c.sub}</div>
+      </div>`;
+    }).join('');
+  };
+  buildCatGrid('comp-donor-grid','donorPop');
+  buildCatGrid('comp-survey-grid','surveyPop');
+
+  // ── Not yet started / not added ──
+  const notStarted=gardens.filter(g=>(screenedByGarden[g.name]||0)===0);
+  document.getElementById('notStartedSub').textContent=`${notStarted.length} of ${gardens.length} gardens in the Reference sheet have zero screened records${dist?` in ${dist}`:''}`;
+  document.getElementById('notStartedBody').innerHTML=notStarted.map(g=>
+    `<tr><td><strong>${g.name}</strong></td><td>${g.district||'—'}</td><td>${g.upazila||'—'}</td><td class="mono">${g.donorPop?g.donorPop.toLocaleString():'—'}</td><td class="mono">${g.surveyPop?g.surveyPop.toLocaleString():'—'}</td></tr>`
+  ).join('')||'<tr><td colspan="5" style="text-align:center;color:var(--text3)">None — every garden in the Reference sheet has at least one screened record 🎉</td></tr>';
+
+  // ── Garden-wise completion table ──
+  window._gardenCompRows=gardens.map(g=>{
+    const scr=screenedByGarden[g.name]||0;
+    return{garden:g,scr,catDonor:classifyCoverage(scr,g.donorPop),catSurvey:classifyCoverage(scr,g.surveyPop)};
+  });
+  const distSel=document.getElementById('compDist');
+  if(!distSel.dataset.filled){
+    const dists=[...new Set(GARDEN_REF_ARRAY.map(g=>g.district).filter(Boolean))].sort();
+    dists.forEach(d=>distSel.innerHTML+=`<option>${d}</option>`);
+    distSel.dataset.filled='1';
+  }
+  renderGardenCompletionTable();
+}
+
+function renderGardenCompletionTable(){
+  const q=(document.getElementById('compSearch').value||'').toLowerCase();
+  const distF=document.getElementById('compDist').value;
+  const rows=(window._gardenCompRows||[]).filter(x=>
+    (!q||x.garden.name.toLowerCase().includes(q))&&(!distF||x.garden.district===distF)
+  );
+  document.getElementById('gardenCompletionBody').innerHTML=rows.map(x=>{
+    const g=x.garden;
+    const covDonor=g.donorPop>0?pct(x.scr,g.donorPop):'—';
+    const covSurvey=g.surveyPop>0?pct(x.scr,g.surveyPop):'—';
+    return`<tr><td><strong>${g.name}</strong></td><td style="color:var(--text2)">${g.district||'—'}</td><td>${g.upazila||'—'}</td><td><strong>${x.scr.toLocaleString()}</strong></td>
+      <td class="mono">${g.donorPop?g.donorPop.toLocaleString():'—'}</td><td>${covDonor}</td><td><span class="status-pill ${x.catDonor.cls}">${x.catDonor.label}</span></td>
+      <td class="mono">${g.surveyPop?g.surveyPop.toLocaleString():'—'}</td><td>${covSurvey}</td><td><span class="status-pill ${x.catSurvey.cls}">${x.catSurvey.label}</span></td></tr>`;
+  }).join('')||'<tr><td colspan="10" style="text-align:center;color:var(--text3)">No matching gardens</td></tr>';
+}
+function filterGardenCompletion(){renderGardenCompletionTable();}
+
+window.downloadGardenCompletion=function(){
+  const rows=window._gardenCompRows||[];
+  if(!rows.length){alert('No data to download.');return;}
+  const data=rows.map(x=>({
+    'Tea Garden':x.garden.name,'District':x.garden.district,'Upazila':x.garden.upazila,
+    'Screened':x.scr,
+    'Donor Population':x.garden.donorPop,'Coverage % (Donor)':x.garden.donorPop?((x.scr/x.garden.donorPop)*100).toFixed(1):'',
+    'Status (Donor)':x.catDonor.label,
+    'Survey Population':x.garden.surveyPop,'Coverage % (Survey)':x.garden.surveyPop?((x.scr/x.garden.surveyPop)*100).toFixed(1):'',
+    'Status (Survey)':x.catSurvey.label,
+  }));
+  const ws=XLSX.utils.json_to_sheet(data);
+  const wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,ws,'Garden Completion');
+  XLSX.writeFile(wb,'Tea_Garden_Completion.xlsx');
+};
+
+// ═══════════════════════════════════════════════
 // GARDEN
 // ═══════════════════════════════════════════════
 function buildGarden(){
@@ -1416,7 +2150,31 @@ function buildGarden(){
 
   const arr=Object.entries(gar).sort((a,b)=>b[1].n-a[1].n);
   document.getElementById('garCount').textContent=arr.length+' gardens';
-  document.getElementById('gardenBody').innerHTML=arr.map(([g,d])=>`<tr data-name="${g.toLowerCase()}" data-dist="${d.district.toLowerCase()}"><td><strong>${g}</strong></td><td style="color:var(--text2)">${d.district}</td><td>${d.cfs.size}</td><td><strong>${d.n}</strong></td><td>${b(d.pres,'ba')}</td><td style="color:var(--amber);font-weight:600">${pct(d.pres,d.n)}</td><td>${d.cad>0?b(d.cad,'bsl'):'—'}</td><td>${d.cxrAbn>0?`<span class="badge" style="background:#FDEBD0;color:#E67E22">${d.cxrAbn}</span>`:'—'}</td><td>${d.xray>0?b(d.xray,'bsl'):'—'}</td><td>${d.gxp>0?b(d.gxp,'bg'):'—'}</td><td>${b(d.diag,'br')}</td><td>${b(d.tx,'bg')}</td><td>${d.errs>0?b(d.errs,'br'):chk()}</td></tr>`).join('');
+  document.getElementById('gardenBody').innerHTML=arr.map(([g,d])=>{
+    const ref=gardenRefFor(g);
+    const upz=ref?ref.upazila:'—';
+    const donorPop=ref?ref.donorPop:null;
+    const surveyPop=ref?ref.surveyPop:null;
+    const covDonor=(ref&&donorPop>0)?pct(d.n,donorPop):'—';
+    const covSurvey=(ref&&surveyPop>0)?pct(d.n,surveyPop):'—';
+    return`<tr data-name="${g.toLowerCase()}" data-dist="${d.district.toLowerCase()}"><td><strong>${g}</strong></td><td style="color:var(--text2)">${d.district}</td><td style="color:var(--text2)">${upz}</td><td>${d.cfs.size}</td><td><strong>${d.n}</strong></td><td>${b(d.pres,'ba')}</td><td style="color:var(--amber);font-weight:600">${pct(d.pres,d.n)}</td><td>${d.cad>0?b(d.cad,'bsl'):'—'}</td><td>${d.cxrAbn>0?`<span class="badge" style="background:#FDEBD0;color:#E67E22">${d.cxrAbn}</span>`:'—'}</td><td>${d.xray>0?b(d.xray,'bsl'):'—'}</td><td>${d.gxp>0?b(d.gxp,'bg'):'—'}</td><td>${b(d.diag,'br')}</td><td>${b(d.tx,'bg')}</td><td>${d.errs>0?b(d.errs,'br'):chk()}</td><td class="mono">${donorPop!==null?donorPop.toLocaleString():'—'}</td><td class="mono">${surveyPop!==null?surveyPop.toLocaleString():'—'}</td><td style="font-weight:600;color:${ref?'var(--blue)':'var(--text3)'}">${covDonor}</td><td style="font-weight:600;color:${ref?'var(--green-mid)':'var(--text3)'}">${covSurvey}</td></tr>`;
+  }).join('');
+
+  // Unmatched gardens: names present in the screening data with no reference-sheet match
+  const unmatchedCard=document.getElementById('unmatchedGardenCard');
+  if(GARDEN_REF_ARRAY.length){
+    const unmatched=arr.filter(([g])=>!gardenRefFor(g));
+    if(unmatched.length){
+      unmatchedCard.style.display='';
+      document.getElementById('unmatchedGardenBody').innerHTML=unmatched
+        .sort((a,b)=>b[1].n-a[1].n)
+        .map(([g,d])=>`<tr><td><strong>${g}</strong></td><td style="color:var(--text2)">${d.district}</td><td>${d.n}</td></tr>`).join('');
+    } else {
+      unmatchedCard.style.display='none';
+    }
+  } else {
+    unmatchedCard.style.display='none';
+  }
 }
 window.filterGarden=function(){const q=(document.getElementById('garSearch').value||'').toLowerCase(),dist=(document.getElementById('garDist').value||'').toLowerCase();document.querySelectorAll('#gardenBody tr').forEach(tr=>{tr.style.display=(tr.dataset.name?.includes(q)&&(!dist||tr.dataset.dist===dist))?'':'none';});};
 
@@ -1462,7 +2220,7 @@ function buildTBCases(){
   const eptb=tbRows.filter(r=>cv(r,C.TB_TYPE)==='EPTB').length;
   const bplus=tbRows.filter(r=>cv(r,C.BACT_STATUS)==='B+').length;
   const cd=tbRows.filter(r=>cv(r,C.BACT_STATUS)==='CD').length;
-  const child=tbRows.filter(r=>cn(r,C.AGE_Y)!==null&&cn(r,C.AGE_Y)<=15).length;
+  const child=tbRows.filter(r=>cn(r,C.AGE_Y)!==null&&cn(r,C.AGE_Y)<15).length;
   const tx=tbRows.filter(r=>cv(r,C.TX_STARTED)==='Yes').length;
   const flagged=withFlags.filter(x=>x.fl.length>0).length;
 
@@ -1473,7 +2231,7 @@ function buildTBCases(){
     K('#556B2F','🔬',eptb,'EPTB',pct(eptb,tot),'#556B2F')+
     K('var(--red-light)','🧫',bplus,'B+ Confirmed',pct(bplus,tot),'var(--red-light)')+
     K('var(--amber)','🩺',cd,'CD Clinical',pct(cd,tot),'var(--amber)')+
-    K('#FF6B6B','👶',child,'Child TB (≤15y)',pct(child,tot),'#FF6B6B')+
+    K('#FF6B6B','👶',child,'Child TB (<15y)',pct(child,tot),'#FF6B6B')+
     K('var(--green)','💊',tx,'On Treatment',pct(tx,tot),'var(--green)')+
     K('var(--red)','⚠️',flagged,'Flagged Cases',pct(flagged,tot),flagged>0?'var(--red)':'var(--green)');
 

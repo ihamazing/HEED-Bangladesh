@@ -310,6 +310,15 @@ tbody tr.row-suspect:hover td{background:#FFF5D6}
       <div class="card" style="margin-top:4px">
         <div class="card-head">
           <div>
+            <span class="card-title">🧬 B+ & CD Case Source: CAD-Abnormal vs. Direct-to-Molecular-Test</span>
+            <div class="card-sub" style="margin-top:3px">Confirmed-positive (B+) and clinically-diagnosed (CD) cases split by entry pathway — CAD X-ray abnormal (≥40) vs. no CAD X-ray at all — plus the diagnostic yield rate showing CAD X-ray's impact on case detection</div>
+          </div>
+        </div>
+        <div class="card-body" id="bplus-source-chart"></div>
+      </div>
+      <div class="card" style="margin-top:4px">
+        <div class="card-head">
+          <div>
             <span class="card-title">📈 Monthly Trends</span>
             <div class="card-sub" style="margin-top:3px">Each metric on its own date — Screened &amp; Presumptive by Screening Date, Tested by first test done, Diagnosed by Diagnosed Date</div>
           </div>
@@ -361,22 +370,23 @@ tbody tr.row-suspect:hover td{background:#FFF5D6}
           <thead><tr>
             <th onclick="srt('cfTable',0,false)">CF Name</th>
             <th onclick="srt('cfTable',1,false)">District</th>
-            <th onclick="srt('cfTable',2,true)">Days</th>
-            <th onclick="srt('cfTable',3,true)">Screened</th>
-            <th onclick="srt('cfTable',4,true)">Avg/day</th>
-            <th onclick="srt('cfTable',5,true)">Presumptive</th>
-            <th onclick="srt('cfTable',6,true)">Pres.%</th>
-            <th onclick="srt('cfTable',7,true)">Tested</th>
-            <th onclick="srt('cfTable',8,true)">CAD</th>
-            <th onclick="srt('cfTable',9,true)">CXR Abn.</th>
-            <th onclick="srt('cfTable',10,true)">X-ray</th>
-            <th onclick="srt('cfTable',11,true)">GXP</th>
-            <th onclick="srt('cfTable',12,true)">Diagnosed</th>
-            <th onclick="srt('cfTable',13,false)">Avg Start</th>
-            <th onclick="srt('cfTable',14,false)">Avg End</th>
-            <th onclick="srt('cfTable',15,false)">Avg Session</th>
-            <th onclick="srt('cfTable',16,true)">Errors</th>
-            <th onclick="srt('cfTable',17,true)">Error %</th>
+            <th onclick="srt('cfTable',2,false)">Upazila</th>
+            <th onclick="srt('cfTable',3,true)">Days</th>
+            <th onclick="srt('cfTable',4,true)">Screened</th>
+            <th onclick="srt('cfTable',5,true)">Avg/day</th>
+            <th onclick="srt('cfTable',6,true)">Presumptive</th>
+            <th onclick="srt('cfTable',7,true)">Pres.%</th>
+            <th onclick="srt('cfTable',8,true)">Tested</th>
+            <th onclick="srt('cfTable',9,true)">CAD</th>
+            <th onclick="srt('cfTable',10,true)">CXR Abn.</th>
+            <th onclick="srt('cfTable',11,true)">X-ray</th>
+            <th onclick="srt('cfTable',12,true)">GXP</th>
+            <th onclick="srt('cfTable',13,true)">Diagnosed</th>
+            <th onclick="srt('cfTable',14,false)">Avg Start</th>
+            <th onclick="srt('cfTable',15,false)">Avg End</th>
+            <th onclick="srt('cfTable',16,false)">Avg Session</th>
+            <th onclick="srt('cfTable',17,true)">Errors</th>
+            <th onclick="srt('cfTable',18,true)">Error %</th>
           </tr></thead>
           <tbody id="cfBody"></tbody>
         </table></div>
@@ -645,6 +655,18 @@ tbody tr.row-suspect:hover td{background:#FFF5D6}
           <tbody id="tbBody"></tbody>
         </table></div>
       </div>
+      <div class="card" id="softOverrideCard" style="display:none">
+        <div class="card-head">
+          <div>
+            <span class="card-title">🔕 Ignored Cases (Flag Overrides)</span>
+            <div class="card-sub" style="margin-top:3px">Cases where you clicked "Ignore this case" to dismiss its flags. This is remembered in <strong>this browser only</strong> (via local storage) — the same case will stay un-flagged the next time you upload the same CSV in this browser, but it will re-appear on a different device/browser or if site data is cleared.</div>
+          </div>
+        </div>
+        <div class="tbl-wrap"><table id="softOverrideTable">
+          <thead><tr><th>PID / Key</th><th>Patient</th><th>Ignored On</th><th></th></tr></thead>
+          <tbody id="softOverrideBody"></tbody>
+        </table></div>
+      </div>
     </div>
     <!-- VALIDATION -->
     <div class="pane" id="pane-validation">
@@ -657,13 +679,14 @@ tbody tr.row-suspect:hover td{background:#FFF5D6}
             <div class="rule-box">
               <strong>Gender</strong> — Male or Female only<br>
               <strong>Diabetes / Cough / Fever / Weight Loss / Swelling</strong> — Cannot be blank<br>
-              <strong>Cough Duration</strong> — Required if Cough=Yes, max 60 days<br>
-              <strong>Fever Duration</strong> — Required if Fever=Yes, max 60 days<br>
-              <strong>Night Sweats</strong> — Yes/No for age ≥15; blank for age &lt;15<br>
-              <strong>Playfulness</strong> — "Yes" only valid for age &lt;15<br>
+              <strong>Cough Duration</strong> — Required if Cough=Yes, max 60 days, cannot be 0<br>
+              <strong>Fever Duration</strong> — Required if Fever=Yes, max 60 days, cannot be 0<br>
+              <strong>Night Sweats</strong> — Age &lt;15: blank or "No" only ("Yes" flagged) · Age ≥15: cannot be blank (must be Yes/No)<br>
+              <strong>Playfulness</strong> — Age &lt;15: "Yes" or "No" · Age ≥15: "No" or blank only ("Yes" flagged)<br>
               <strong>Child Diabetes</strong> — Age &lt;15 with Diabetes=Yes is flagged<br>
               <strong>Advised/Done mismatch</strong> — Test Done=Yes but Advised=No<br>
-              <strong>GXP Sputum + Cough=No</strong> — GXP Sputum done without reported cough
+              <strong>GXP Sputum + Cough=No</strong> — GXP Sputum done without reported cough<br>
+              <strong>TB Entry vs. Diagnosed Date</strong> <span style="color:var(--text3)">(TB Cases tab)</span> — Entry date must be on/after the Diagnosed date
             </div>
           </div>
         </div>
@@ -904,6 +927,26 @@ function isMTBPositive(val){
 // Alias used throughout
 const isPositive=isMTBPositive;
 
+// Which test actually confirmed a B+ (bacteriologically positive) case.
+// Priority: GXP Sputum first (most commonly used), then Truenat, then any other
+// confirmatory test (AFB, GXP Stool, GXP EPTB Ultra, FNAC, Biopsy, ADA) grouped as "Other".
+function confirmSource(r){
+  const tests=[
+    {d:C.GXP_DONE,res:C.GXP_RESULT,label:'GXP Sputum'},
+    {d:C.TRUENAT_DONE,res:C.TRUENAT_RESULT,label:'Truenat'},
+    {d:C.AFB_DONE,res:C.AFB_RESULT,label:'Other'},
+    {d:C.STOOL_DONE,res:C.STOOL_RESULT,label:'Other'},
+    {d:C.EPTB_DONE,res:C.EPTB_RESULT,label:'Other'},
+    {d:C.FNAC_DONE,res:C.FNAC_RESULT,label:'Other'},
+    {d:C.BIOPSY_DONE,res:C.BIOPSY_RESULT,label:'Other'},
+    {d:C.ADA_DONE,res:C.ADA_RESULT,label:'Other'}
+  ];
+  for(const t of tests){
+    if(cv(r,t.d)==='Yes'&&isPositive(cv(r,t.res)))return t.label;
+  }
+  return 'Other';
+}
+
 // ── VALIDATION LOGIC ─────────────────────────────
 function validate(r){
   const age=cn(r,C.AGE_Y);
@@ -914,17 +957,21 @@ function validate(r){
   const cough=cv(r,C.COUGH);
   if(cough==='')errs.push('Cough');
   const cd=parseFloat(r._cd);
-  if(cough==='Yes'&&(isNaN(cd)||cd>60))errs.push('Cough Duration');
+  if(cough==='Yes'&&(isNaN(cd)||cd>60||cd===0))errs.push('Cough Duration');
   const fever=cv(r,C.FEVER);
   if(fever==='')errs.push('Fever');
   const fd=parseFloat(r._fd);
-  if(fever==='Yes'&&(isNaN(fd)||fd>60))errs.push('Fever Duration');
+  if(fever==='Yes'&&(isNaN(fd)||fd>60||fd===0))errs.push('Fever Duration');
   if(cv(r,C.WEIGHT_LOSS)==='')errs.push('Weight Loss');
   const ns=cv(r,C.NIGHT_SWEATS);
   if(age!==null){
-    if(age>=15&&ns!=='Yes'&&ns!=='No')errs.push('Night Sweats');
-    if(age<15&&ns!=='')errs.push('Night Sweats');
+    // Under 15 (14.99 or lower): Night Sweats must be blank or "No" — "Yes" is flagged.
+    if(age<15){if(ns==='Yes')errs.push('Night Sweats');}
+    // 15 and above: cannot be blank — must be "Yes" or "No".
+    else{if(ns!=='Yes'&&ns!=='No')errs.push('Night Sweats');}
   }
+  // Playfulness is the opposite: under 15 may be "Yes" or "No" (no flag either way);
+  // 15 and above must be "No" or blank — "Yes" is flagged.
   if(age!==null&&age>=15&&cv(r,C.PLAYFULNESS)==='Yes')errs.push('Playfulness');
   if(cv(r,C.GLAND)==='')errs.push('Swelling');
   if(age!==null&&age<15&&cv(r,C.DIABETES)==='Yes')errs.push('Child Diabetes');
@@ -967,6 +1014,12 @@ function tbFlags(r){
     });
   }
 
+  // TB case entry date must be on/after the Diagnosed date — dismissible
+  // per-case via the "Ignore this case" button in the TB Case Registry
+  // (see getRowKey/FLAG_OVERRIDES below).
+  const entryDt=pd(cv(r,C.DIAG_ENTRY_DATE));
+  if(diagDt&&entryDt&&ds(entryDt)<ds(diagDt))flags.push('TB case entry date is before Diagnosed date');
+
   // No test but diagnosed
   if(!r._anyTested)flags.push('Diagnosed with no test done');
 
@@ -1001,6 +1054,37 @@ function tbFlags(r){
   if(r._suspect)flags.push('Suspicious: same name & DOB found in dataset');
   return flags;
 }
+
+// ── PER-CASE FLAG OVERRIDE ("Ignore This Case") ─────────────────
+// Lets you dismiss ALL current flags for one specific TB case (e.g. a
+// known/approved exception). The override is remembered in this browser's
+// localStorage, keyed by a stable row identity (PID, or patient+DOB if PID
+// is blank), so re-uploading the SAME CSV later in the SAME browser will
+// not re-flag a case you've already reviewed and dismissed. It will NOT
+// persist across different browsers/devices, or if browser site data is
+// cleared — there is no server/database behind this dashboard to store it
+// centrally.
+function getRowKey(r){
+  const pid=cv(r,C.PID);
+  if(pid)return 'pid:'+pid;
+  return 'nd:'+(cv(r,C.PATIENT)+cv(r,C.DOB)).toLowerCase().replace(/\s/g,'');
+}
+const FLAG_OVERRIDE_KEY='tb_flag_overrides_v1';
+let FLAG_OVERRIDES={};
+try{FLAG_OVERRIDES=JSON.parse(localStorage.getItem(FLAG_OVERRIDE_KEY)||'{}');}catch(e){FLAG_OVERRIDES={};}
+function saveFlagOverrides(){
+  try{localStorage.setItem(FLAG_OVERRIDE_KEY,JSON.stringify(FLAG_OVERRIDES));}catch(e){}
+}
+window.ignoreCaseFlags=function(key){
+  FLAG_OVERRIDES[key]={date:new Date().toISOString()};
+  saveFlagOverrides();
+  if(typeof buildTBCases==='function')buildTBCases();
+};
+window.restoreCaseFlags=function(key){
+  delete FLAG_OVERRIDES[key];
+  saveFlagOverrides();
+  if(typeof buildTBCases==='function')buildTBCases();
+};
 
 // ── INIT ─────────────────────────────────────────
 function initData(rows,fname){
@@ -1214,6 +1298,10 @@ function buildOverview(){
   const eptb=tbRows.filter(r=>cv(r,C.TB_TYPE)==='EPTB').length;
   const bplus=tbRows.filter(r=>cv(r,C.BACT_STATUS)==='B+').length;
   const cd=tbRows.filter(r=>cv(r,C.BACT_STATUS)==='CD').length;
+  const bplusPTB=tbRows.filter(r=>cv(r,C.BACT_STATUS)==='B+'&&cv(r,C.TB_TYPE)==='PTB').length;
+  const bplusEPTB=tbRows.filter(r=>cv(r,C.BACT_STATUS)==='B+'&&cv(r,C.TB_TYPE)==='EPTB').length;
+  const cdPTB=tbRows.filter(r=>cv(r,C.BACT_STATUS)==='CD'&&cv(r,C.TB_TYPE)==='PTB').length;
+  const cdEPTB=tbRows.filter(r=>cv(r,C.BACT_STATUS)==='CD'&&cv(r,C.TB_TYPE)==='EPTB').length;
   const presMale=baseRows.filter(r=>cv(r,C.PRESUMPTIVE)==='Yes'&&cv(r,C.GENDER)==='Male').length;
   const presFemale=baseRows.filter(r=>cv(r,C.PRESUMPTIVE)==='Yes'&&cv(r,C.GENDER)==='Female').length;
   const diagMale=tbRows.filter(r=>cv(r,C.GENDER)==='Male').length;
@@ -1286,6 +1374,108 @@ function buildOverview(){
       ${miniDonut('Bacteriological Status','B+ (Confirmed)',bplus,'#E0646F','CD (Clinical)',cd,'#E8A96E')}
       ${miniDonut('Age Group','Child (<15y)',childTB,'#FF6B6B','Adult',Math.max(diag-childTB,0),'#7FA8D9')}
     </div>
+    <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border)">
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text3);margin-bottom:8px">Bacteriological Status by TB Type</div>
+      <div style="display:grid;grid-template-columns:1fr auto auto;gap:6px 14px;font-size:12.5px;align-items:center">
+        <div style="color:var(--text3);font-size:10px;font-weight:700;text-transform:uppercase">&nbsp;</div>
+        <div style="color:var(--text3);font-size:10px;font-weight:700;text-transform:uppercase;text-align:right">Count</div>
+        <div style="color:var(--text3);font-size:10px;font-weight:700;text-transform:uppercase;text-align:right">% of Diagnosed</div>
+        <div><span class="badge br">B+</span> · PTB</div><div class="mono" style="text-align:right">${bplusPTB}</div><div class="mono" style="text-align:right">${pct(bplusPTB,diag)}</div>
+        <div><span class="badge br">B+</span> · EPTB</div><div class="mono" style="text-align:right">${bplusEPTB}</div><div class="mono" style="text-align:right">${pct(bplusEPTB,diag)}</div>
+        <div><span class="badge ba">CD</span> · PTB</div><div class="mono" style="text-align:right">${cdPTB}</div><div class="mono" style="text-align:right">${pct(cdPTB,diag)}</div>
+        <div><span class="badge ba">CD</span> · EPTB</div><div class="mono" style="text-align:right">${cdEPTB}</div><div class="mono" style="text-align:right">${pct(cdEPTB,diag)}</div>
+      </div>
+    </div>
+  `;
+
+  // ── B+ / CD Case Source: CAD-Abnormal vs. Direct-to-Molecular-Test ──
+  // Diagnosed (B+ and CD) cases split by entry pathway.
+  const bplusRows=tbRows.filter(r=>cv(r,C.BACT_STATUS)==='B+');
+  const cdRows=tbRows.filter(r=>cv(r,C.BACT_STATUS)==='CD');
+  const isCadAbnormal=r=>{
+    if(cv(r,C.CAD_DONE)!=='Yes')return false;
+    const v=cn(r,C.CAD_RESULT);return v!==null&&v>=40;
+  };
+  const isNoCad=r=>cv(r,C.CAD_DONE)!=='Yes'; // "direct to molecular test" — no CAD X-ray at all
+  const cadAbnormalPos=bplusRows.filter(isCadAbnormal);
+  const noCadPos=bplusRows.filter(isNoCad);
+  const cadAbnormalCD=cdRows.filter(isCadAbnormal);
+  const noCadCD=cdRows.filter(isNoCad);
+
+  const srcColors={'GXP Sputum':'var(--green-light)','Truenat':'#C77DBB','Other':'#7B68EE'};
+  const typeColors={'PTB':'#8B4513','EPTB':'#556B2F'};
+  const sourceBreakdown=rows=>{
+    const b={'GXP Sputum':0,'Truenat':0,'Other':0};
+    rows.forEach(r=>{b[confirmSource(r)]++;});
+    return b;
+  };
+  const typeBreakdown=rows=>{
+    const b={'PTB':0,'EPTB':0};
+    rows.forEach(r=>{const t=cv(r,C.TB_TYPE);if(b[t]!==undefined)b[t]++;});
+    return b;
+  };
+  const barCol=(title,rows,accentCol,breakdown,colors)=>{
+    const total=rows.length;
+    const src=breakdown(rows);
+    const bar=Object.entries(src).map(([lbl,val])=>{
+      const w=total>0?(val/total*100):0;
+      return w>0?`<div style="height:100%;width:${w}%;background:${colors[lbl]}" title="${lbl}: ${val}"></div>`:'';
+    }).join('');
+    const legend=Object.entries(src).map(([lbl,val])=>
+      `<div class="gd-leg-item"><span class="gd-dot" style="background:${colors[lbl]}"></span>${lbl} <b>${val.toLocaleString()}</b><span class="gd-leg-pct">${pct(val,total)}</span></div>`
+    ).join('');
+    return`<div style="flex:1;min-width:240px">
+      <div style="display:flex;align-items:baseline;gap:9px;margin-bottom:8px">
+        <div style="font-size:26px;font-weight:700;font-family:'DM Mono',monospace;color:${accentCol}">${total.toLocaleString()}</div>
+        <div class="gd-title" style="margin-bottom:0">${title}</div>
+      </div>
+      <div style="display:flex;height:20px;border-radius:6px;overflow:hidden;background:var(--surface2);margin-bottom:8px">${bar||''}</div>
+      <div class="gd-legend">${legend}</div>
+    </div>`;
+  };
+
+  // ── CAD impact / diagnostic yield rate ──
+  // Denominator = everyone who actually went through that pathway AND
+  // underwent at least one molecular/other diagnostic test (any test except
+  // CAD and plain X-ray) — not just the ones who came back positive. This
+  // shows what fraction of TESTED people in each pathway turned out to be
+  // B+ or CD, so you can see whether the CAD-abnormal pathway finds TB at
+  // a higher rate than testing people directly without a CAD X-ray.
+  const OTHER_TEST_DONE_COLS=[C.MT_DONE,C.STOOL_DONE,C.GXP_DONE,C.IND_DONE,C.GL_DONE,
+    C.EPTB_DONE,C.TRUENAT_DONE,C.AFB_DONE,C.FNAC_DONE,C.BIOPSY_DONE,C.ADA_DONE];
+  const anyOtherTestDone=r=>OTHER_TEST_DONE_COLS.some(c=>cv(r,c)==='Yes');
+  const cadAbnormalTestedPop=baseRows.filter(r=>isCadAbnormal(r)&&anyOtherTestDone(r));
+  const noCadTestedPop=baseRows.filter(r=>isNoCad(r)&&anyOtherTestDone(r));
+  const cadPopBplus=cadAbnormalTestedPop.filter(r=>cv(r,C.TB_DIAG)==='Yes'&&cv(r,C.BACT_STATUS)==='B+').length;
+  const cadPopCD=cadAbnormalTestedPop.filter(r=>cv(r,C.TB_DIAG)==='Yes'&&cv(r,C.BACT_STATUS)==='CD').length;
+  const noCadPopBplus=noCadTestedPop.filter(r=>cv(r,C.TB_DIAG)==='Yes'&&cv(r,C.BACT_STATUS)==='B+').length;
+  const noCadPopCD=noCadTestedPop.filter(r=>cv(r,C.TB_DIAG)==='Yes'&&cv(r,C.BACT_STATUS)==='CD').length;
+  const yieldRate=(n,d)=>d>0?((n/d)*100).toFixed(1)+'%':'—';
+
+  document.getElementById('bplus-source-chart').innerHTML=`
+    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text3);margin-bottom:2px">B+ (Bacteriologically Confirmed) — Test Source</div>
+    <div style="display:flex;gap:28px;flex-wrap:wrap;margin-bottom:16px">
+      ${barCol('CAD X-ray Abnormal (≥40) → Confirmed B+',cadAbnormalPos,'#E67E22',sourceBreakdown,srcColors)}
+      ${barCol('No CAD X-ray → Direct to Test → Confirmed B+',noCadPos,'var(--blue)',sourceBreakdown,srcColors)}
+    </div>
+    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text3);margin-bottom:2px;padding-top:12px;border-top:1px solid var(--border)">CD (Clinically Diagnosed) — TB Type</div>
+    <div style="display:flex;gap:28px;flex-wrap:wrap;margin-bottom:16px">
+      ${barCol('CAD X-ray Abnormal (≥40) → Clinically Diagnosed CD',cadAbnormalCD,'#E67E22',typeBreakdown,typeColors)}
+      ${barCol('No CAD X-ray → Direct to Test → Clinically Diagnosed CD',noCadCD,'var(--blue)',typeBreakdown,typeColors)}
+    </div>
+    <div style="padding-top:12px;border-top:1px solid var(--border)">
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text3);margin-bottom:8px">Diagnostic Yield Rate — CAD X-ray Impact</div>
+      <div class="card-sub" style="margin:-4px 0 10px 0">Of everyone who actually underwent a molecular/other diagnostic test (any test except CAD or plain X-ray) in each pathway, what % turned out B+ or CD</div>
+      <div style="display:grid;grid-template-columns:1fr auto auto auto;gap:6px 14px;font-size:12.5px;align-items:center">
+        <div style="color:var(--text3);font-size:10px;font-weight:700;text-transform:uppercase">Pathway</div>
+        <div style="color:var(--text3);font-size:10px;font-weight:700;text-transform:uppercase;text-align:right">Tested</div>
+        <div style="color:var(--text3);font-size:10px;font-weight:700;text-transform:uppercase;text-align:right">B+ Rate</div>
+        <div style="color:var(--text3);font-size:10px;font-weight:700;text-transform:uppercase;text-align:right">CD Rate</div>
+        <div>🟠 CAD X-ray Abnormal → tested</div><div class="mono" style="text-align:right">${cadAbnormalTestedPop.length.toLocaleString()}</div><div class="mono" style="text-align:right;color:#E67E22;font-weight:700">${yieldRate(cadPopBplus,cadAbnormalTestedPop.length)}</div><div class="mono" style="text-align:right;color:#E67E22;font-weight:700">${yieldRate(cadPopCD,cadAbnormalTestedPop.length)}</div>
+        <div>🔵 No CAD → direct to test</div><div class="mono" style="text-align:right">${noCadTestedPop.length.toLocaleString()}</div><div class="mono" style="text-align:right;color:var(--blue);font-weight:700">${yieldRate(noCadPopBplus,noCadTestedPop.length)}</div><div class="mono" style="text-align:right;color:var(--blue);font-weight:700">${yieldRate(noCadPopCD,noCadTestedPop.length)}</div>
+      </div>
+    </div>
+    <div style="margin-top:12px;padding-top:10px;border-top:1px solid var(--border);font-size:11.5px;color:var(--text3)">Total B+: <strong style="color:var(--text2)">${bplusRows.length.toLocaleString()}</strong> · Total CD: <strong style="color:var(--text2)">${cdRows.length.toLocaleString()}</strong> in current filter — the CAD-abnormal/No-CAD groups above may not sum to these totals if CAD was done but not abnormal, or CAD result is missing</div>
   `;
 
   const genderDonut=(title,m,f)=>{
@@ -1555,8 +1745,10 @@ function buildCF(){
   // Build CF entries from base rows (screened, presumptive, days, timing, errors)
   base.forEach(r=>{
     const cf=cv(r,C.CF)||'Unknown';
-    if(!CFD[cf])CFD[cf]={name:cf,baseRows:[],resultRows:[],tbRows:[],days:{},district:cv(r,C.DISTRICT)};
+    if(!CFD[cf])CFD[cf]={name:cf,baseRows:[],resultRows:[],tbRows:[],days:{},district:cv(r,C.DISTRICT),upazilas:new Set()};
     CFD[cf].baseRows.push(r);
+    const gref=gardenRefFor(cv(r,C.FACILITY));
+    if(gref&&gref.upazila)CFD[cf].upazilas.add(gref.upazila);
     if(r._sdt){
       const dk=r._sds;
       if(!CFD[cf].days[dk])CFD[cf].days[dk]={min:r._sdt,max:r._sdt,count:0,gardens:new Set()};
@@ -1571,14 +1763,14 @@ function buildCF(){
   // Add result rows (test counts) — may be a different set in result mode
   result.forEach(r=>{
     const cf=cv(r,C.CF)||'Unknown';
-    if(!CFD[cf])CFD[cf]={name:cf,baseRows:[],resultRows:[],tbRows:[],days:{},district:cv(r,C.DISTRICT)};
+    if(!CFD[cf])CFD[cf]={name:cf,baseRows:[],resultRows:[],tbRows:[],days:{},district:cv(r,C.DISTRICT),upazilas:new Set()};
     CFD[cf].resultRows.push(r);
   });
 
   // Add TB-aligned rows (diag counts) using corrected filter
   tbResult.forEach(r=>{
     const cf=cv(r,C.CF)||'Unknown';
-    if(!CFD[cf])CFD[cf]={name:cf,baseRows:[],resultRows:[],tbRows:[],days:{},district:cv(r,C.DISTRICT)};
+    if(!CFD[cf])CFD[cf]={name:cf,baseRows:[],resultRows:[],tbRows:[],days:{},district:cv(r,C.DISTRICT),upazilas:new Set()};
     CFD[cf].tbRows.push(r);
   });
 
@@ -1599,9 +1791,12 @@ function buildCF(){
     const aE=nd?Math.round(dA.reduce((s,d)=>s+d.max.getHours()*60+d.max.getMinutes(),0)/nd):0;
     const aDur=nd?dA.reduce((s,d)=>s+(d.max-d.min)/60000,0)/nd:0;
     const sh=Math.floor(aS/60),sm=aS%60,eh=Math.floor(aE/60),em=aE%60;
+    const upzList=[...(cf.upazilas||[])].filter(Boolean).sort();
+    const upzTxt=upzList.length?upzList.join(', '):'—';
     return`<tr data-name="${cf.name.toLowerCase()}">
       <td><strong>${cf.name}</strong></td>
       <td style="color:var(--text2)">${cf.district}</td>
+      <td style="color:var(--text2);max-width:160px;overflow:hidden;text-overflow:ellipsis" title="${upzTxt}">${upzTxt}</td>
       <td>${nd}</td><td><strong>${tot.toLocaleString()}</strong></td>
       <td class="mono">${nd>0?(tot/nd).toFixed(1):'-'}</td>
       <td>${b(pres,'ba')}</td>
@@ -2213,7 +2408,13 @@ function buildTBCases(){
     r._suspect=key.length>3&&seen[key]>1;
   });
 
-  const withFlags=tbRows.map(r=>({r,fl:tbFlags(r)}));
+  const withFlags=tbRows.map(r=>{
+    const key=getRowKey(r);
+    const overridden=!!FLAG_OVERRIDES[key];
+    const rawFlags=tbFlags(r);
+    const fl=overridden?[]:rawFlags;
+    return{r,fl,rawFlags,overridden,key};
+  });
   withFlags.sort((a,b)=>b.fl.length-a.fl.length);
 
   const tot=tbRows.length,ptb=tbRows.filter(r=>cv(r,C.TB_TYPE)==='PTB').length;
@@ -2235,11 +2436,17 @@ function buildTBCases(){
     K('var(--green)','💊',tx,'On Treatment',pct(tx,tot),'var(--green)')+
     K('var(--red)','⚠️',flagged,'Flagged Cases',pct(flagged,tot),flagged>0?'var(--red)':'var(--green)');
 
-  document.getElementById('tbBody').innerHTML=withFlags.map(({r,fl})=>{
+  document.getElementById('tbBody').innerHTML=withFlags.map(({r,fl,rawFlags,overridden,key})=>{
     const isFl=fl.length>0,isSus=r._suspect;
     const rowCls=isSus?'row-suspect':isFl?'row-flagged':'';
     const cadScore=cv(r,C.CAD_RESULT)?parseFloat(cv(r,C.CAD_RESULT)).toFixed(1):'—';
-    const flagCell=fl.length>0?fl.map(f=>`<span class="err-chip" style="display:block;margin-bottom:2px">${f}</span>`).join(''):`<span style="color:var(--green);font-weight:700">✓ Clean</span>`;
+    const keyEsc=key.replace(/'/g,"\\'").replace(/"/g,'&quot;');
+    const chips=fl.map(f=>`<span class="err-chip" style="display:block;margin-bottom:2px">${f}</span>`).join('');
+    const ignoreBtn=rawFlags.length>0?(overridden
+      ?`<button onclick="restoreCaseFlags('${keyEsc}')" title="Restore flags for this case" style="margin-top:3px;border:none;background:none;color:var(--text3);cursor:pointer;font-size:10px;text-decoration:underline;padding:0">↺ Restore flags</button>`
+      :`<button onclick="ignoreCaseFlags('${keyEsc}')" title="Dismiss all flags for this specific case — remembered in this browser, so it won't re-flag on the next upload of the same CSV" style="margin-top:3px;border:1px solid var(--border2);background:var(--surface);color:var(--text2);cursor:pointer;font-size:10px;padding:2px 7px;border-radius:999px">🔕 Ignore this case</button>`
+    ):'';
+    const flagCell=isFl?chips+ignoreBtn:(overridden?`<span style="color:var(--text3);font-size:11px">🔕 Overridden${ignoreBtn}</span>`:`<span style="color:var(--green);font-weight:700">✓ Clean</span>`);
     return`<tr class="${rowCls}" data-fl="${isFl?'1':'0'}" data-type="${cv(r,C.TB_TYPE)}" data-bact="${cv(r,C.BACT_STATUS)}" data-q="${(cv(r,C.PATIENT)+cv(r,C.PID)+cv(r,C.CF)).toLowerCase()}">
       <td style="min-width:200px">${flagCell}</td>
       <td>${r._sds||'—'}</td>
@@ -2270,6 +2477,21 @@ function buildTBCases(){
       <td><span class="badge ${cv(r,C.TX_STARTED)==='Yes'?'bg':'bsl'}">${cv(r,C.TX_STARTED)||'—'}</span></td>
     </tr>`;
   }).join('');
+
+  // Overridden cases management panel
+  const overriddenList=withFlags.filter(x=>x.overridden);
+  const overrideCard=document.getElementById('softOverrideCard');
+  if(overriddenList.length){
+    overrideCard.style.display='';
+    document.getElementById('softOverrideBody').innerHTML=overriddenList.map(({r,key})=>{
+      const ov=FLAG_OVERRIDES[key]||{};
+      const when=ov.date?new Date(ov.date).toLocaleString():'—';
+      const keyEsc=key.replace(/'/g,"\\'").replace(/"/g,'&quot;');
+      return`<tr><td class="mono" style="color:var(--text3)">${cv(r,C.PID)||key}</td><td>${cv(r,C.PATIENT)}</td><td>${when}</td><td><button class="dl-btn" onclick="restoreCaseFlags('${keyEsc}')">↺ Restore Flags</button></td></tr>`;
+    }).join('');
+  } else {
+    overrideCard.style.display='none';
+  }
 }
 window.filterTB=function(){
   const q=(document.getElementById('tbSearch').value||'').toLowerCase();
@@ -2398,7 +2620,15 @@ window.downloadTBCases=function(){
   if(!tbRows.length){alert('No TB cases in current view.');return;}
   const d1=document.getElementById('d1').value,d2=document.getElementById('d2').value;
   const range=(d1&&d2)?`_${d1}_to_${d2}`:'';
-  const data=tbRows.map(r=>rowToObj(r,{'__TB_Case_Flags':tbFlags(r).join('; ')}));
+  const data=tbRows.map(r=>{
+    const key=getRowKey(r);
+    const overridden=!!FLAG_OVERRIDES[key];
+    const flags=overridden?[]:tbFlags(r);
+    return rowToObj(r,{
+      '__TB_Case_Flags':flags.join('; '),
+      '__Flags_Overridden':overridden?'Yes':'No'
+    });
+  });
   const ws=XLSX.utils.json_to_sheet(data);
   const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'TB Cases');
   XLSX.writeFile(wb,`TB_Cases${range}.xlsx`);
@@ -2408,7 +2638,7 @@ window.downloadTBCases=function(){
 // CF TABLE DOWNLOAD
 // ═══════════════════════════════════════════════
 window.downloadCFTable=function(){
-  const headers=['CF Name','District','Days Worked','Total Screened','Avg/day',
+  const headers=['CF Name','District','Upazila','Days Worked','Total Screened','Avg/day',
     'Presumptive','Pres. %','Tested','CAD Done','CXR Abnormal (≥40)',
     'X-ray Done','GXP Sputum Done','Diagnosed',
     'Avg Start Time','Avg End Time','Avg Session Duration',

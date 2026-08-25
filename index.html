@@ -310,8 +310,8 @@ tbody tr.row-suspect:hover td{background:#FFF5D6}
       <div class="card" style="margin-top:4px">
         <div class="card-head">
           <div>
-            <span class="card-title">🧬 B+ & CD Case Source: CAD-Abnormal vs. Direct-to-Molecular-Test</span>
-            <div class="card-sub" style="margin-top:3px">Confirmed-positive (B+) and clinically-diagnosed (CD) cases split by entry pathway — CAD X-ray abnormal (≥40) vs. no CAD X-ray at all — plus the diagnostic yield rate showing CAD X-ray's impact on case detection</div>
+            <span class="card-title">🧬 B+ & CD Case Source: CAD-Abnormal vs. Tested without CAD Abnormal</span>
+            <div class="card-sub" style="margin-top:3px">Confirmed-positive (B+) and clinically-diagnosed (CD) cases split into two full-partition pathways — CAD X-ray abnormal (≥40) vs. tested without a CAD abnormal result (CAD came back normal, or no CAD X-ray at all) — plus the diagnostic yield rate showing CAD X-ray's impact on case detection</div>
           </div>
         </div>
         <div class="card-body" id="bplus-source-chart"></div>
@@ -1388,7 +1388,7 @@ function buildOverview(){
     </div>
   `;
 
-  // ── B+ / CD Case Source: CAD-Abnormal vs. Direct-to-Molecular-Test ──
+  // ── B+ / CD Case Source: CAD-Abnormal vs. CAD-Normal-or-No-CAD ──
   // Diagnosed (B+ and CD) cases split by entry pathway.
   const bplusRows=tbRows.filter(r=>cv(r,C.BACT_STATUS)==='B+');
   const cdRows=tbRows.filter(r=>cv(r,C.BACT_STATUS)==='CD');
@@ -1396,11 +1396,13 @@ function buildOverview(){
     if(cv(r,C.CAD_DONE)!=='Yes')return false;
     const v=cn(r,C.CAD_RESULT);return v!==null&&v>=40;
   };
-  const isNoCad=r=>cv(r,C.CAD_DONE)!=='Yes'; // "direct to molecular test" — no CAD X-ray at all
+  // Everyone who is NOT confirmed CAD-abnormal: CAD done but result came back
+  // normal (<40), OR no CAD X-ray at all ("direct to test").
+  const isNotCadAbnormal=r=>!isCadAbnormal(r);
   const cadAbnormalPos=bplusRows.filter(isCadAbnormal);
-  const noCadPos=bplusRows.filter(isNoCad);
+  const noCadPos=bplusRows.filter(isNotCadAbnormal);
   const cadAbnormalCD=cdRows.filter(isCadAbnormal);
-  const noCadCD=cdRows.filter(isNoCad);
+  const noCadCD=cdRows.filter(isNotCadAbnormal);
 
   const srcColors={'GXP Sputum':'var(--green-light)','Truenat':'#C77DBB','Other':'#7B68EE'};
   const typeColors={'PTB':'#8B4513','EPTB':'#556B2F'};
@@ -1440,42 +1442,47 @@ function buildOverview(){
   // CAD and plain X-ray) — not just the ones who came back positive. This
   // shows what fraction of TESTED people in each pathway turned out to be
   // B+ or CD, so you can see whether the CAD-abnormal pathway finds TB at
-  // a higher rate than testing people directly without a CAD X-ray.
+  // a higher rate than the CAD-normal-or-no-CAD pathway.
   const OTHER_TEST_DONE_COLS=[C.MT_DONE,C.STOOL_DONE,C.GXP_DONE,C.IND_DONE,C.GL_DONE,
     C.EPTB_DONE,C.TRUENAT_DONE,C.AFB_DONE,C.FNAC_DONE,C.BIOPSY_DONE,C.ADA_DONE];
   const anyOtherTestDone=r=>OTHER_TEST_DONE_COLS.some(c=>cv(r,c)==='Yes');
   const cadAbnormalTestedPop=baseRows.filter(r=>isCadAbnormal(r)&&anyOtherTestDone(r));
-  const noCadTestedPop=baseRows.filter(r=>isNoCad(r)&&anyOtherTestDone(r));
+  const noCadTestedPop=baseRows.filter(r=>isNotCadAbnormal(r)&&anyOtherTestDone(r));
   const cadPopBplus=cadAbnormalTestedPop.filter(r=>cv(r,C.TB_DIAG)==='Yes'&&cv(r,C.BACT_STATUS)==='B+').length;
   const cadPopCD=cadAbnormalTestedPop.filter(r=>cv(r,C.TB_DIAG)==='Yes'&&cv(r,C.BACT_STATUS)==='CD').length;
   const noCadPopBplus=noCadTestedPop.filter(r=>cv(r,C.TB_DIAG)==='Yes'&&cv(r,C.BACT_STATUS)==='B+').length;
   const noCadPopCD=noCadTestedPop.filter(r=>cv(r,C.TB_DIAG)==='Yes'&&cv(r,C.BACT_STATUS)==='CD').length;
   const yieldRate=(n,d)=>d>0?((n/d)*100).toFixed(1)+'%':'—';
 
+  // Combined "Total TB Rate" per pathway (B+ and CD together), same style
+  // as the individual B+/CD rate columns — out of everyone tested in that
+  // pathway, what % turned out to be ANY form of TB (B+ or CD).
+
   document.getElementById('bplus-source-chart').innerHTML=`
     <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text3);margin-bottom:2px">B+ (Bacteriologically Confirmed) — Test Source</div>
     <div style="display:flex;gap:28px;flex-wrap:wrap;margin-bottom:16px">
       ${barCol('CAD X-ray Abnormal (≥40) → Confirmed B+',cadAbnormalPos,'#E67E22',sourceBreakdown,srcColors)}
-      ${barCol('No CAD X-ray → Direct to Test → Confirmed B+',noCadPos,'var(--blue)',sourceBreakdown,srcColors)}
+      ${barCol('Tested without CAD Abnormal → Confirmed B+',noCadPos,'var(--blue)',sourceBreakdown,srcColors)}
     </div>
     <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text3);margin-bottom:2px;padding-top:12px;border-top:1px solid var(--border)">CD (Clinically Diagnosed) — TB Type</div>
     <div style="display:flex;gap:28px;flex-wrap:wrap;margin-bottom:16px">
       ${barCol('CAD X-ray Abnormal (≥40) → Clinically Diagnosed CD',cadAbnormalCD,'#E67E22',typeBreakdown,typeColors)}
-      ${barCol('No CAD X-ray → Direct to Test → Clinically Diagnosed CD',noCadCD,'var(--blue)',typeBreakdown,typeColors)}
+      ${barCol('Tested without CAD Abnormal → Clinically Diagnosed CD',noCadCD,'var(--blue)',typeBreakdown,typeColors)}
     </div>
     <div style="padding-top:12px;border-top:1px solid var(--border)">
       <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text3);margin-bottom:8px">Diagnostic Yield Rate — CAD X-ray Impact</div>
-      <div class="card-sub" style="margin:-4px 0 10px 0">Of everyone who actually underwent a molecular/other diagnostic test (any test except CAD or plain X-ray) in each pathway, what % turned out B+ or CD</div>
-      <div style="display:grid;grid-template-columns:1fr auto auto auto;gap:6px 14px;font-size:12.5px;align-items:center">
+      <div class="card-sub" style="margin:-4px 0 10px 0">Of everyone who actually underwent a molecular/other diagnostic test (any test except CAD or plain X-ray) in each pathway, what % turned out B+, what % turned out CD, and what % turned out to be any form of TB (B+ + CD combined)</div>
+      <div style="display:grid;grid-template-columns:1fr auto auto auto auto;gap:6px 14px;font-size:12.5px;align-items:center">
         <div style="color:var(--text3);font-size:10px;font-weight:700;text-transform:uppercase">Pathway</div>
         <div style="color:var(--text3);font-size:10px;font-weight:700;text-transform:uppercase;text-align:right">Tested</div>
         <div style="color:var(--text3);font-size:10px;font-weight:700;text-transform:uppercase;text-align:right">B+ Rate</div>
         <div style="color:var(--text3);font-size:10px;font-weight:700;text-transform:uppercase;text-align:right">CD Rate</div>
-        <div>🟠 CAD X-ray Abnormal → tested</div><div class="mono" style="text-align:right">${cadAbnormalTestedPop.length.toLocaleString()}</div><div class="mono" style="text-align:right;color:#E67E22;font-weight:700">${yieldRate(cadPopBplus,cadAbnormalTestedPop.length)}</div><div class="mono" style="text-align:right;color:#E67E22;font-weight:700">${yieldRate(cadPopCD,cadAbnormalTestedPop.length)}</div>
-        <div>🔵 No CAD → direct to test</div><div class="mono" style="text-align:right">${noCadTestedPop.length.toLocaleString()}</div><div class="mono" style="text-align:right;color:var(--blue);font-weight:700">${yieldRate(noCadPopBplus,noCadTestedPop.length)}</div><div class="mono" style="text-align:right;color:var(--blue);font-weight:700">${yieldRate(noCadPopCD,noCadTestedPop.length)}</div>
+        <div style="color:var(--text3);font-size:10px;font-weight:700;text-transform:uppercase;text-align:right">Total TB Rate</div>
+        <div>🟠 CAD X-ray Abnormal → tested</div><div class="mono" style="text-align:right">${cadAbnormalTestedPop.length.toLocaleString()}</div><div class="mono" style="text-align:right;color:#E67E22;font-weight:700">${yieldRate(cadPopBplus,cadAbnormalTestedPop.length)}</div><div class="mono" style="text-align:right;color:#E67E22;font-weight:700">${yieldRate(cadPopCD,cadAbnormalTestedPop.length)}</div><div class="mono" style="text-align:right;color:#E67E22;font-weight:700">${yieldRate(cadPopBplus+cadPopCD,cadAbnormalTestedPop.length)}</div>
+        <div>🔵 Tested without CAD Abnormal</div><div class="mono" style="text-align:right">${noCadTestedPop.length.toLocaleString()}</div><div class="mono" style="text-align:right;color:var(--blue);font-weight:700">${yieldRate(noCadPopBplus,noCadTestedPop.length)}</div><div class="mono" style="text-align:right;color:var(--blue);font-weight:700">${yieldRate(noCadPopCD,noCadTestedPop.length)}</div><div class="mono" style="text-align:right;color:var(--blue);font-weight:700">${yieldRate(noCadPopBplus+noCadPopCD,noCadTestedPop.length)}</div>
       </div>
     </div>
-    <div style="margin-top:12px;padding-top:10px;border-top:1px solid var(--border);font-size:11.5px;color:var(--text3)">Total B+: <strong style="color:var(--text2)">${bplusRows.length.toLocaleString()}</strong> · Total CD: <strong style="color:var(--text2)">${cdRows.length.toLocaleString()}</strong> in current filter — the CAD-abnormal/No-CAD groups above may not sum to these totals if CAD was done but not abnormal, or CAD result is missing</div>
+    <div style="margin-top:12px;padding-top:10px;border-top:1px solid var(--border);font-size:11.5px;color:var(--text3)">Total B+: <strong style="color:var(--text2)">${bplusRows.length.toLocaleString()}</strong> · Total CD: <strong style="color:var(--text2)">${cdRows.length.toLocaleString()}</strong> in current filter — every diagnosed case falls into exactly one of the two pathways above (CAD Abnormal, or Tested without CAD Abnormal)</div>
   `;
 
   const genderDonut=(title,m,f)=>{

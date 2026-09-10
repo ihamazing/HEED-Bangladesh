@@ -13,7 +13,8 @@
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}html{font-size:14px}
 body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text1);min-height:100vh;line-height:1.5}
 .app{display:flex;min-height:100vh}
-.sidebar{width:var(--sidebar-w);background:var(--slate);position:fixed;top:0;left:0;bottom:0;display:flex;flex-direction:column;z-index:200;overflow-y:auto;transition:transform .25s ease;box-shadow:2px 0 16px rgba(0,0,0,.18)}
+.sidebar{width:var(--sidebar-w);background:var(--slate);position:fixed;top:0;left:0;bottom:0;display:flex;flex-direction:column;z-index:200;overflow-y:auto;transform:translateX(-100%);transition:transform .25s ease;box-shadow:2px 0 16px rgba(0,0,0,.18)}
+.sidebar.open{transform:translateX(0)}
 .sidebar-logo{padding:22px 20px 18px;background:linear-gradient(135deg,var(--green) 0%,var(--green-mid) 60%,#3D6B5A 100%);border-bottom:1px solid rgba(255,255,255,.1)}
 .logo-eyebrow{font-size:9.5px;font-weight:600;letter-spacing:.14em;color:rgba(255,255,255,.6);text-transform:uppercase;margin-bottom:5px}
 .logo-name{font-size:16px;font-weight:700;color:#fff;margin-bottom:2px;line-height:1.25}
@@ -45,10 +46,11 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text1);mi
 .btn-reset:hover{background:rgba(255,255,255,.06);color:rgba(255,255,255,.8)}
 .rec-count{text-align:center;font-size:11px;color:rgba(255,255,255,.3);margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,255,255,.07)}
 .rec-count strong{color:var(--green-light);font-weight:600}
-.main{margin-left:var(--sidebar-w);flex:1;min-width:0;display:flex;flex-direction:column}
+.main{margin-left:0;flex:1;min-width:0;display:flex;flex-direction:column}
 .top-banner{background:linear-gradient(135deg,#1A6B3C 0%,#2E6B45 30%,#6B2E2E 70%,#C0392B 100%);padding:0 28px;height:var(--header-h);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.2)}
 .banner-left{display:flex;align-items:center;gap:14px}
-.menu-toggle{display:none;background:none;border:none;color:rgba(255,255,255,.8);font-size:20px;cursor:pointer;padding:4px}
+.menu-toggle{display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.1);border:none;border-radius:8px;color:rgba(255,255,255,.9);font-size:19px;cursor:pointer;padding:6px 10px;transition:background .15s}
+.menu-toggle:hover{background:rgba(255,255,255,.2)}
 .banner-title{font-size:17px;font-weight:700;color:#fff;letter-spacing:-.01em}
 .banner-sub{font-size:11px;color:rgba(255,255,255,.55);margin-top:1px}
 .banner-right{display:flex;align-items:center;gap:12px}
@@ -79,7 +81,9 @@ input[type=file]{display:none}
 .mode-pill{font-size:10px;font-weight:700;padding:3px 10px;border-radius:999px}
 .mode-screen{background:var(--blue-pale);color:var(--blue)}
 .mode-result{background:var(--amber-pale);color:var(--amber)}
-.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(148px,1fr));gap:12px;margin-bottom:16px}
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,175px));gap:12px;margin-bottom:16px}
+.kpi-cat{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);margin:4px 0 8px 2px}
+.kpi-cat:first-of-type{margin-top:0}
 .kpi{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:16px 18px;box-shadow:var(--shadow-sm);position:relative;overflow:hidden}
 .kpi-stripe{position:absolute;top:0;left:0;right:0;height:3px}
 .kpi-ico{font-size:19px;margin-bottom:10px;display:block}
@@ -92,21 +96,17 @@ input[type=file]{display:none}
 .kpi-mini .mi-val{font-size:17px;font-weight:700;font-family:'DM Mono',monospace;line-height:1;letter-spacing:-.02em}
 .kpi-mini .mi-lbl{font-size:10px;color:var(--text3);margin-top:2px;font-weight:500}
 .gender-compare{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}
-.gender-donut-col{display:flex;align-items:center;gap:14px;text-align:left;padding:4px 0}
-.gd-info{flex:1;min-width:0}
 .gd-title{font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:7px}
-.gd-ring-wrap{position:relative;width:80px;height:80px;flex-shrink:0}
-.gd-ring{width:100%;height:100%;display:block}
-.gd-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none}
-.gd-total{font-size:15.5px;font-weight:700;font-family:'DM Mono',monospace;letter-spacing:-.02em;color:var(--text1)}
-.gd-total-lbl{font-size:8px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-top:1px}
 .gd-legend{display:flex;flex-direction:column;gap:4px}
 .gd-leg-item{display:flex;align-items:center;gap:6px;justify-content:flex-start;font-size:12.5px;color:var(--text2)}
 .gd-leg-item b{color:var(--text1);font-weight:700}
 .gd-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
 .gd-leg-pct{color:var(--text3);font-weight:600;margin-left:1px}
+.stacked-bar{display:flex;height:18px;border-radius:5px;overflow:hidden;background:var(--surface2);margin-bottom:8px}
+.card-soft{box-shadow:none;border:1px solid var(--border)}
 .trend-toolbar{display:flex;align-items:center;gap:8px}
-.trend-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(400px,1fr));gap:14px}
+.trend-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+@media(max-width:700px){.trend-grid{grid-template-columns:1fr}}
 .trend-card{border-radius:var(--r-lg);padding:16px 18px 10px;border:1px solid var(--border);box-shadow:var(--shadow-sm)}
 .trend-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:2px}
 .trend-title{font-size:12px;font-weight:700;display:flex;align-items:center;gap:6px}
@@ -198,7 +198,8 @@ tbody tr.row-suspect:hover td{background:#FFF5D6}
 .tc-chart-n{font-size:11.5px;font-weight:700;color:var(--text1);font-family:'DM Mono',monospace;margin-left:4px}
 .tc-chart-p{font-size:10.5px;color:var(--text3);margin-left:2px}
 @media(max-width:900px){.tc-grid{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:900px){.sidebar{transform:translateX(-100%)}.sidebar.open{transform:translateX(0)}.main{margin-left:0}.menu-toggle{display:block}.content{padding:16px}.kpi-grid{grid-template-columns:repeat(2,1fr)}.two-col{grid-template-columns:1fr}.top-banner{padding:0 16px}.banner-title{font-size:14px}}
+@media(max-width:900px){.content{padding:16px}.kpi-grid{grid-template-columns:repeat(2,1fr)}.two-col{grid-template-columns:1fr}.top-banner{padding:0 16px}.banner-title{font-size:14px}}
+@media(max-width:520px){.tc-grid{grid-template-columns:repeat(1,1fr)!important}.kpi-grid{grid-template-columns:1fr}.content{padding:12px}.top-banner{padding:0 12px;height:64px}.banner-sub{display:none}.banner-right{gap:8px}.file-chip{padding:5px 9px;font-size:11px}.file-chip span{max-width:70px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:inline-block}.upload-cta{padding:8px 12px;font-size:0}.upload-cta svg{width:16px;height:16px}.card-head{padding:11px 14px}.card-body{padding:14px}.trend-big{font-size:20px}.gender-compare{gap:10px}}
 </style>
 </head>
 <body>
@@ -294,20 +295,35 @@ tbody tr.row-suspect:hover td{background:#FFF5D6}
     <!-- OVERVIEW -->
     <div class="pane" id="pane-overview">
       <div class="sec-head"><div class="sec-eyebrow">Programme Summary</div><div class="sec-title">Overview <span id="ov-pill"></span></div></div>
-      <div class="kpi-grid" id="kpi-r1"></div>
-      <div class="kpi-grid" id="kpi-r2"></div>
-      <div class="card" style="margin-top:4px" id="cascade-card">
-        <div class="card-head"><span class="card-title" style="font-size:15px">Screening Cascade</span></div>
-        <div id="cascade-body" style="padding:8px 18px 18px"></div>
+      <div class="kpi-cat">Screening</div>
+      <div class="kpi-grid" id="kpi-screening"></div>
+      <div class="kpi-cat">CAD X-ray &amp; Chest X-ray</div>
+      <div class="kpi-grid" id="kpi-cad"></div>
+      <div class="kpi-cat">Molecular &amp; Diagnostic Tests</div>
+      <div class="kpi-grid" id="kpi-molecular"></div>
+      <div class="kpi-cat">TB Cases &amp; Classification</div>
+      <div class="kpi-grid" id="kpi-tbclass"></div>
+      <div class="kpi-cat">Data Quality</div>
+      <div class="kpi-grid" id="kpi-validation"></div>
+
+      <div class="card" style="margin-top:4px" id="deepdive-card">
+        <div class="card-head">
+          <div>
+            <span class="card-title">🔬 Deep Dive: Risk Factors &amp; Comorbidities</span>
+            <div class="card-sub" style="margin-top:3px">Diabetes and household-contact risk patterns across the screened population</div>
+          </div>
+        </div>
+        <div class="card-body" id="deepdive-body" style="padding:18px"></div>
       </div>
+
       <div class="two-col">
-        <div class="card" style="display:flex;flex-direction:column"><div class="card-head"><span class="card-title" style="font-size:15px">TB Case Breakdown</span></div><div class="card-body" id="tb-breakdown" style="display:flex;flex-direction:column;justify-content:center;flex:1"></div></div>
-        <div class="card" style="display:flex;flex-direction:column">
+        <div class="card card-soft" style="display:flex;flex-direction:column"><div class="card-head"><span class="card-title" style="font-size:15px">TB Case Breakdown</span></div><div class="card-body" id="tb-breakdown" style="display:flex;flex-direction:column;justify-content:center;flex:1"></div></div>
+        <div class="card card-soft" style="display:flex;flex-direction:column">
           <div class="card-head"><span class="card-title" style="font-size:15px">Gender Breakdown</span><span class="card-sub">Screened vs. Presumptive vs. Diagnosed</span></div>
           <div class="card-body" id="gender-compare" style="display:flex;flex-direction:column;justify-content:center;flex:1;gap:14px"></div>
         </div>
       </div>
-      <div class="card" style="margin-top:4px">
+      <div class="card card-soft" style="margin-top:4px">
         <div class="card-head">
           <div>
             <span class="card-title">🧬 B+ & CD Case Source: CAD-Abnormal vs. Tested without CAD Abnormal</span>
@@ -411,13 +427,14 @@ tbody tr.row-suspect:hover td{background:#FFF5D6}
             <th onclick="srt('districtTable',3,true)">Screened</th>
             <th onclick="srt('districtTable',4,true)">Presumptive</th>
             <th onclick="srt('districtTable',5,true)">Yield %</th>
-            <th onclick="srt('districtTable',6,true)">CAD X-ray</th>
-            <th onclick="srt('districtTable',7,true)">CXR Abn.</th>
-            <th onclick="srt('districtTable',8,true)">X-ray</th>
-            <th onclick="srt('districtTable',9,true)">GXP</th>
-            <th onclick="srt('districtTable',10,true)">Diagnosed</th>
-            <th onclick="srt('districtTable',11,true)">Treated</th>
-            <th onclick="srt('districtTable',12,true)">Errors</th>
+            <th onclick="srt('districtTable',6,true)">Tested</th>
+            <th onclick="srt('districtTable',7,true)">CAD X-ray</th>
+            <th onclick="srt('districtTable',8,true)">CXR Abn.</th>
+            <th onclick="srt('districtTable',9,true)">X-ray</th>
+            <th onclick="srt('districtTable',10,true)">GXP</th>
+            <th onclick="srt('districtTable',11,true)">Diagnosed</th>
+            <th onclick="srt('districtTable',12,true)">Treated</th>
+            <th onclick="srt('districtTable',13,true)">Errors</th>
           </tr></thead>
           <tbody id="districtBody"></tbody>
         </table></div>
@@ -485,6 +502,7 @@ tbody tr.row-suspect:hover td{background:#FFF5D6}
               <span class="card-title">Upazila Summary</span>
               <div class="card-sub" style="margin-top:3px">Population screened vs. Donor and Survey population targets, by District &amp; Upazila</div>
             </div>
+            <button class="dl-btn" onclick="downloadUpazilaTable()">⬇ Download Excel</button>
           </div>
           <div class="tbl-wrap"><table id="upazilaTable">
             <thead><tr>
@@ -493,13 +511,14 @@ tbody tr.row-suspect:hover td{background:#FFF5D6}
               <th onclick="srt('upazilaTable',2,true)">Gardens</th>
               <th onclick="srt('upazilaTable',3,true)">Screened</th>
               <th onclick="srt('upazilaTable',4,true)">Presumptive</th>
-              <th onclick="srt('upazilaTable',5,true)">Diagnosed</th>
-              <th onclick="srt('upazilaTable',6,true)">Donor Pop.</th>
-              <th onclick="srt('upazilaTable',7,true)">Survey Pop.</th>
-              <th onclick="srt('upazilaTable',8,true)">Cov. % (Donor)</th>
-              <th onclick="srt('upazilaTable',9,true)">Cov. % (Survey)</th>
-              <th onclick="srt('upazilaTable',10,true)">Gardens Completed (Donor)</th>
-              <th onclick="srt('upazilaTable',11,true)">Gardens Completed (Survey)</th>
+              <th onclick="srt('upazilaTable',5,true)">Tested</th>
+              <th onclick="srt('upazilaTable',6,true)">Diagnosed</th>
+              <th onclick="srt('upazilaTable',7,true)">Donor Pop.</th>
+              <th onclick="srt('upazilaTable',8,true)">Survey Pop.</th>
+              <th onclick="srt('upazilaTable',9,true)">Cov. % (Donor)</th>
+              <th onclick="srt('upazilaTable',10,true)">Cov. % (Survey)</th>
+              <th onclick="srt('upazilaTable',11,true)">Gardens Completed (Donor)</th>
+              <th onclick="srt('upazilaTable',12,true)">Gardens Completed (Survey)</th>
             </tr></thead>
             <tbody id="upazilaBody"></tbody>
           </table></div>
@@ -590,17 +609,18 @@ tbody tr.row-suspect:hover td{background:#FFF5D6}
             <th onclick="srt('gardenTable',4,true)">Screened</th>
             <th onclick="srt('gardenTable',5,true)">Presumptive</th>
             <th onclick="srt('gardenTable',6,true)">Yield %</th>
-            <th onclick="srt('gardenTable',7,true)">CAD X-ray</th>
-            <th onclick="srt('gardenTable',8,true)">CXR Abn.</th>
-            <th onclick="srt('gardenTable',9,true)">X-ray</th>
-            <th onclick="srt('gardenTable',10,true)">GXP</th>
-            <th onclick="srt('gardenTable',11,true)">Diagnosed</th>
-            <th onclick="srt('gardenTable',12,true)">Treated</th>
-            <th onclick="srt('gardenTable',13,true)">Errors</th>
-            <th onclick="srt('gardenTable',14,true)">Donor Pop.</th>
-            <th onclick="srt('gardenTable',15,true)">Survey Pop.</th>
-            <th onclick="srt('gardenTable',16,true)">Cov. % (Donor)</th>
-            <th onclick="srt('gardenTable',17,true)">Cov. % (Survey)</th>
+            <th onclick="srt('gardenTable',7,true)">Tested</th>
+            <th onclick="srt('gardenTable',8,true)">CAD X-ray</th>
+            <th onclick="srt('gardenTable',9,true)">CXR Abn.</th>
+            <th onclick="srt('gardenTable',10,true)">X-ray</th>
+            <th onclick="srt('gardenTable',11,true)">GXP</th>
+            <th onclick="srt('gardenTable',12,true)">Diagnosed</th>
+            <th onclick="srt('gardenTable',13,true)">Treated</th>
+            <th onclick="srt('gardenTable',14,true)">Errors</th>
+            <th onclick="srt('gardenTable',15,true)">Donor Pop.</th>
+            <th onclick="srt('gardenTable',16,true)">Survey Pop.</th>
+            <th onclick="srt('gardenTable',17,true)">Cov. % (Donor)</th>
+            <th onclick="srt('gardenTable',18,true)">Cov. % (Survey)</th>
           </tr></thead>
           <tbody id="gardenBody"></tbody>
         </table></div>
@@ -632,6 +652,7 @@ tbody tr.row-suspect:hover td{background:#FFF5D6}
           <select class="sel" id="tbType" onchange="filterTB()"><option value="">All TB types</option><option>PTB</option><option>EPTB</option></select>
           <select class="sel" id="tbBact" onchange="filterTB()"><option value="">All bact. status</option><option>B+</option><option>CD</option></select>
           <select class="sel" id="tbFlag" onchange="filterTB()"><option value="">All rows</option><option value="1">Flagged only</option></select>
+          <select class="sel" id="tbMDR" onchange="filterTB()"><option value="">All (MDR &amp; sensitive)</option><option value="1">MDR only</option></select>
         </div>
         <div class="tbl-wrap"><table id="tbTable">
           <thead><tr>
@@ -644,7 +665,7 @@ tbody tr.row-suspect:hover td{background:#FFF5D6}
             <th onclick="srt('tbTable',7,false)">CF</th>
             <th onclick="srt('tbTable',8,false)">District</th>
             <th>Tea Garden</th>
-            <th>TB Type</th><th>Bact.Status</th><th>EPTB Site</th>
+            <th>TB Type</th><th>Bact.Status</th><th>MDR</th><th>EPTB Site</th>
             <th>CAD Done</th><th>CAD Score</th><th>X-ray</th>
             <th>GXP Sputum</th><th>GXP Result</th>
             <th>AFB</th><th>AFB Result</th>
@@ -926,6 +947,24 @@ function isMTBPositive(val){
 }
 // Alias used throughout
 const isPositive=isMTBPositive;
+
+// Rifampicin-resistance detection (MDR-TB signal). GeneXpert/Truenat-family
+// results look like "MTB detected, Rif resistance detected" (positive for
+// resistance), "...Rif resistance not detected" (negative — must NOT match),
+// or "...Rif resistance indeterminate" (inconclusive — must NOT match).
+function isRifResistant(val){
+  if(!val)return false;
+  const v=val.toLowerCase();
+  if(v.includes('resistance not detected'))return false;
+  if(v.includes('resistance indeterminate'))return false;
+  if(v.includes('resistance detected'))return true;
+  return false;
+}
+// Result columns that can carry a Rif-resistance call (molecular/NAAT tests only)
+const RIF_RESULT_COLS=[C.GXP_RESULT,C.STOOL_RESULT,C.IND_RESULT,C.GL_RESULT,C.EPTB_RESULT,C.TRUENAT_RESULT];
+function isMDR(r){
+  return RIF_RESULT_COLS.some(i=>isRifResistant(cv(r,i)));
+}
 
 // Which test actually confirmed a B+ (bacteriologically positive) case.
 // Priority: GXP Sputum first (most commonly used), then Truenat, then any other
@@ -1248,6 +1287,63 @@ function srt(tid,col,num){
 // ═══════════════════════════════════════════════
 // OVERVIEW
 // ═══════════════════════════════════════════════
+// Fixed color palette for recurring categories, kept stable across every
+// chart on this tab (and matching the badge colors used app-wide) so a
+// color always means the same thing wherever it's seen.
+const CAT_COLOR={
+  PTB:'#8B4513',EPTB:'#556B2F',           // matches TB Type legend everywhere on this tab
+  'B+':'var(--red)','CD':'var(--amber)',   // matches the .br / .ba badges used in every other tab
+  Child:'#7C4DBE',Adult:'#5B7C99',
+  Male:'#93C5E8',Female:'#F6C9D6',
+  CadAbnormal:'#E67E22',NoCadAbnormal:'var(--blue)'
+};
+// Shared building block for every "N-way split" chart on this tab — a single
+// horizontal stacked bar + legend, replacing the old per-chart donuts so
+// every breakdown on the page reads with the same visual language and the
+// same bar height/typography.
+function stackedBarCard(title,total,segments,opts={}){
+  const bar=segments.map(s=>{
+    const w=total>0?(s.val/total*100):0;
+    return w>0?`<div style="height:100%;width:${w}%;background:${s.col}" title="${s.label}: ${s.val.toLocaleString()}"></div>`:'';
+  }).join('');
+  const legend=segments.map(s=>
+    `<div class="gd-leg-item"><span class="gd-dot" style="background:${s.col}"></span>${s.label} <b>${s.val.toLocaleString()}</b><span class="gd-leg-pct">${pct(s.val,total)}</span></div>`
+  ).join('');
+  return`<div style="flex:1;min-width:${opts.minWidth||210}px">
+    <div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:8px">
+      <div class="gd-title" style="margin-bottom:0">${title}</div>
+      <div style="font-size:15px;font-weight:700;font-family:'DM Mono',monospace;color:var(--text2);flex-shrink:0">${total.toLocaleString()}</div>
+    </div>
+    <div class="stacked-bar">${bar||''}</div>
+    <div class="gd-legend" style="flex-direction:row;flex-wrap:wrap;gap:4px 16px">${legend}</div>
+  </div>`;
+}
+// Dark-themed horizontal rate-bar list for the Deep Dive section — each row
+// is a category (age group, district, ...) with its own rate, scaled against
+// the highest rate in the list so the steepest riser is immediately visible.
+function rateBarList(items){
+  const maxPct=Math.max(...items.map(i=>i.rate),0.01);
+  return items.map(i=>{
+    const w=Math.max((i.rate/maxPct*100),i.rate>0?2:0);
+    return`<div style="margin-bottom:11px">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;font-size:12px;margin-bottom:4px">
+        <span style="color:var(--text2)">${i.label}</span>
+        <span class="mono" style="font-weight:700;color:${i.col}">${i.rate.toFixed(2)}% <span style="color:var(--text3);font-weight:400">(${i.val}/${i.n.toLocaleString()})</span></span>
+      </div>
+      <div style="height:9px;border-radius:4px;background:var(--surface2);overflow:hidden">
+        <div style="height:100%;width:${w}%;background:${i.col};border-radius:4px"></div>
+      </div>
+    </div>`;
+  }).join('');
+}
+// Headline stat callout for the Deep Dive section
+function statCallout(icon,headline,sub,col){
+  return`<div style="flex:1;min-width:260px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:14px 16px;border-left:3px solid ${col}">
+    <div style="font-size:20px;margin-bottom:6px">${icon}</div>
+    <div style="font-size:14px;font-weight:700;color:var(--text1);line-height:1.4;margin-bottom:4px">${headline}</div>
+    <div style="font-size:11px;color:var(--text3)">${sub}</div>
+  </div>`;
+}
 function buildOverview(){
   const baseRows=window.FILTERED_BASE||FILTERED;
   const testRows=FILTERED;
@@ -1275,6 +1371,8 @@ function buildOverview(){
   const tot=baseRows.length;
   const pres=baseRows.filter(r=>cv(r,C.PRESUMPTIVE)==='Yes').length;
   const presTested=baseRows.filter(r=>cv(r,C.PRESUMPTIVE)==='Yes'&&r._anyTested).length;
+  const nonPresTested=baseRows.filter(r=>cv(r,C.PRESUMPTIVE)!=='Yes'&&r._anyTested).length;
+  const totalTested=presTested+nonPresTested; // everyone tested, regardless of presumptive status
   const errs=baseRows.filter(r=>r._errs.length>0).length;
   const days=Math.max(uDays(baseRows),1);
   const male=baseRows.filter(r=>cv(r,C.GENDER)==='Male').length;
@@ -1289,6 +1387,12 @@ function buildOverview(){
   const stoolDone=testRows.filter(r=>cv(r,C.STOOL_DONE)==='Yes').length;
   const eptbUltraDone=testRows.filter(r=>cv(r,C.EPTB_DONE)==='Yes').length;
   const fnacDone=testRows.filter(r=>cv(r,C.FNAC_DONE)==='Yes').length;
+  // "Total Molecular Tested" — one person counts once if they underwent ANY
+  // molecular/other diagnostic test (same test list used in the CAD-abnormal
+  // vs. tested-without-CAD-abnormal yield section below, minus CAD & X-ray).
+  const MOLECULAR_TEST_COLS=[C.MT_DONE,C.STOOL_DONE,C.GXP_DONE,C.IND_DONE,C.GL_DONE,
+    C.EPTB_DONE,C.TRUENAT_DONE,C.AFB_DONE,C.FNAC_DONE,C.BIOPSY_DONE,C.ADA_DONE];
+  const molecularTested=testRows.filter(r=>MOLECULAR_TEST_COLS.some(c=>cv(r,c)==='Yes')).length;
 
   // TB counts — all from tbRows so they are internally consistent
   const diag=tbRows.length;
@@ -1310,69 +1414,148 @@ function buildOverview(){
   const K=(stripe,ico,val,lbl,sub,col='var(--text1)')=>
     `<div class="kpi"><div class="kpi-stripe" style="background:${stripe}"></div><span class="kpi-ico">${ico}</span><div class="kpi-val" style="color:${col}">${val}</div><div class="kpi-lbl">${lbl}</div><div class="kpi-sub">${sub}</div></div>`;
 
-  document.getElementById('kpi-r1').innerHTML=
+  document.getElementById('kpi-screening').innerHTML=
     K('var(--green-mid)','📋',tot.toLocaleString(),'Total Screened',(tot/days).toFixed(1)+' per day avg','var(--green)')+
     K('var(--amber)','🔍',pres.toLocaleString(),'Presumptive TB',pct(pres,tot)+' yield rate','var(--amber)')+
-    K('#7B68EE','🧪',presTested.toLocaleString(),'Presumptive Tested',pct(presTested,pres)+' of presumptive','#7B68EE')+
+    K('#7B68EE','🧪',totalTested.toLocaleString(),'Tested (Overall)',pct(totalTested,pres)+' of presumptive'+(nonPresTested>0?` <span style="opacity:.65">(${nonPresTested.toLocaleString()} non-presumptive)</span>`:''),'#7B68EE');
+
+  document.getElementById('kpi-cad').innerHTML=
     K('var(--blue)','🩻',cadDone,'CAD X-ray Done',pct(cadDone,pres)+' of presumptive','var(--blue)')+
     K('#E67E22','🔴',cxrAbn,'CXR Abnormal (≥40)',pct(cxrAbn,cadDone)+' of CAD done','#E67E22')+
-    K('#0891B2','🩻',xrayDone,'X-ray Done',pct(xrayDone,pres)+' of presumptive','#0891B2')+
+    K('#0891B2','🩻',xrayDone,'X-ray Done',pct(xrayDone,pres)+' of presumptive','#0891B2');
+
+  document.getElementById('kpi-molecular').innerHTML=
     K('var(--green-light)','🧬',gxpDone,'GXP Sputum Done',pct(gxpDone,pres)+' of presumptive','var(--green)')+
     K('#C77DBB','🧫',truenatDone,'Truenat Done',pct(truenatDone,pres)+' of presumptive','#C77DBB')+
     K('#5B9279','🔬',afbDone,'AFB Done',pct(afbDone,pres)+' of presumptive','#5B9279')+
     K('#A67C52','💩',stoolDone,'GXP Stool Done',pct(stoolDone,pres)+' of presumptive','#A67C52')+
     K('#6C7BC7','🧬',eptbUltraDone,'GXP EPTB Ultra Done',pct(eptbUltraDone,pres)+' of presumptive','#6C7BC7')+
-    K('#D97757','💉',fnacDone,'FNAC Done',pct(fnacDone,pres)+' of presumptive','#D97757');
+    K('#D97757','💉',fnacDone,'FNAC Done',pct(fnacDone,pres)+' of presumptive','#D97757')+
+    K('#3D5A80','🧪',molecularTested.toLocaleString(),'Total Molecular Tested',pct(molecularTested,pres)+' of presumptive — 1 per person','#3D5A80');
 
-  document.getElementById('kpi-r2').innerHTML=
+  document.getElementById('kpi-tbclass').innerHTML=
     K('var(--red)','🏥',diag,'TB Diagnosed',pct(diag,pres)+' of presumptive','var(--red)')+
     K('#FF6B6B','👶',childTB,'Child TB (<15y)',pct(childTB,diag)+' of diagnosed','#FF6B6B')+
     K('var(--green)','💊',tx,'On Treatment',pct(tx,diag)+' of diagnosed','var(--green)')+
     K('#8B4513','🫁',ptb,'PTB',pct(ptb,diag)+' of total TB','#8B4513')+
-    K('#556B2F','🔬',eptb,'EPTB',pct(eptb,diag)+' of total TB','#556B2F')+
+    K('#556B2F','🔬',eptb,'EPTB',pct(eptb,diag)+' of total TB','#556B2F');
+
+  document.getElementById('kpi-validation').innerHTML=
     K('var(--red-light)','⚠️',errs,'Validation Errors',pct(errs,tot)+' of records',errs>0?'var(--red)':'var(--green)');
 
-  document.getElementById('cascade-body').innerHTML=[
-    ['📋','Total Screened',tot,tot,'var(--green-mid)'],
-    ['🔍','Presumptive',pres,tot,'var(--amber)'],
-    ['🧪','Presumptive Tested',presTested,pres,'#7B68EE'],
-    ['🩻','CAD X-ray Done',cadDone,pres,'var(--blue)'],
-    ['🔴','CXR Abnormal (Score ≥40)',cxrAbn,cadDone,'#E67E22'],
-    ['🩻','X-ray Done',xrayDone,pres,'#0891B2'],
-    ['🧬','GXP Sputum Done',gxpDone,pres,'var(--green-light)'],
-    ['🏥','TB Diagnosed',diag,pres,'var(--red)'],
-    ['💊','On Treatment',tx,diag,'var(--green)']
-  ].map(([ico,lbl,n,d,col])=>{
-    const w=d>0?Math.round(n/d*100):0;
-    return`<div class="cascade-row"><span class="casc-ico">${ico}</span><span class="casc-lbl">${lbl}</span><span class="casc-val">${n.toLocaleString()}</span><span class="casc-pct">${pct(n,d)}</span><div class="casc-bar"><div class="prog"><div class="prog-fill" style="width:${w}%;background:${col}"></div></div></div></div>`;
-  }).join('');
-
-  const miniDonut=(title,aLbl,aVal,aCol,bLbl,bVal,bCol)=>{
-    const t=aVal+bVal,r=42,circ=2*Math.PI*r;
-    const aFrac=t>0?aVal/t:0;
-    const aLen=circ*aFrac;
-    return`<div class="gender-donut-col">
-      <div class="gd-ring-wrap">
-        <svg viewBox="0 0 100 100" class="gd-ring">
-          <circle cx="50" cy="50" r="${r}" fill="none" stroke="${bCol}" stroke-width="14"/>
-          <circle cx="50" cy="50" r="${r}" fill="none" stroke="${aCol}" stroke-width="14" stroke-dasharray="${aLen} ${circ-aLen}" stroke-linecap="round" transform="rotate(-90 50 50)"/>
-        </svg>
-        <div class="gd-center"><div class="gd-total">${t.toLocaleString()}</div></div>
-      </div>
-      <div class="gd-info">
-        <div class="gd-title">${title}</div>
-        <div class="gd-legend">
-          <div class="gd-leg-item"><span class="gd-dot" style="background:${aCol}"></span>${aLbl} <b>${aVal.toLocaleString()}</b><span class="gd-leg-pct">${pct(aVal,t)}</span></div>
-          <div class="gd-leg-item"><span class="gd-dot" style="background:${bCol}"></span>${bLbl} <b>${bVal.toLocaleString()}</b><span class="gd-leg-pct">${pct(bVal,t)}</span></div>
-        </div>
-      </div>
-    </div>`;
+  // ── Deep Dive: Risk Factors & Comorbidities ──
+  // Diabetes prevalence by age group (5 bands)
+  const AGE_BANDS=[[0,15,'0–14'],[15,25,'15–24'],[25,40,'25–39'],[40,60,'40–59'],[60,999,'60+']];
+  const diabByAge=AGE_BANDS.map(([lo,hi,label])=>{
+    const grp=baseRows.filter(r=>{const a=cn(r,C.AGE_Y);return a!==null&&a>=lo&&a<hi;});
+    const diab=grp.filter(r=>cv(r,C.DIABETES)==='Yes').length;
+    return{label,n:grp.length,val:diab,rate:grp.length>0?diab/grp.length*100:0,col:'#4CAF7D'};
+  });
+  // Diabetes prevalence by gender
+  const diabByGender=['Male','Female'].map(g=>{
+    const grp=baseRows.filter(r=>cv(r,C.GENDER)===g);
+    const diab=grp.filter(r=>cv(r,C.DIABETES)==='Yes').length;
+    return{label:g,n:grp.length,val:diab,rate:grp.length>0?diab/grp.length*100:0,col:g==='Male'?CAT_COLOR.Male:CAT_COLOR.Female};
+  });
+  // Diabetes prevalence by district
+  const distSet=[...new Set(baseRows.map(r=>cv(r,C.DISTRICT)).filter(Boolean))];
+  const diabByDistrict=distSet.map(d=>{
+    const grp=baseRows.filter(r=>cv(r,C.DISTRICT)===d);
+    const diab=grp.filter(r=>cv(r,C.DIABETES)==='Yes').length;
+    return{label:d,n:grp.length,val:diab,rate:grp.length>0?diab/grp.length*100:0,col:'#C77DBB'};
+  }).sort((a,b)=>b.rate-a.rate);
+  // Diabetes prevalence trend over time (by screening month)
+  const diabMonthMap={};
+  baseRows.forEach(r=>{
+    const dt=r._sds;if(!dt)return;
+    const m=dt.slice(0,7);
+    if(!diabMonthMap[m])diabMonthMap[m]={n:0,diab:0};
+    diabMonthMap[m].n++;
+    if(cv(r,C.DIABETES)==='Yes')diabMonthMap[m].diab++;
+  });
+  const diabMonths=Object.keys(diabMonthMap).sort();
+  const diabTrend=diabMonths.map(m=>({label:monthLabel(m),n:diabMonthMap[m].n,val:diabMonthMap[m].diab,rate:diabMonthMap[m].n>0?diabMonthMap[m].diab/diabMonthMap[m].n*100:0,col:'#7FB894'}));
+  // Risk factor comparison: Diabetes vs. Household Contact History, relative
+  // to TB positivity (TB Diagnosed=Yes) in the exposed vs. unexposed group
+  const riskFactor=(colIdx,label)=>{
+    const exposed=baseRows.filter(r=>cv(r,colIdx)==='Yes');
+    const unexposed=baseRows.filter(r=>cv(r,colIdx)==='No');
+    const expTB=exposed.filter(r=>cv(r,C.TB_DIAG)==='Yes').length;
+    const unexpTB=unexposed.filter(r=>cv(r,C.TB_DIAG)==='Yes').length;
+    const expRate=exposed.length>0?expTB/exposed.length*100:0;
+    const unexpRate=unexposed.length>0?unexpTB/unexposed.length*100:0;
+    const relRisk=unexpRate>0?expRate/unexpRate:null;
+    return{label,exposed:exposed.length,expTB,expRate,unexposed:unexposed.length,unexpTB,unexpRate,relRisk};
   };
+  const rfDiabetes=riskFactor(C.DIABETES,'Diabetes');
+  const rfContact=riskFactor(C.CONTACT,'Household TB Contact');
+
+  const headlineContact=rfContact.relRisk!==null
+    ?`Household contacts: <strong>${rfContact.expRate.toFixed(2)}%</strong> TB+ vs <strong>${rfContact.unexpRate.toFixed(2)}%</strong> — <strong>${rfContact.relRisk.toFixed(1)}×</strong> higher`
+    :`Not enough contact-history data in scope.`;
+  const oldestBand=diabByAge[diabByAge.length-1],youngestBand=diabByAge[0];
+  const headlineDiabetes=`Diabetes: <strong>${youngestBand.rate.toFixed(2)}%</strong> under 15 → <strong>${oldestBand.rate.toFixed(2)}%</strong> at 60+`;
+
+  document.getElementById('deepdive-body').innerHTML=`
+    <div style="display:flex;gap:14px;flex-wrap:wrap;margin-bottom:20px">
+      ${statCallout('🚨',headlineContact,'TB+ rate, with vs. without a known household contact','#E67E22')}
+      ${statCallout('📈',headlineDiabetes,'Diabetes prevalence rises steadily with age','#4CAF7D')}
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:24px;margin-bottom:20px">
+      <div>
+        <div class="gd-title">Diabetes by Age Group</div>
+        ${rateBarList(diabByAge)}
+      </div>
+      <div>
+        <div class="gd-title">Diabetes Over Time</div>
+        ${diabTrend.length?rateBarList(diabTrend):'<div style="color:var(--text3);font-size:12px">No dated records in scope.</div>'}
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:24px;margin-bottom:20px">
+      <div>
+        <div class="gd-title">Diabetes by Gender</div>
+        ${rateBarList(diabByGender)}
+      </div>
+      <div>
+        <div class="gd-title">Diabetes by District</div>
+        ${diabByDistrict.length?rateBarList(diabByDistrict):'<div style="color:var(--text3);font-size:12px">No district data in scope.</div>'}
+      </div>
+    </div>
+    <div style="padding-top:16px;border-top:1px solid var(--border)">
+      <div class="gd-title">Risk Factor Comparison</div>
+      <div class="tbl-wrap">
+      <table style="width:100%;border-collapse:collapse;font-size:12.5px;color:var(--text2)">
+        <thead><tr style="color:var(--text3);font-size:10px;text-transform:uppercase;text-align:right">
+          <th style="text-align:left;padding-bottom:6px;font-weight:700">Factor</th>
+          <th style="padding-bottom:6px;font-weight:700">Population</th>
+          <th style="padding-bottom:6px;font-weight:700">TB+ Cases</th>
+          <th style="padding-bottom:6px;font-weight:700">TB+ Rate</th>
+          <th style="padding-bottom:6px;font-weight:700">Unexposed Rate</th>
+          <th style="padding-bottom:6px;font-weight:700">Relative Risk</th>
+        </tr></thead>
+        <tbody>
+          ${[rfContact,rfDiabetes].map(rf=>`<tr style="border-top:1px solid var(--border)">
+            <td style="padding:7px 0;text-align:left;color:var(--text1)">${rf.label}</td>
+            <td class="mono" style="text-align:right">${rf.exposed.toLocaleString()}</td>
+            <td class="mono" style="text-align:right">${rf.expTB.toLocaleString()}</td>
+            <td class="mono" style="text-align:right;font-weight:700;color:#E67E22">${rf.expRate.toFixed(2)}%</td>
+            <td class="mono" style="text-align:right;color:var(--text3)">${rf.unexpRate.toFixed(2)}%</td>
+            <td class="mono" style="text-align:right;font-weight:700;color:var(--text1)">${rf.relRisk!==null?rf.relRisk.toFixed(1)+'×':'—'}</td>
+          </tr>`).join('')}
+        </tbody>
+      </table>
+      </div>
+      <div style="font-size:10.5px;color:var(--text3);margin-top:8px">Diabetic sample size is small — read that row as directional, not precise.</div>
+    </div>
+  `;
+
+  const miniDonut=(title,aLbl,aVal,aCol,bLbl,bVal,bCol)=>
+    stackedBarCard(title,aVal+bVal,[{label:aLbl,val:aVal,col:aCol},{label:bLbl,val:bVal,col:bCol}]);
   document.getElementById('tb-breakdown').innerHTML=`
     <div class="gender-compare" style="grid-template-columns:1fr">
-      ${miniDonut('TB Type','PTB',ptb,'#8B4513','EPTB',eptb,'#556B2F')}
-      ${miniDonut('Bacteriological Status','B+ (Confirmed)',bplus,'#E0646F','CD (Clinical)',cd,'#E8A96E')}
-      ${miniDonut('Age Group','Child (<15y)',childTB,'#FF6B6B','Adult',Math.max(diag-childTB,0),'#7FA8D9')}
+      ${miniDonut('TB Type','PTB',ptb,CAT_COLOR.PTB,'EPTB',eptb,CAT_COLOR.EPTB)}
+      ${miniDonut('Bacteriological Status','B+ (Confirmed)',bplus,CAT_COLOR['B+'],'CD (Clinical)',cd,CAT_COLOR['CD'])}
+      ${miniDonut('Age Group','Child (<15y)',childTB,CAT_COLOR.Child,'Adult',Math.max(diag-childTB,0),CAT_COLOR.Adult)}
     </div>
     <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border)">
       <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text3);margin-bottom:8px">Bacteriological Status by TB Type</div>
@@ -1404,8 +1587,8 @@ function buildOverview(){
   const cadAbnormalCD=cdRows.filter(isCadAbnormal);
   const noCadCD=cdRows.filter(isNotCadAbnormal);
 
+  const typeColors={'PTB':CAT_COLOR.PTB,'EPTB':CAT_COLOR.EPTB};
   const srcColors={'GXP Sputum':'var(--green-light)','Truenat':'#C77DBB','Other':'#7B68EE'};
-  const typeColors={'PTB':'#8B4513','EPTB':'#556B2F'};
   const sourceBreakdown=rows=>{
     const b={'GXP Sputum':0,'Truenat':0,'Other':0};
     rows.forEach(r=>{b[confirmSource(r)]++;});
@@ -1416,24 +1599,11 @@ function buildOverview(){
     rows.forEach(r=>{const t=cv(r,C.TB_TYPE);if(b[t]!==undefined)b[t]++;});
     return b;
   };
-  const barCol=(title,rows,accentCol,breakdown,colors)=>{
+  const barCol=(title,rows,breakdown,colors)=>{
     const total=rows.length;
     const src=breakdown(rows);
-    const bar=Object.entries(src).map(([lbl,val])=>{
-      const w=total>0?(val/total*100):0;
-      return w>0?`<div style="height:100%;width:${w}%;background:${colors[lbl]}" title="${lbl}: ${val}"></div>`:'';
-    }).join('');
-    const legend=Object.entries(src).map(([lbl,val])=>
-      `<div class="gd-leg-item"><span class="gd-dot" style="background:${colors[lbl]}"></span>${lbl} <b>${val.toLocaleString()}</b><span class="gd-leg-pct">${pct(val,total)}</span></div>`
-    ).join('');
-    return`<div style="flex:1;min-width:240px">
-      <div style="display:flex;align-items:baseline;gap:9px;margin-bottom:8px">
-        <div style="font-size:26px;font-weight:700;font-family:'DM Mono',monospace;color:${accentCol}">${total.toLocaleString()}</div>
-        <div class="gd-title" style="margin-bottom:0">${title}</div>
-      </div>
-      <div style="display:flex;height:20px;border-radius:6px;overflow:hidden;background:var(--surface2);margin-bottom:8px">${bar||''}</div>
-      <div class="gd-legend">${legend}</div>
-    </div>`;
+    const segments=Object.entries(src).map(([label,val])=>({label,val,col:colors[label]}));
+    return stackedBarCard(title,total,segments,{minWidth:240});
   };
 
   // ── CAD impact / diagnostic yield rate ──
@@ -1443,9 +1613,7 @@ function buildOverview(){
   // shows what fraction of TESTED people in each pathway turned out to be
   // B+ or CD, so you can see whether the CAD-abnormal pathway finds TB at
   // a higher rate than the CAD-normal-or-no-CAD pathway.
-  const OTHER_TEST_DONE_COLS=[C.MT_DONE,C.STOOL_DONE,C.GXP_DONE,C.IND_DONE,C.GL_DONE,
-    C.EPTB_DONE,C.TRUENAT_DONE,C.AFB_DONE,C.FNAC_DONE,C.BIOPSY_DONE,C.ADA_DONE];
-  const anyOtherTestDone=r=>OTHER_TEST_DONE_COLS.some(c=>cv(r,c)==='Yes');
+  const anyOtherTestDone=r=>MOLECULAR_TEST_COLS.some(c=>cv(r,c)==='Yes');
   const cadAbnormalTestedPop=baseRows.filter(r=>isCadAbnormal(r)&&anyOtherTestDone(r));
   const noCadTestedPop=baseRows.filter(r=>isNotCadAbnormal(r)&&anyOtherTestDone(r));
   const cadPopBplus=cadAbnormalTestedPop.filter(r=>cv(r,C.TB_DIAG)==='Yes'&&cv(r,C.BACT_STATUS)==='B+').length;
@@ -1461,13 +1629,13 @@ function buildOverview(){
   document.getElementById('bplus-source-chart').innerHTML=`
     <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text3);margin-bottom:2px">B+ (Bacteriologically Confirmed) — Test Source</div>
     <div style="display:flex;gap:28px;flex-wrap:wrap;margin-bottom:16px">
-      ${barCol('CAD X-ray Abnormal (≥40) → Confirmed B+',cadAbnormalPos,'#E67E22',sourceBreakdown,srcColors)}
-      ${barCol('Tested without CAD Abnormal → Confirmed B+',noCadPos,'var(--blue)',sourceBreakdown,srcColors)}
+      ${barCol('CAD X-ray Abnormal (≥40) → Confirmed B+',cadAbnormalPos,sourceBreakdown,srcColors)}
+      ${barCol('Tested without CAD Abnormal → Confirmed B+',noCadPos,sourceBreakdown,srcColors)}
     </div>
     <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text3);margin-bottom:2px;padding-top:12px;border-top:1px solid var(--border)">CD (Clinically Diagnosed) — TB Type</div>
     <div style="display:flex;gap:28px;flex-wrap:wrap;margin-bottom:16px">
-      ${barCol('CAD X-ray Abnormal (≥40) → Clinically Diagnosed CD',cadAbnormalCD,'#E67E22',typeBreakdown,typeColors)}
-      ${barCol('Tested without CAD Abnormal → Clinically Diagnosed CD',noCadCD,'var(--blue)',typeBreakdown,typeColors)}
+      ${barCol('CAD X-ray Abnormal (≥40) → Clinically Diagnosed CD',cadAbnormalCD,typeBreakdown,typeColors)}
+      ${barCol('Tested without CAD Abnormal → Clinically Diagnosed CD',noCadCD,typeBreakdown,typeColors)}
     </div>
     <div style="padding-top:12px;border-top:1px solid var(--border)">
       <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text3);margin-bottom:8px">Diagnostic Yield Rate — CAD X-ray Impact</div>
@@ -1485,27 +1653,8 @@ function buildOverview(){
     <div style="margin-top:12px;padding-top:10px;border-top:1px solid var(--border);font-size:11.5px;color:var(--text3)">Total B+: <strong style="color:var(--text2)">${bplusRows.length.toLocaleString()}</strong> · Total CD: <strong style="color:var(--text2)">${cdRows.length.toLocaleString()}</strong> in current filter — every diagnosed case falls into exactly one of the two pathways above (CAD Abnormal, or Tested without CAD Abnormal)</div>
   `;
 
-  const genderDonut=(title,m,f)=>{
-    const t=m+f,r=42,circ=2*Math.PI*r;
-    const mFrac=t>0?m/t:0;
-    const mLen=circ*mFrac;
-    return`<div class="gender-donut-col">
-      <div class="gd-ring-wrap">
-        <svg viewBox="0 0 100 100" class="gd-ring">
-          <circle cx="50" cy="50" r="${r}" fill="none" stroke="#F6C9D6" stroke-width="14"/>
-          <circle cx="50" cy="50" r="${r}" fill="none" stroke="#93C5E8" stroke-width="14" stroke-dasharray="${mLen} ${circ-mLen}" stroke-linecap="round" transform="rotate(-90 50 50)"/>
-        </svg>
-        <div class="gd-center"><div class="gd-total">${t.toLocaleString()}</div></div>
-      </div>
-      <div class="gd-info">
-        <div class="gd-title">${title}</div>
-        <div class="gd-legend">
-          <div class="gd-leg-item"><span class="gd-dot" style="background:#93C5E8"></span>Male <b>${m.toLocaleString()}</b><span class="gd-leg-pct">${pct(m,t)}</span></div>
-          <div class="gd-leg-item"><span class="gd-dot" style="background:#F6C9D6"></span>Female <b>${f.toLocaleString()}</b><span class="gd-leg-pct">${pct(f,t)}</span></div>
-        </div>
-      </div>
-    </div>`;
-  };
+  const genderDonut=(title,m,f)=>
+    stackedBarCard(title,m+f,[{label:'Male',val:m,col:CAT_COLOR.Male},{label:'Female',val:f,col:CAT_COLOR.Female}]);
   document.getElementById('gender-compare').innerHTML=
     genderDonut('Screened',male,female)+
     genderDonut('Presumptive',presMale,presFemale)+
@@ -1560,7 +1709,7 @@ function renderTrendCard(elId,title,ico,months,vals,lineColor,fillFrom,bgTint){
     }
   }
 
-  const W=560,H=180,padL=14,padR=14,padT=26,padB=26;
+  const W=560,H=180,padL=34,padR=22,padT=26,padB=26;
   const innerW=W-padL-padR,innerH=H-padT-padB;
   const maxV=Math.max(...vals,1);
   const n=months.length;
@@ -1568,18 +1717,36 @@ function renderTrendCard(elId,title,ico,months,vals,lineColor,fillFrom,bgTint){
   const linePath=smoothPath(pts);
   const areaPath=linePath+` L${pts[n-1][0]},${padT+innerH} L${pts[0][0]},${padT+innerH} Z`;
   const gid='g'+elId;
-  // Show every Nth x-axis month label to avoid crowding when the scope is large
+  // Y-axis reference gridlines (0 / mid / max) with small tick labels — gives
+  // the eye an absolute scale to read values against, not just shape.
+  const gridlines=[0,0.5,1].map(frac=>{
+    const val=Math.round(maxV*frac);
+    const y=padT+innerH-(frac*innerH);
+    return`<line x1="${padL}" y1="${y}" x2="${padL+innerW}" y2="${y}" stroke="var(--border)" stroke-width="1" stroke-dasharray="2,3"/>
+      <text x="${padL-6}" y="${y+3}" font-size="8" fill="var(--text3)" text-anchor="end">${val.toLocaleString()}</text>`;
+  }).join('');
+  // Show every Nth x-axis month label to avoid crowding when the scope is large.
+  // First/last labels are edge-anchored (not center-anchored) so long labels
+  // never get clipped by the SVG viewBox edge.
   const step=Math.max(1,Math.ceil(n/7));
-  const labels=months.map((m,i)=>(i%step===0||i===n-1)?`<text x="${pts[i][0]}" y="${H-8}" font-size="9" fill="var(--text3)" text-anchor="middle">${monthLabel(m)}</text>`:'').join('');
-  // Every point gets its own visible value callout (not hover-only) — a soft
-  // halo behind the number keeps it legible over the line/area fill.
+  const labels=months.map((m,i)=>{
+    if(!(i%step===0||i===n-1))return'';
+    const anchor=i===0?'start':i===n-1?'end':'middle';
+    return`<text x="${pts[i][0]}" y="${H-8}" font-size="9" fill="var(--text3)" text-anchor="${anchor}">${monthLabel(m)}</text>`;
+  }).join('');
+  // Every point shows its value directly on the chart (not hover-only) so
+  // the month-to-month swing is visible at a glance without interacting.
+  // First/last labels are edge-anchored (not center-anchored) so the number
+  // never gets cropped by the SVG viewBox edge; interior labels are
+  // center-anchored and stay safely inside the padded plot area.
   const dots=pts.map((p,i)=>{
-    const lbl=vals[i].toLocaleString();
+    const anchor=i===0?'start':i===n-1?'end':'middle';
+    const tx=i===0?p[0]+3:i===n-1?p[0]-3:p[0];
     return`<g>
       <title>${monthLabel(months[i])}: ${vals[i].toLocaleString()}</title>
       <circle cx="${p[0]}" cy="${p[1]}" r="5" fill="transparent"/>
       <circle cx="${p[0]}" cy="${p[1]}" r="2.8" fill="${lineColor}"/>
-      <text x="${p[0]}" y="${p[1]-9}" font-size="10" font-weight="700" fill="${lineColor}" text-anchor="middle" paint-order="stroke" stroke="${bgTint}" stroke-width="3.2" stroke-linejoin="round">${lbl}</text>
+      <text x="${tx}" y="${p[1]-9}" font-size="10" font-weight="700" fill="${lineColor}" text-anchor="${anchor}" paint-order="stroke" stroke="${bgTint}" stroke-width="3.2" stroke-linejoin="round">${vals[i].toLocaleString()}</text>
     </g>`;
   }).join('');
 
@@ -1597,6 +1764,7 @@ function renderTrendCard(elId,title,ico,months,vals,lineColor,fillFrom,bgTint){
         <stop offset="0%" stop-color="${fillFrom}" stop-opacity="0.55"/>
         <stop offset="100%" stop-color="${fillFrom}" stop-opacity="0.02"/>
       </linearGradient></defs>
+      ${gridlines}
       <path d="${areaPath}" fill="url(#${gid})" stroke="none"/>
       <path d="${linePath}" fill="none" stroke="${lineColor}" stroke-width="2.4" stroke-linecap="round"/>
       ${dots}
@@ -1651,9 +1819,9 @@ function buildTrends(){
         if(cv(r,C.PRESUMPTIVE)==='Yes')presM[k]++;
       }
     }
-    // "Tested" mirrors the Overview "Presumptive Tested" KPI exactly: presumptive
-    // AND has at least one test done — not just "anyone with a test on file".
-    if(cv(r,C.PRESUMPTIVE)==='Yes'&&r._anyTested&&r._firstTestDt){
+    // "Tested" counts everyone who has at least one test done, regardless of
+    // presumptive status (mirrors the Overview "Tested (Overall)" KPI).
+    if(r._anyTested&&r._firstTestDt){
       const k=clampKey(monthKey(r._firstTestDt));
       if(testedM[k]!==undefined)testedM[k]++;
     }
@@ -1669,7 +1837,7 @@ function buildTrends(){
 
   renderTrendCard('trend-screened','Screened','📋',months,months.map(m=>screenedM[m]),'#7FA8D9','#BFDBFA','#F3F7FC');
   renderTrendCard('trend-pres','Presumptive','🔍',months,months.map(m=>presM[m]),'#E8A96E','#FBDCB8','#FDF6EE');
-  renderTrendCard('trend-tested','Tested','🧪',months,months.map(m=>testedM[m]),'#B39DDB','#E1D5F5','#F8F5FC');
+  renderTrendCard('trend-tested','Tested (Overall)','🧪',months,months.map(m=>testedM[m]),'#B39DDB','#E1D5F5','#F8F5FC');
   renderTrendCard('trend-diag','Diagnosed','🏥',months,months.map(m=>diagM[m]),'#EC9BB6','#FBD3E0','#FDF3F6');
 }
 
@@ -1861,16 +2029,17 @@ function buildDistrict(){
 
   base.forEach(r=>{
     const d=cv(r,C.DISTRICT)||'Unknown';
-    if(!distMap[d])distMap[d]={n:0,pres:0,cad:0,cxrAbn:0,xray:0,gxp:0,diag:0,tx:0,errs:0,cfs:new Set(),gar:new Set()};
+    if(!distMap[d])distMap[d]={n:0,pres:0,tested:0,cad:0,cxrAbn:0,xray:0,gxp:0,diag:0,tx:0,errs:0,cfs:new Set(),gar:new Set()};
     distMap[d].n++;
     if(cv(r,C.PRESUMPTIVE)==='Yes')distMap[d].pres++;
+    if(r._anyTested)distMap[d].tested++;
     if(r._errs.length>0)distMap[d].errs++;
     distMap[d].cfs.add(cv(r,C.CF));distMap[d].gar.add(cv(r,C.FACILITY));
   });
 
   result.forEach(r=>{
     const d=cv(r,C.DISTRICT)||'Unknown';
-    if(!distMap[d])distMap[d]={n:0,pres:0,cad:0,cxrAbn:0,xray:0,gxp:0,diag:0,tx:0,errs:0,cfs:new Set(),gar:new Set()};
+    if(!distMap[d])distMap[d]={n:0,pres:0,tested:0,cad:0,cxrAbn:0,xray:0,gxp:0,diag:0,tx:0,errs:0,cfs:new Set(),gar:new Set()};
     if(cv(r,C.CAD_DONE)==='Yes')distMap[d].cad++;
     const cadScore=cn(r,C.CAD_RESULT);if(cadScore!==null&&cadScore>=40)distMap[d].cxrAbn++;
     if(cv(r,C.XRAY_DONE)==='Yes')distMap[d].xray++;
@@ -1880,12 +2049,12 @@ function buildDistrict(){
   // TB diag/tx use the corrected diag-date-aligned set
   tbResult.forEach(r=>{
     const d=cv(r,C.DISTRICT)||'Unknown';
-    if(!distMap[d])distMap[d]={n:0,pres:0,cad:0,cxrAbn:0,xray:0,gxp:0,diag:0,tx:0,errs:0,cfs:new Set(),gar:new Set()};
+    if(!distMap[d])distMap[d]={n:0,pres:0,tested:0,cad:0,cxrAbn:0,xray:0,gxp:0,diag:0,tx:0,errs:0,cfs:new Set(),gar:new Set()};
     if(cv(r,C.TB_DIAG)==='Yes')distMap[d].diag++;
     if(cv(r,C.TX_STARTED)==='Yes')distMap[d].tx++;
   });
 
-  document.getElementById('districtBody').innerHTML=Object.entries(distMap).sort((a,x)=>x[1].n-a[1].n).map(([nm,d])=>`<tr><td><strong>${nm}</strong></td><td>${d.cfs.size}</td><td>${d.gar.size}</td><td><strong>${d.n.toLocaleString()}</strong></td><td>${b(d.pres,'ba')}</td><td style="color:var(--amber);font-weight:600">${pct(d.pres,d.n)}</td><td>${d.cad>0?b(d.cad,'bsl'):'—'}</td><td>${d.cxrAbn>0?`<span class="badge" style="background:#FDEBD0;color:#E67E22">${d.cxrAbn}</span>`:'—'}</td><td>${d.xray>0?b(d.xray,'bsl'):'—'}</td><td>${d.gxp>0?b(d.gxp,'bg'):'—'}</td><td>${b(d.diag,'br')}</td><td>${b(d.tx,'bg')}</td><td>${d.errs>0?b(d.errs,'br'):chk()}</td></tr>`).join('');
+  document.getElementById('districtBody').innerHTML=Object.entries(distMap).sort((a,x)=>x[1].n-a[1].n).map(([nm,d])=>`<tr><td><strong>${nm}</strong></td><td>${d.cfs.size}</td><td>${d.gar.size}</td><td><strong>${d.n.toLocaleString()}</strong></td><td>${b(d.pres,'ba')}</td><td style="color:var(--amber);font-weight:600">${pct(d.pres,d.n)}</td><td>${d.tested>0?b(d.tested,'bsl'):'—'}</td><td>${d.cad>0?b(d.cad,'bsl'):'—'}</td><td>${d.cxrAbn>0?`<span class="badge" style="background:#FDEBD0;color:#E67E22">${d.cxrAbn}</span>`:'—'}</td><td>${d.xray>0?b(d.xray,'bsl'):'—'}</td><td>${d.gxp>0?b(d.gxp,'bg'):'—'}</td><td>${b(d.diag,'br')}</td><td>${b(d.tx,'bg')}</td><td>${d.errs>0?b(d.errs,'br'):chk()}</td></tr>`).join('');
 }
 
 // ═══════════════════════════════════════════════
@@ -2177,11 +2346,12 @@ function buildUpazilaWise(){
   const dist=document.getElementById('fDist').value;
   const screenedByGarden=computeGardenScreenedCounts(base);
 
-  // Presumptive/diagnosed per garden (for the Upazila table only)
-  const presByGarden={},diagByGarden={};
+  // Presumptive/tested/diagnosed per garden (for the Upazila table only)
+  const presByGarden={},testedByGarden={},diagByGarden={};
   base.forEach(r=>{
     const ref=gardenRefFor(cv(r,C.FACILITY));
     if(ref&&cv(r,C.PRESUMPTIVE)==='Yes')presByGarden[ref.name]=(presByGarden[ref.name]||0)+1;
+    if(ref&&r._anyTested)testedByGarden[ref.name]=(testedByGarden[ref.name]||0)+1;
   });
   FILTERED.forEach(r=>{
     const ref=gardenRefFor(cv(r,C.FACILITY));
@@ -2205,11 +2375,11 @@ function buildUpazilaWise(){
   const upzMap={};
   gardens.forEach(g=>{
     const u=g.upazila||'Unknown';
-    if(!upzMap[u])upzMap[u]={district:g.district,gardens:0,donorPop:0,surveyPop:0,n:0,pres:0,diag:0,compDonor:0,compSurvey:0};
+    if(!upzMap[u])upzMap[u]={district:g.district,gardens:0,donorPop:0,surveyPop:0,n:0,pres:0,tested:0,diag:0,compDonor:0,compSurvey:0};
     const b=upzMap[u];
     const scr=screenedByGarden[g.name]||0;
     b.gardens++;b.donorPop+=g.donorPop||0;b.surveyPop+=g.surveyPop||0;
-    b.n+=scr;b.pres+=presByGarden[g.name]||0;b.diag+=diagByGarden[g.name]||0;
+    b.n+=scr;b.pres+=presByGarden[g.name]||0;b.tested+=testedByGarden[g.name]||0;b.diag+=diagByGarden[g.name]||0;
     if(classifyCoverage(scr,g.donorPop).key==='comp')b.compDonor++;
     if(classifyCoverage(scr,g.surveyPop).key==='comp')b.compSurvey++;
   });
@@ -2217,8 +2387,9 @@ function buildUpazilaWise(){
   document.getElementById('upazilaBody').innerHTML=Object.entries(upzMap).sort((a,b)=>b[1].n-a[1].n).map(([u,d])=>{
     const covDonor=d.donorPop>0?pct(d.n,d.donorPop):'—';
     const covSurvey=d.surveyPop>0?pct(d.n,d.surveyPop):'—';
-    return`<tr><td style="color:var(--text2)">${d.district||'—'}</td><td><strong>${u}</strong></td><td>${d.gardens||'—'}</td><td><strong>${d.n.toLocaleString()}</strong></td><td>${b(d.pres,'ba')}</td><td>${b(d.diag,'br')}</td><td class="mono">${d.donorPop>0?d.donorPop.toLocaleString():'—'}</td><td class="mono">${d.surveyPop>0?d.surveyPop.toLocaleString():'—'}</td><td style="font-weight:600;color:var(--blue)">${covDonor}</td><td style="font-weight:600;color:var(--green-mid)">${covSurvey}</td><td>${d.compDonor} / ${d.gardens}</td><td>${d.compSurvey} / ${d.gardens}</td></tr>`;
+    return`<tr><td style="color:var(--text2)">${d.district||'—'}</td><td><strong>${u}</strong></td><td>${d.gardens||'—'}</td><td><strong>${d.n.toLocaleString()}</strong></td><td>${b(d.pres,'ba')}</td><td>${d.tested>0?b(d.tested,'bsl'):'—'}</td><td>${b(d.diag,'br')}</td><td class="mono">${d.donorPop>0?d.donorPop.toLocaleString():'—'}</td><td class="mono">${d.surveyPop>0?d.surveyPop.toLocaleString():'—'}</td><td style="font-weight:600;color:var(--blue)">${covDonor}</td><td style="font-weight:600;color:var(--green-mid)">${covSurvey}</td><td>${d.compDonor} / ${d.gardens}</td><td>${d.compSurvey} / ${d.gardens}</td></tr>`;
   }).join('');
+  window._upazilaSummaryRows=Object.entries(upzMap).sort((a,b)=>b[1].n-a[1].n);
 
   // ── 5-category KPI grids (donor & survey) ──
   const buildCatGrid=(elId,popKey)=>{
@@ -2297,6 +2468,30 @@ window.downloadGardenCompletion=function(){
   XLSX.writeFile(wb,'Tea_Garden_Completion.xlsx');
 };
 
+window.downloadUpazilaTable=function(){
+  const rows=window._upazilaSummaryRows||[];
+  if(!rows.length){alert('No data to download.');return;}
+  const data=rows.map(([u,d])=>({
+    'District':d.district||'',
+    'Upazila':u,
+    'Gardens':d.gardens||0,
+    'Screened':d.n,
+    'Presumptive':d.pres,
+    'Tested':d.tested,
+    'Diagnosed':d.diag,
+    'Donor Population':d.donorPop||'',
+    'Survey Population':d.surveyPop||'',
+    'Coverage % (Donor)':d.donorPop>0?((d.n/d.donorPop)*100).toFixed(1):'',
+    'Coverage % (Survey)':d.surveyPop>0?((d.n/d.surveyPop)*100).toFixed(1):'',
+    'Gardens Completed (Donor)':`${d.compDonor} / ${d.gardens}`,
+    'Gardens Completed (Survey)':`${d.compSurvey} / ${d.gardens}`
+  }));
+  const ws=XLSX.utils.json_to_sheet(data);
+  const wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,ws,'Upazila Summary');
+  XLSX.writeFile(wb,'Upazila_Summary.xlsx');
+};
+
 // ═══════════════════════════════════════════════
 // GARDEN
 // ═══════════════════════════════════════════════
@@ -2326,16 +2521,17 @@ function buildGarden(){
 
   base.forEach(r=>{
     const g=cv(r,C.FACILITY)||'Unknown';
-    if(!gar[g])gar[g]={n:0,pres:0,cad:0,cxrAbn:0,xray:0,gxp:0,diag:0,tx:0,errs:0,district:cv(r,C.DISTRICT),cfs:new Set()};
+    if(!gar[g])gar[g]={n:0,pres:0,tested:0,cad:0,cxrAbn:0,xray:0,gxp:0,diag:0,tx:0,errs:0,district:cv(r,C.DISTRICT),cfs:new Set()};
     gar[g].n++;
     if(cv(r,C.PRESUMPTIVE)==='Yes')gar[g].pres++;
+    if(r._anyTested)gar[g].tested++;
     if(r._errs.length>0)gar[g].errs++;
     gar[g].cfs.add(cv(r,C.CF));
   });
 
   result.forEach(r=>{
     const g=cv(r,C.FACILITY)||'Unknown';
-    if(!gar[g])gar[g]={n:0,pres:0,cad:0,cxrAbn:0,xray:0,gxp:0,diag:0,tx:0,errs:0,district:cv(r,C.DISTRICT),cfs:new Set()};
+    if(!gar[g])gar[g]={n:0,pres:0,tested:0,cad:0,cxrAbn:0,xray:0,gxp:0,diag:0,tx:0,errs:0,district:cv(r,C.DISTRICT),cfs:new Set()};
     if(cv(r,C.CAD_DONE)==='Yes')gar[g].cad++;
     const cadScore=cn(r,C.CAD_RESULT);if(cadScore!==null&&cadScore>=40)gar[g].cxrAbn++;
     if(cv(r,C.XRAY_DONE)==='Yes')gar[g].xray++;
@@ -2345,7 +2541,7 @@ function buildGarden(){
   // TB diag/tx use the corrected diag-date-aligned set
   tbResult.forEach(r=>{
     const g=cv(r,C.FACILITY)||'Unknown';
-    if(!gar[g])gar[g]={n:0,pres:0,cad:0,cxrAbn:0,xray:0,gxp:0,diag:0,tx:0,errs:0,district:cv(r,C.DISTRICT),cfs:new Set()};
+    if(!gar[g])gar[g]={n:0,pres:0,tested:0,cad:0,cxrAbn:0,xray:0,gxp:0,diag:0,tx:0,errs:0,district:cv(r,C.DISTRICT),cfs:new Set()};
     if(cv(r,C.TB_DIAG)==='Yes')gar[g].diag++;
     if(cv(r,C.TX_STARTED)==='Yes')gar[g].tx++;
   });
@@ -2359,7 +2555,7 @@ function buildGarden(){
     const surveyPop=ref?ref.surveyPop:null;
     const covDonor=(ref&&donorPop>0)?pct(d.n,donorPop):'—';
     const covSurvey=(ref&&surveyPop>0)?pct(d.n,surveyPop):'—';
-    return`<tr data-name="${g.toLowerCase()}" data-dist="${d.district.toLowerCase()}"><td><strong>${g}</strong></td><td style="color:var(--text2)">${d.district}</td><td style="color:var(--text2)">${upz}</td><td>${d.cfs.size}</td><td><strong>${d.n}</strong></td><td>${b(d.pres,'ba')}</td><td style="color:var(--amber);font-weight:600">${pct(d.pres,d.n)}</td><td>${d.cad>0?b(d.cad,'bsl'):'—'}</td><td>${d.cxrAbn>0?`<span class="badge" style="background:#FDEBD0;color:#E67E22">${d.cxrAbn}</span>`:'—'}</td><td>${d.xray>0?b(d.xray,'bsl'):'—'}</td><td>${d.gxp>0?b(d.gxp,'bg'):'—'}</td><td>${b(d.diag,'br')}</td><td>${b(d.tx,'bg')}</td><td>${d.errs>0?b(d.errs,'br'):chk()}</td><td class="mono">${donorPop!==null?donorPop.toLocaleString():'—'}</td><td class="mono">${surveyPop!==null?surveyPop.toLocaleString():'—'}</td><td style="font-weight:600;color:${ref?'var(--blue)':'var(--text3)'}">${covDonor}</td><td style="font-weight:600;color:${ref?'var(--green-mid)':'var(--text3)'}">${covSurvey}</td></tr>`;
+    return`<tr data-name="${g.toLowerCase()}" data-dist="${d.district.toLowerCase()}"><td><strong>${g}</strong></td><td style="color:var(--text2)">${d.district}</td><td style="color:var(--text2)">${upz}</td><td>${d.cfs.size}</td><td><strong>${d.n}</strong></td><td>${b(d.pres,'ba')}</td><td style="color:var(--amber);font-weight:600">${pct(d.pres,d.n)}</td><td>${d.tested>0?b(d.tested,'bsl'):'—'}</td><td>${d.cad>0?b(d.cad,'bsl'):'—'}</td><td>${d.cxrAbn>0?`<span class="badge" style="background:#FDEBD0;color:#E67E22">${d.cxrAbn}</span>`:'—'}</td><td>${d.xray>0?b(d.xray,'bsl'):'—'}</td><td>${d.gxp>0?b(d.gxp,'bg'):'—'}</td><td>${b(d.diag,'br')}</td><td>${b(d.tx,'bg')}</td><td>${d.errs>0?b(d.errs,'br'):chk()}</td><td class="mono">${donorPop!==null?donorPop.toLocaleString():'—'}</td><td class="mono">${surveyPop!==null?surveyPop.toLocaleString():'—'}</td><td style="font-weight:600;color:${ref?'var(--blue)':'var(--text3)'}">${covDonor}</td><td style="font-weight:600;color:${ref?'var(--green-mid)':'var(--text3)'}">${covSurvey}</td></tr>`;
   }).join('');
 
   // Unmatched gardens: names present in the screening data with no reference-sheet match
@@ -2430,6 +2626,7 @@ function buildTBCases(){
   const cd=tbRows.filter(r=>cv(r,C.BACT_STATUS)==='CD').length;
   const child=tbRows.filter(r=>cn(r,C.AGE_Y)!==null&&cn(r,C.AGE_Y)<15).length;
   const tx=tbRows.filter(r=>cv(r,C.TX_STARTED)==='Yes').length;
+  const mdr=tbRows.filter(isMDR).length;
   const flagged=withFlags.filter(x=>x.fl.length>0).length;
 
   const K=(s,i,v,l,sub,col='var(--text1)')=>`<div class="kpi"><div class="kpi-stripe" style="background:${s}"></div><span class="kpi-ico">${i}</span><div class="kpi-val" style="color:${col}">${v}</div><div class="kpi-lbl">${l}</div><div class="kpi-sub">${sub}</div></div>`;
@@ -2441,10 +2638,12 @@ function buildTBCases(){
     K('var(--amber)','🩺',cd,'CD Clinical',pct(cd,tot),'var(--amber)')+
     K('#FF6B6B','👶',child,'Child TB (<15y)',pct(child,tot),'#FF6B6B')+
     K('var(--green)','💊',tx,'On Treatment',pct(tx,tot),'var(--green)')+
+    K('#8E2434','🧬',mdr,'MDR-TB (Rif Resistant)',pct(mdr,tot)+' of TB cases',mdr>0?'#8E2434':'var(--green)')+
     K('var(--red)','⚠️',flagged,'Flagged Cases',pct(flagged,tot),flagged>0?'var(--red)':'var(--green)');
 
   document.getElementById('tbBody').innerHTML=withFlags.map(({r,fl,rawFlags,overridden,key})=>{
     const isFl=fl.length>0,isSus=r._suspect;
+    const rMDR=isMDR(r);
     const rowCls=isSus?'row-suspect':isFl?'row-flagged':'';
     const cadScore=cv(r,C.CAD_RESULT)?parseFloat(cv(r,C.CAD_RESULT)).toFixed(1):'—';
     const keyEsc=key.replace(/'/g,"\\'").replace(/"/g,'&quot;');
@@ -2454,7 +2653,7 @@ function buildTBCases(){
       :`<button onclick="ignoreCaseFlags('${keyEsc}')" title="Dismiss all flags for this specific case — remembered in this browser, so it won't re-flag on the next upload of the same CSV" style="margin-top:3px;border:1px solid var(--border2);background:var(--surface);color:var(--text2);cursor:pointer;font-size:10px;padding:2px 7px;border-radius:999px">🔕 Ignore this case</button>`
     ):'';
     const flagCell=isFl?chips+ignoreBtn:(overridden?`<span style="color:var(--text3);font-size:11px">🔕 Overridden${ignoreBtn}</span>`:`<span style="color:var(--green);font-weight:700">✓ Clean</span>`);
-    return`<tr class="${rowCls}" data-fl="${isFl?'1':'0'}" data-type="${cv(r,C.TB_TYPE)}" data-bact="${cv(r,C.BACT_STATUS)}" data-q="${(cv(r,C.PATIENT)+cv(r,C.PID)+cv(r,C.CF)).toLowerCase()}">
+    return`<tr class="${rowCls}" data-fl="${isFl?'1':'0'}" data-type="${cv(r,C.TB_TYPE)}" data-bact="${cv(r,C.BACT_STATUS)}" data-mdr="${rMDR?'1':'0'}" data-q="${(cv(r,C.PATIENT)+cv(r,C.PID)+cv(r,C.CF)).toLowerCase()}">
       <td style="min-width:200px">${flagCell}</td>
       <td>${r._sds||'—'}</td>
       <td>${cv(r,C.DIAG_DATE)||'—'}</td>
@@ -2467,6 +2666,7 @@ function buildTBCases(){
       <td>${cv(r,C.FACILITY)}</td>
       <td><span class="badge ${cv(r,C.TB_TYPE)==='PTB'?'br':'bg'}">${cv(r,C.TB_TYPE)||'—'}</span></td>
       <td><span class="badge ${cv(r,C.BACT_STATUS)==='B+'?'br':'ba'}">${cv(r,C.BACT_STATUS)||'—'}</span></td>
+      <td>${rMDR?'<span class="badge" style="background:#F5D0D8;color:#8E2434;font-weight:700">🧬 MDR</span>':'<span style="color:var(--text3)">—</span>'}</td>
       <td style="color:var(--text2)">${cv(r,C.EPTB_SITE)||'—'}</td>
       <td>${cv(r,C.CAD_DONE)||'—'}</td>
       <td class="mono">${cadScore}</td>
@@ -2505,12 +2705,14 @@ window.filterTB=function(){
   const type=document.getElementById('tbType').value;
   const bact=document.getElementById('tbBact').value;
   const flagOnly=document.getElementById('tbFlag').value==='1';
+  const mdrOnly=document.getElementById('tbMDR').value==='1';
   document.querySelectorAll('#tbBody tr').forEach(tr=>{
     const mq=!q||tr.dataset.q?.includes(q);
     const mt=!type||tr.dataset.type===type;
     const mb=!bact||tr.dataset.bact===bact;
     const mf=!flagOnly||tr.dataset.fl==='1';
-    tr.style.display=(mq&&mt&&mb&&mf)?'':'none';
+    const mm=!mdrOnly||tr.dataset.mdr==='1';
+    tr.style.display=(mq&&mt&&mb&&mf&&mm)?'':'none';
   });
 };
 
@@ -2633,7 +2835,8 @@ window.downloadTBCases=function(){
     const flags=overridden?[]:tbFlags(r);
     return rowToObj(r,{
       '__TB_Case_Flags':flags.join('; '),
-      '__Flags_Overridden':overridden?'Yes':'No'
+      '__Flags_Overridden':overridden?'Yes':'No',
+      '__MDR_Rif_Resistant':isMDR(r)?'Yes':'No'
     });
   });
   const ws=XLSX.utils.json_to_sheet(data);
